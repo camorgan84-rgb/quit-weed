@@ -390,11 +390,14 @@
 <div class="counter-card">
   <!-- Setup state -->
   <div class="counter-setup visible" id="counterSetup">
-    <div class="counter-label">Set your quit date &amp; time</div>
+    <div class="counter-label">When did you last use?</div>
     <div class="date-input-group">
-      <label>When did you last use?</label>
-      <input type="datetime-local" id="quitDateInput">
-      <button class="btn-primary" onclick="setQuitDate()">Start My Journey</button>
+      <div style="display:flex; gap:8px; width:100%; max-width:300px;">
+        <input type="date" id="quitDatePart" style="flex:1; padding:10px 12px; border:1.5px solid rgba(255,255,255,0.2); border-radius:12px; font-size:0.95rem; color:white; background:rgba(255,255,255,0.1); color-scheme:dark;">
+        <input type="time" id="quitTimePart" style="flex:1; padding:10px 12px; border:1.5px solid rgba(255,255,255,0.2); border-radius:12px; font-size:0.95rem; color:white; background:rgba(255,255,255,0.1); color-scheme:dark;">
+      </div>
+      <button class="btn-primary" id="startBtn" style="margin-top:4px;">Start My Journey</button>
+      <button class="btn-small" id="startNowBtn">I just quit — start from now</button>
     </div>
   </div>
 
@@ -1341,10 +1344,12 @@ function storageRemove(key) {
   delete memoryStore[key];
 }
 
-// Parse datetime-local string safely on iOS (avoid timezone interpretation bugs)
+// Parse stored quit date (stored as timestamp ms)
 function parseLocalDate(str) {
   if (!str) return null;
-  // "2026-04-08T10:30" → treat as local time
+  const ms = parseInt(str, 10);
+  if (!isNaN(ms)) return new Date(ms);
+  // Legacy fallback for old string format
   const [datePart, timePart] = str.split('T');
   const [y, mo, d] = datePart.split('-').map(Number);
   const [h, mi] = (timePart || '00:00').split(':').map(Number);
@@ -1355,14 +1360,27 @@ function parseLocalDate(str) {
 let timerInterval;
 
 function setQuitDate() {
-  let input = document.getElementById('quitDateInput').value;
-  if (!input) {
-    const now = new Date();
-    now.setSeconds(0, 0);
-    input = new Date(now - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
-    document.getElementById('quitDateInput').value = input;
+  const datePart = document.getElementById('quitDatePart').value;
+  const timePart = document.getElementById('quitTimePart').value;
+
+  let quit;
+  if (datePart && timePart) {
+    const [y, mo, d] = datePart.split('-').map(Number);
+    const [h, mi] = timePart.split(':').map(Number);
+    quit = new Date(y, mo - 1, d, h, mi, 0, 0);
+  } else if (datePart) {
+    const [y, mo, d] = datePart.split('-').map(Number);
+    quit = new Date(y, mo - 1, d, 0, 0, 0, 0);
+  } else {
+    quit = new Date();
   }
-  storageSet('quitDate', input);
+
+  storageSet('quitDate', quit.getTime().toString());
+  startCounter();
+}
+
+function setQuitNow() {
+  storageSet('quitDate', Date.now().toString());
   startCounter();
 }
 
@@ -1647,12 +1665,19 @@ function renderLog() {
 
 // ——— Init ———
 window.addEventListener('DOMContentLoaded', () => {
-  // Set default datetime to now
+  // Pre-fill date/time inputs with today
   const now = new Date();
-  now.setSeconds(0, 0);
-  const local = new Date(now - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
-  document.getElementById('quitDateInput').value = local;
-  document.getElementById('logDateTime').value = local;
+  const pad = n => String(n).padStart(2, '0');
+  const dateStr = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
+  const timeStr = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
+  document.getElementById('quitDatePart').value = dateStr;
+  document.getElementById('quitTimePart').value = timeStr;
+
+  document.getElementById('startBtn').addEventListener('click', setQuitDate);
+  document.getElementById('startNowBtn').addEventListener('click', setQuitNow);
+
+  const logNow = new Date(now - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+  document.getElementById('logDateTime').value = logNow;
 
   renderIntensityBtns();
   renderLog();
