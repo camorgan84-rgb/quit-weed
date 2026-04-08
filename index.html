@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Clear & Free — Cannabis Recovery</title>
+<title>Bloom</title>
 <style>
   :root {
     --navy:       #1a3560;
@@ -47,7 +47,7 @@
 
   /* ─── Counter ───────────────────────────────────── */
   .counter-card {
-    background: var(--navy);
+    background: linear-gradient(180deg, #c084b8 0%, #7b6abf 40%, #1a3560 100%);
     padding: 36px 24px 28px;
     text-align: center;
   }
@@ -57,7 +57,7 @@
   .counter-display.visible { display: block; }
 
   .counter-label { font-size: 0.68rem; font-weight: 700; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; }
-  .counter-big { font-size: 5.5rem; font-weight: 900; color: var(--gold-bright); line-height: 1; letter-spacing: -3px; }
+  .counter-big { font-size: 5.5rem; font-weight: 900; color: #ffffff; line-height: 1; letter-spacing: -3px; }
   .counter-unit { font-size: 0.8rem; color: rgba(255,255,255,0.4); margin-top: 6px; text-transform: uppercase; letter-spacing: 1.5px; }
   .counter-sub { display: flex; justify-content: center; gap: 32px; margin-top: 22px; padding-top: 22px; border-top: 1px solid rgba(255,255,255,0.08); }
   .counter-sub-item { text-align: center; }
@@ -382,7 +382,7 @@
 
 <!-- Header -->
 <div class="app-header">
-  <h1>Clear &amp; Free</h1>
+  <h1>Bloom</h1>
   <p>Your cannabis recovery companion</p>
 </div>
 
@@ -459,6 +459,14 @@
     <!-- Injected by JS -->
   </div>
 
+  <div class="section-title">Today's Tips</div>
+  <div id="cbtTipsContent">
+    <div class="tips-card">
+      <div class="tips-header">Tips for Today</div>
+      <div class="journal-no-date">Set your quit date to see tips tailored to where you are.</div>
+    </div>
+  </div>
+
   <!-- Static brain/body overview -->
   <div class="card" style="margin-top:4px;">
     <div class="card-title">
@@ -467,6 +475,14 @@
     <div class="card-body">
       THC mimics anandamide — your brain's natural "bliss" molecule — and floods CB1 receptors in the limbic system, prefrontal cortex, and hippocampus. Over time, the brain <strong>downregulates</strong> these receptors (makes fewer of them) to compensate. When you stop, your brain needs time to rebuild its natural endocannabinoid tone.
       <div class="info-box" style="margin-top:10px;">The good news: CB1 receptors begin recovering within <strong>2 days</strong> and show significant normalization by <strong>4 weeks</strong>. Full recovery can take 3–6 months depending on use history.</div>
+    </div>
+  </div>
+
+  <div class="section-title">Journal Prompts for Today</div>
+  <div id="todayJournalContent">
+    <div class="journal-card">
+      <div class="journal-header">✏️ Reflections</div>
+      <div class="journal-no-date" style="color:rgba(255,255,255,0.4);">Set your quit date to see prompts tailored to where you are.</div>
     </div>
   </div>
 
@@ -1086,15 +1102,6 @@
     </div>
   </div>
 
-  <!-- Day-specific Tips -->
-  <div class="section-title" style="margin-top:28px;">Today's Tips</div>
-  <div id="cbtTipsContent">
-    <div class="tips-card">
-      <div class="tips-header">Tips for Today</div>
-      <div class="journal-no-date">Set your quit date to see tips tailored to where you are.</div>
-    </div>
-  </div>
-
   <!-- Day-specific Journal Prompts -->
   <div class="section-title">Journal Prompts for Today</div>
   <div id="cbtJournalContent">
@@ -1401,12 +1408,14 @@ function renderCBT(days) {
     </div>
   `;
 
-  // Journal prompts
-  document.getElementById('cbtJournalContent').innerHTML = `
+  // Journal prompts (CBT tab + Today tab)
+  const journalHTML = `
     <div class="journal-card">
       <div class="journal-header">✏️ Journal Prompts — ${phase.name}</div>
       ${phase.journal.map(p => `<div class="journal-prompt">${p}</div>`).join('')}
-    </div>
+    </div>`;
+  document.getElementById('cbtJournalContent').innerHTML = journalHTML;
+  document.getElementById('todayJournalContent').innerHTML = journalHTML;
   `;
 }
 
