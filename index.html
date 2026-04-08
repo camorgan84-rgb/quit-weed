@@ -386,6 +386,8 @@
   <p>Your cannabis recovery companion</p>
 </div>
 
+<div id="jsError" style="display:block; background:red; color:white; font-size:12px; padding:6px; text-align:center;"></div>
+
 <!-- Counter Card -->
 <div class="counter-card">
   <!-- Setup state -->
@@ -1117,6 +1119,12 @@
 </div>
 
 <script>
+// Global error catcher
+window.onerror = function(msg, src, line) {
+  var el = document.getElementById('jsError');
+  if (el) el.textContent = 'JS Error: ' + msg + ' (line ' + line + ')';
+};
+
 // ——— Data ———
 const MILESTONES = [
   { days: 1, label: '1 Day' },
