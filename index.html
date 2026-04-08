@@ -297,6 +297,80 @@
   .log-stat .stat-lbl { font-size: 0.6rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-top: 2px; font-weight: 700; }
   .reasons-insight { background: var(--blue-pale); border-left: 3px solid var(--blue); border-radius: 10px; padding: 12px 14px; font-size: 0.82rem; color: var(--navy); margin-bottom: 14px; line-height: 1.6; }
 
+  /* Journal & Tips */
+  .journal-card {
+    background: var(--navy);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 10px;
+    color: white;
+  }
+  .journal-card .journal-header {
+    font-size: 0.68rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--gold-bright);
+    margin-bottom: 14px;
+  }
+  .journal-prompt {
+    background: rgba(255,255,255,0.07);
+    border-radius: 10px;
+    padding: 13px 15px;
+    margin-bottom: 8px;
+    font-size: 0.87rem;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.88);
+    border-left: 3px solid var(--gold-bright);
+  }
+  .journal-prompt:last-child { margin-bottom: 0; }
+  .journal-no-date {
+    font-size: 0.85rem;
+    color: var(--muted);
+    font-style: italic;
+    padding: 8px 2px;
+  }
+
+  .tips-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: 20px;
+    margin-bottom: 10px;
+  }
+  .tips-card .tips-header {
+    font-size: 0.68rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+  .tip-item {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    font-size: 0.87rem;
+    line-height: 1.6;
+    color: #333;
+  }
+  .tip-item:last-child { margin-bottom: 0; }
+  .tip-dot {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--blue-pale);
+    color: var(--blue);
+    font-size: 0.7rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
   @media (max-width: 400px) {
     .counter-big { font-size: 4.5rem; letter-spacing: -2px; }
     .counter-sub { gap: 20px; }
@@ -1011,6 +1085,25 @@
       </div>
     </div>
   </div>
+
+  <!-- Day-specific Tips -->
+  <div class="section-title" style="margin-top:28px;">Today's Tips</div>
+  <div id="cbtTipsContent">
+    <div class="tips-card">
+      <div class="tips-header">Tips for Today</div>
+      <div class="journal-no-date">Set your quit date to see tips tailored to where you are.</div>
+    </div>
+  </div>
+
+  <!-- Day-specific Journal Prompts -->
+  <div class="section-title">Journal Prompts for Today</div>
+  <div id="cbtJournalContent">
+    <div class="journal-card">
+      <div class="journal-header">✏️ Reflections</div>
+      <div class="journal-no-date" style="color:rgba(255,255,255,0.4);">Set your quit date to see prompts tailored to where you are.</div>
+    </div>
+  </div>
+
 </div>
 
 <script>
@@ -1031,98 +1124,194 @@ const PHASES = [
   {
     min: 0, max: 0,
     name: 'Before Quitting',
-    color: '#c4783a',
-    bgColor: '#fdf0e4',
-    borderColor: '#c4783a',
+    color: '#c4783a', bgColor: '#fdf0e4', borderColor: '#c4783a',
     desc: 'Preparing Your Mind & Body',
     sub: 'The most powerful thing you can do today is decide and prepare. Set your quit date, start your supplements, and tell one person you trust.',
     brain: 'THC binds to CB1 receptors throughout your brain, especially in the prefrontal cortex (decision-making), hippocampus (memory), and amygdala (emotion). Regular use has downregulated your natural endocannabinoid system — but this reverses with time.',
     body: 'Your lungs, liver, and immune system are ready to begin recovery the moment you stop. Start Omega-3, Magnesium, NAC, and Vitamin D now.',
     symptoms: ['Anticipation', 'Anxiety about quitting', 'Planning mode'],
+    journal: [
+      'What is the real reason I want to quit? Go deeper than the obvious answer.',
+      'What has cannabis cost me — in relationships, energy, time, or self-respect?',
+      'What would my life look like in 90 days if I followed through?',
+      'What am I most afraid of about quitting? Is that fear telling me the truth?',
+      'Who do I want to tell about this decision, and why?',
+    ],
+    tips: [
+      'Remove paraphernalia from your home tonight — lighters, papers, devices. Out of sight reduces impulse.',
+      'Tell at least one person you trust. Accountability dramatically increases success rates.',
+      'Write your "why" on a sticky note and put it somewhere you\'ll see it every morning.',
+      'Plan what you will do in the first hour after your quit time — have a specific activity ready.',
+      'Stock up on healthy snacks now. Your appetite and cravings will both spike early on.',
+    ],
   },
   {
     min: 1, max: 3,
     name: 'Acute Withdrawal',
-    color: '#b03a3a',
-    bgColor: '#fff0f0',
-    borderColor: '#b03a3a',
+    color: '#b03a3a', bgColor: '#fff0f0', borderColor: '#b03a3a',
     desc: 'Days 1–3: The Storm',
     sub: 'This is the hardest window. THC is leaving your bloodstream and your brain is scrambling to recalibrate. It is temporary. Every hour counts.',
     brain: 'CB1 receptors are suddenly unoccupied. Your brain\'s dopamine system, which adapted to THC-driven stimulation, is now producing less natural dopamine. This is why you feel flat, irritable, or anxious.',
     body: 'THC clears from blood within 3–4 days. Night sweats, chills, and restlessness are your nervous system resetting. This is physical — not weakness.',
     symptoms: ['Irritability', 'Anxiety', 'Insomnia', 'Night sweats', 'Decreased appetite', 'Restlessness', 'Vivid dreams', 'Headaches'],
+    journal: [
+      'What physical sensations am I feeling right now, and where in my body are they?',
+      'What is the hardest moment I\'ve had today? How did I get through it?',
+      'What thought keeps pulling me toward using? What would I say to a friend who had that thought?',
+      'What is one tiny thing I\'m proud of doing today, even if it feels small?',
+      'What did I use cannabis to avoid feeling? Can I sit with that feeling for just 5 minutes?',
+    ],
+    tips: [
+      'Drink water constantly. Hydration reduces headaches and helps flush metabolites.',
+      'Set 1-hour goals, not 1-day goals. "I just need to get through the next hour" is enough.',
+      'Cold showers help. The shock resets your nervous system and reduces irritability quickly.',
+      'Don\'t isolate. Even a 10-minute call with someone you trust can break a craving spiral.',
+      'Eat even if you\'re not hungry — low blood sugar makes irritability and cravings much worse.',
+    ],
   },
   {
     min: 4, max: 7,
     name: 'Peak & Early Turning',
-    color: '#7c6b9e',
-    bgColor: '#f0ecf8',
-    borderColor: '#7c6b9e',
+    color: '#7c6b9e', bgColor: '#f0ecf8', borderColor: '#7c6b9e',
     desc: 'Days 4–7: The Peak & First Shift',
     sub: 'Symptoms often peak around day 3–4, then slowly begin to ease. You may start to feel occasional windows of clarity. Hold on.',
     brain: 'CB1 receptors are rapidly upregulating (rebuilding). Your brain is producing more of its own anandamide. Sleep cycles are still disrupted as REM sleep rebounds.',
     body: 'Appetite may start returning. Vivid, intense dreams are extremely common — this is healthy REM rebound after months of suppressed dreaming.',
     symptoms: ['Vivid dreams', 'Mood swings', 'Brain fog', 'Fatigue', 'Sleep disruption', 'Appetite returning', 'Emotional waves'],
+    journal: [
+      'Describe a moment today where I felt even slightly better than yesterday. What was happening?',
+      'What emotions keep surfacing that I used to numb? What are they trying to tell me?',
+      'My mood has been swinging — what triggers the hardest dips? What helps them pass?',
+      'What\'s one thing I noticed today that I wouldn\'t have if I were high?',
+      'What does "getting through the hardest days" say about who I am?',
+    ],
+    tips: [
+      'Vivid dreams are healthy — your brain is restoring REM sleep it was suppressed from. Journal them if they\'re intense.',
+      'This is peak week for irritability. Warn people you\'re close to that you\'re going through something hard.',
+      'Start a simple 10-minute walk outside each day. Natural light and movement directly boost dopamine.',
+      'If the brain fog is thick, don\'t fight it. Rest is productive right now — your brain is doing real work.',
+      'Try eating smaller meals more often. Your appetite system is resetting and large meals can feel overwhelming.',
+    ],
   },
   {
     min: 8, max: 14,
     name: 'Acute Phase Winding Down',
-    color: '#2d8a8a',
-    bgColor: '#e4f4f4',
-    borderColor: '#2d8a8a',
+    color: '#2d8a8a', bgColor: '#e4f4f4', borderColor: '#2d8a8a',
     desc: 'Days 8–14: Acute Phase Easing',
     sub: 'The worst is behind you. Physical symptoms are declining. Emotional flatness (anhedonia) is common — your dopamine system is rebuilding, not broken.',
     brain: 'Dopamine pathways are recalibrating. The "blunted" feeling many people experience (nothing feels fun) is temporary and reflects the receptor sensitivity restoring to baseline.',
     body: 'Physical symptoms significantly reduce. Sleep quality improving. Appetite largely restored. You may notice mental clarity in short bursts.',
     symptoms: ['Anhedonia (flat mood)', 'Low motivation', 'Some irritability', 'Improving sleep', 'Occasional cravings', 'Brain fog lifting'],
+    journal: [
+      'Nothing feels exciting right now — but what\'s one thing I\'m looking forward to, even a little?',
+      'Compare how I feel today vs. day 1. What has actually improved, even if it doesn\'t feel like much?',
+      'Where am I finding motivation right now? What gets me out of bed?',
+      'What old interests or hobbies might I want to reconnect with now that I\'m getting clearer?',
+      'What would I tell someone on day 1 about surviving this first week?',
+    ],
+    tips: [
+      'Anhedonia (nothing feeling fun) is the brain\'s dopamine receptors re-sensitizing. It ends — usually by week 3–4.',
+      'Force yourself to do one enjoyable activity daily even if you don\'t feel like it. The feeling follows the action.',
+      'This is a great time to restart an old hobby or start something new — creativity benefits from clean dopamine.',
+      'Reduce caffeine if anxiety is still present. It amplifies withdrawal-related jitters.',
+      'Sleep is healing you. Protect it: consistent bedtime, dark room, no screens 30 min before bed.',
+    ],
   },
   {
     min: 15, max: 30,
     name: 'Post-Acute Phase',
-    color: '#3d7a5e',
-    bgColor: '#e8f5ee',
-    borderColor: '#3d7a5e',
+    color: '#3d7a5e', bgColor: '#e8f5ee', borderColor: '#3d7a5e',
     desc: 'Days 15–30: Recalibration',
     sub: 'Your endocannabinoid system is actively rebuilding. You may have good days and harder days — this is normal. The trend is upward.',
     brain: 'Anandamide system is recalibrating. Natural reward circuitry is strengthening. The prefrontal cortex (willpower and decision-making) is recovering its baseline function.',
     body: 'Most physical symptoms resolved. Occasional psychological cravings driven by habit memory — these will fade with time and trigger-interruption.',
     symptoms: ['Psychological cravings', 'Mood variability', 'Improving clarity', 'Better sleep', 'Emotional sensitivity', 'Occasional anxiety'],
+    journal: [
+      'What is noticeably different in my daily life now compared to when I was using?',
+      'What high-risk situations or people am I navigating, and how am I handling them?',
+      'When a craving hit recently, what did I tell myself? What worked?',
+      'What am I feeling more deeply now that I wasn\'t able to feel before?',
+      'How has my relationship with time changed? What am I doing with hours I didn\'t have before?',
+    ],
+    tips: [
+      'Psychological cravings at this stage are habit-loops, not physical need. They respond well to pattern interruption.',
+      'Identify your top 3 high-risk times of day (evenings? weekends?) and pre-plan them with specific activities.',
+      'Your emotional sensitivity is higher right now — that\'s your nervous system waking up. It levels out.',
+      'Consider adding exercise 3x per week. It\'s the most evidence-based mood booster in recovery.',
+      'Start tracking wins in a notes app or journal. Seeing progress builds momentum.',
+    ],
   },
   {
     min: 31, max: 60,
     name: 'Neurological Healing',
-    color: '#3d7a5e',
-    bgColor: '#e8f5ee',
-    borderColor: '#3d7a5e',
+    color: '#3d7a5e', bgColor: '#e8f5ee', borderColor: '#3d7a5e',
     desc: 'Days 31–60: The Brain Rebuilds',
     sub: 'Significant neurological improvements are happening. Cognitive function, memory, and emotional regulation are visibly improving. You\'re past the hardest part.',
     brain: 'CB1 receptor density has largely normalized. Memory formation in the hippocampus is improving. Working memory and attention span increasing.',
     body: 'Sleep deeply improved. Physical energy returning. Lung function (if smoked) noticeably better. Some people experience PAWS — mood waves that come and go.',
     symptoms: ['Mostly good days', 'Occasional PAWS waves', 'Memory improving', 'Better focus', 'Stronger emotions (good and hard)', 'Residual cravings in triggers'],
+    journal: [
+      'What does my "new normal" feel like? How would I describe sober-me to someone who only knew using-me?',
+      'What have I learned about myself that I couldn\'t see when I was using regularly?',
+      'If I had a hard day this week, what story did my mind tell me? Was it accurate?',
+      'What\'s one relationship that has improved, or that I want to invest more in now?',
+      'What does long-term freedom from cannabis mean to me — what does that life look like?',
+    ],
+    tips: [
+      'PAWS (Post-Acute Withdrawal Syndrome) can cause wave-like mood dips. They\'re brief and get less frequent over time.',
+      'Your memory and focus are measurably improving now. Use this: read, learn something, challenge your brain.',
+      'This is the stage where people often get complacent. Don\'t drop your supports — keep the habits that got you here.',
+      'If you haven\'t already, build a consistent morning routine. Structure is protective against relapse.',
+      'Consider what role cannabis was playing emotionally and whether you\'ve found healthier replacements.',
+    ],
   },
   {
     min: 61, max: 90,
     name: 'Consolidation',
-    color: '#2d8a8a',
-    bgColor: '#e4f4f4',
-    borderColor: '#2d8a8a',
+    color: '#2d8a8a', bgColor: '#e4f4f4', borderColor: '#2d8a8a',
     desc: 'Days 61–90: Consolidating Recovery',
     sub: 'You are a fundamentally different version of yourself than you were 90 days ago — neurologically and psychologically. Most people report feeling "like themselves again."',
     brain: 'Dopamine receptor sensitivity normalized. Prefrontal cortex fully re-engaged. Emotional regulation significantly improved.',
     body: 'Sustained energy, clear mind, regulated appetite and sleep. The gap between using-you and sober-you is now vivid.',
     symptoms: ['Minimal cravings', 'Emotional stability', 'Cognitive sharpness', 'High-functioning', 'Trigger awareness'],
+    journal: [
+      'Looking back at day 1 — what do I want to say to that version of myself?',
+      'What values am I living now that I couldn\'t while using? How does that feel?',
+      'What situations still feel risky? How have I grown in handling them?',
+      'What does self-trust mean to me, and how has mine changed?',
+      'Who has noticed a change in me, and what did they say or not say?',
+    ],
+    tips: [
+      'Acknowledge the milestone. 60–90 days is a major neurological achievement — your brain has genuinely rebuilt.',
+      'At this stage, cravings that appear are almost always tied to specific triggers. Name them, plan for them.',
+      'Your confidence will grow in waves. Let it. You\'ve earned it.',
+      'Think about what you want the next 90 days to build — recovery becomes a platform, not just an absence.',
+      'Help someone else if you can. Sharing your experience reinforces your own commitment and creates meaning.',
+    ],
   },
   {
     min: 91, max: 99999,
     name: 'Long-Term Freedom',
-    color: '#d4a843',
-    bgColor: '#fdf8e4',
-    borderColor: '#d4a843',
+    color: '#d4a843', bgColor: '#fdf8e4', borderColor: '#d4a843',
     desc: 'Day 91+: You Are Free',
     sub: 'The neuroscience is clear: you have rebuilt your brain. The cravings that remain are psychological habit-ghosts — they have no real power over a brain that has healed.',
     brain: 'Full endocannabinoid tone restored. Neuroplasticity at its peak — your brain is literally growing new connections. Cognition, creativity, and emotional depth all improved.',
     body: 'Total system restoration. Lungs, liver, hormones, immune system operating at their natural best.',
     symptoms: ['Rare cravings', 'High emotional intelligence', 'Sharp memory', 'Clear intuition', 'Authentic moods'],
+    journal: [
+      'What is my life about now that it wasn\'t before? What has opened up?',
+      'How do I handle stress, boredom, and loneliness differently today?',
+      'What would I never want to go back to, and why?',
+      'What are the pillars of my recovery — what habits, people, or practices keep me grounded?',
+      'What does the next chapter of my life look like, and how does staying free make it possible?',
+    ],
+    tips: [
+      'Long-term recovery is about building a life you don\'t want to escape from. Keep investing in that.',
+      'Complacency is the main risk at this stage. Stay honest with yourself about how you\'re really doing.',
+      'Continue the practices that got you here — sleep, exercise, connection, mindfulness.',
+      'If cravings show up after months of silence, don\'t panic. They\'re echoes. Name them and let them pass.',
+      'Your story has power. Consider sharing it — in a community, with a friend, or in writing.',
+    ],
   },
 ];
 
@@ -1196,7 +1385,33 @@ function resetDate() {
   document.getElementById('eduNote').textContent = 'Set your quit date to see personalized info';
 }
 
+function renderCBT(days) {
+  const phase = getPhase(days);
+
+  // Tips
+  document.getElementById('cbtTipsContent').innerHTML = `
+    <div class="tips-card">
+      <div class="tips-header">💡 Tips for ${phase.name}</div>
+      ${phase.tips.map((t, i) => `
+        <div class="tip-item">
+          <div class="tip-dot">${i + 1}</div>
+          <div>${t}</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+
+  // Journal prompts
+  document.getElementById('cbtJournalContent').innerHTML = `
+    <div class="journal-card">
+      <div class="journal-header">✏️ Journal Prompts — ${phase.name}</div>
+      ${phase.journal.map(p => `<div class="journal-prompt">${p}</div>`).join('')}
+    </div>
+  `;
+}
+
 function renderEducation(days) {
+  renderCBT(days);
   const phase = getPhase(days);
   const noteEl = document.getElementById('eduNote');
   noteEl.textContent = `Day ${days} — information updated to your journey`;
