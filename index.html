@@ -1,0 +1,1600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clear & Free — Cannabis Recovery</title>
+<style>
+  :root {
+    --green: #3d7a5e;
+    --green-light: #5a9e7e;
+    --green-pale: #e8f5ee;
+    --teal: #2d8a8a;
+    --teal-pale: #e4f4f4;
+    --warm: #c4783a;
+    --warm-pale: #fdf0e4;
+    --gold: #d4a843;
+    --gold-pale: #fdf8e4;
+    --lavender: #7c6b9e;
+    --lavender-pale: #f0ecf8;
+    --bg: #f7f9f7;
+    --card: #ffffff;
+    --text: #2c3e35;
+    --muted: #6b8077;
+    --border: #d8e6de;
+    --radius: 14px;
+    --shadow: 0 2px 16px rgba(61,122,94,0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding-bottom: 80px;
+  }
+
+  /* Header */
+  .app-header {
+    background: linear-gradient(135deg, var(--green) 0%, var(--teal) 100%);
+    color: white;
+    padding: 24px 20px 20px;
+    text-align: center;
+  }
+  .app-header h1 { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.5px; }
+  .app-header p { font-size: 0.85rem; opacity: 0.85; margin-top: 2px; }
+
+  /* Counter */
+  .counter-card {
+    background: var(--card);
+    margin: 16px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 24px;
+    text-align: center;
+  }
+  .counter-setup { display: none; }
+  .counter-setup.visible { display: block; }
+  .counter-display { display: none; }
+  .counter-display.visible { display: block; }
+
+  .counter-label { font-size: 0.8rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .counter-big { font-size: 4rem; font-weight: 800; color: var(--green); line-height: 1; }
+  .counter-unit { font-size: 1rem; color: var(--muted); margin-top: 2px; }
+  .counter-sub { display: flex; justify-content: center; gap: 24px; margin-top: 12px; }
+  .counter-sub-item { text-align: center; }
+  .counter-sub-item .num { font-size: 1.4rem; font-weight: 700; color: var(--teal); }
+  .counter-sub-item .lbl { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+  .date-input-group { display: flex; flex-direction: column; gap: 10px; align-items: center; }
+  .date-input-group label { font-size: 0.95rem; color: var(--muted); }
+  .date-input-group input[type="datetime-local"] {
+    padding: 10px 16px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    font-size: 1rem;
+    color: var(--text);
+    background: var(--bg);
+    width: 100%;
+    max-width: 280px;
+  }
+  .btn-primary {
+    background: var(--green);
+    color: white;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-primary:hover { background: var(--green-light); }
+  .btn-small {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  .btn-small:hover { border-color: var(--green); color: var(--green); }
+
+  .milestones { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 16px; }
+  .milestone {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: var(--border);
+    color: var(--muted);
+    border: 2px solid transparent;
+  }
+  .milestone.reached {
+    background: var(--gold-pale);
+    color: var(--warm);
+    border-color: var(--gold);
+  }
+
+  /* Nav */
+  .nav-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    border-top: 1px solid var(--border);
+    display: flex;
+    z-index: 100;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
+  }
+  .nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 4px 6px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: var(--muted);
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    transition: color 0.2s;
+    gap: 3px;
+  }
+  .nav-item.active { color: var(--green); }
+  .nav-item svg { width: 22px; height: 22px; }
+  .nav-item span { font-size: 0.6rem; }
+
+  /* Sections */
+  .section { display: none; padding: 0 16px 16px; }
+  .section.active { display: block; }
+
+  .section-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text);
+    margin: 20px 0 12px;
+    padding-left: 4px;
+  }
+
+  /* Cards */
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 20px;
+    margin-bottom: 12px;
+  }
+  .card-title {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-body { font-size: 0.9rem; line-height: 1.65; color: #3a4e43; }
+
+  .tag {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .tag-green { background: var(--green-pale); color: var(--green); }
+  .tag-teal { background: var(--teal-pale); color: var(--teal); }
+  .tag-warm { background: var(--warm-pale); color: var(--warm); }
+  .tag-gold { background: var(--gold-pale); color: var(--warm); }
+  .tag-lavender { background: var(--lavender-pale); color: var(--lavender); }
+
+  /* Phase banner */
+  .phase-banner {
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 12px;
+    border-left: 4px solid var(--green);
+    background: var(--green-pale);
+  }
+  .phase-banner .phase-name { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--green); }
+  .phase-banner .phase-desc { font-size: 0.95rem; font-weight: 600; color: var(--text); margin-top: 2px; }
+  .phase-banner .phase-sub { font-size: 0.85rem; color: var(--muted); margin-top: 4px; line-height: 1.5; }
+
+  /* Symptom chips */
+  .chip-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .chip {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    background: #f0ebe6;
+    color: #7a5e4a;
+    font-weight: 500;
+  }
+
+  /* Accordion */
+  .accordion-item {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+  .accordion-header {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 16px 20px;
+    text-align: left;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.15s;
+  }
+  .accordion-header:hover { background: var(--bg); }
+  .accordion-header .arrow { transition: transform 0.2s; font-size: 0.8rem; color: var(--muted); }
+  .accordion-header.open .arrow { transform: rotate(180deg); }
+  .accordion-body {
+    display: none;
+    padding: 0 20px 18px;
+    font-size: 0.88rem;
+    line-height: 1.7;
+    color: #3a4e43;
+  }
+  .accordion-body.open { display: block; }
+
+  /* Supplement table */
+  .supp-phase-header {
+    background: var(--green);
+    color: white;
+    padding: 10px 16px;
+    border-radius: 10px 10px 0 0;
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-top: 16px;
+  }
+  .supp-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-top: none;
+    padding: 14px 16px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .supp-item:last-child { border-radius: 0 0 10px 10px; }
+  .supp-icon { font-size: 1.4rem; flex-shrink: 0; }
+  .supp-name { font-weight: 700; font-size: 0.9rem; color: var(--text); }
+  .supp-dose { font-size: 0.78rem; color: var(--teal); font-weight: 600; }
+  .supp-why { font-size: 0.8rem; color: var(--muted); margin-top: 2px; line-height: 1.5; }
+
+  /* EFT */
+  .tapping-point {
+    background: var(--card);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    padding: 16px;
+    margin-bottom: 10px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    border-left: 4px solid var(--lavender);
+  }
+  .tapping-num {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--lavender);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+  }
+  .tapping-name { font-weight: 700; font-size: 0.9rem; color: var(--text); }
+  .tapping-location { font-size: 0.78rem; color: var(--muted); }
+  .tapping-phrase { font-size: 0.85rem; color: var(--lavender); font-style: italic; margin-top: 5px; line-height: 1.5; }
+
+  /* CBT */
+  .cbt-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .cbt-header {
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .cbt-icon { font-size: 1.4rem; }
+  .cbt-title { font-weight: 700; font-size: 0.95rem; }
+  .cbt-body { padding: 14px 18px; font-size: 0.87rem; line-height: 1.7; color: #3a4e43; }
+  .cbt-steps { padding-left: 16px; }
+  .cbt-steps li { margin-bottom: 6px; }
+
+  /* Craving strategy */
+  .strategy-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 18px;
+    margin-bottom: 10px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .strategy-emoji { font-size: 2rem; }
+  .strategy-name { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; }
+  .strategy-desc { font-size: 0.85rem; color: #4a5e53; line-height: 1.6; }
+  .strategy-steps { margin-top: 8px; padding-left: 14px; font-size: 0.83rem; color: var(--muted); }
+  .strategy-steps li { margin-bottom: 3px; }
+
+  /* Thought record */
+  .thought-record {
+    background: var(--lavender-pale);
+    border-radius: 10px;
+    padding: 14px;
+    margin-top: 10px;
+  }
+  .thought-record label { font-size: 0.78rem; font-weight: 700; color: var(--lavender); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px; margin-top: 10px; }
+  .thought-record label:first-child { margin-top: 0; }
+  .thought-record textarea, .thought-record input {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #c8b8e8;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    background: white;
+    color: var(--text);
+    resize: vertical;
+    font-family: inherit;
+  }
+  .thought-record textarea { min-height: 56px; }
+
+  .disclaimer {
+    background: #fff8e8;
+    border: 1px solid #f0d080;
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 0.78rem;
+    color: #7a6020;
+    margin-bottom: 16px;
+    line-height: 1.6;
+  }
+
+  /* Progress bar */
+  .progress-row { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+  .progress-bar-bg { flex: 1; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--green), var(--teal)); border-radius: 3px; transition: width 0.6s ease; }
+  .progress-pct { font-size: 0.75rem; font-weight: 700; color: var(--green); width: 35px; text-align: right; }
+
+  /* Day tabs in education */
+  .edu-note { font-size: 0.85rem; color: var(--muted); margin: -4px 0 12px; padding-left: 4px; font-style: italic; }
+
+  .info-box {
+    background: var(--teal-pale);
+    border-left: 3px solid var(--teal);
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 0.83rem;
+    color: #2a5a5a;
+    line-height: 1.6;
+    margin-top: 10px;
+  }
+
+  ul.clean-list { padding-left: 18px; }
+  ul.clean-list li { margin-bottom: 5px; font-size: 0.87rem; line-height: 1.6; }
+
+  /* Log */
+  .log-form {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .log-form h3 { font-size: 1rem; font-weight: 700; margin-bottom: 14px; }
+  .form-field { margin-bottom: 12px; }
+  .form-field label { display: block; font-size: 0.78rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; }
+  .form-field input, .form-field select, .form-field textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-size: 0.9rem;
+    color: var(--text);
+    background: var(--bg);
+    font-family: inherit;
+    transition: border-color 0.2s;
+  }
+  .form-field input:focus, .form-field select:focus, .form-field textarea:focus {
+    outline: none;
+    border-color: var(--green);
+  }
+  .form-field textarea { min-height: 70px; resize: vertical; }
+  .intensity-row { display: flex; gap: 6px; flex-wrap: wrap; }
+  .intensity-btn {
+    width: 38px; height: 38px;
+    border-radius: 8px;
+    border: 2px solid var(--border);
+    background: white;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  .intensity-btn:hover { border-color: var(--green); color: var(--green); }
+  .intensity-btn.selected { background: var(--green); color: white; border-color: var(--green); }
+  .intensity-btn.high.selected { background: #c0392b; border-color: #c0392b; }
+  .intensity-btn.med.selected { background: var(--warm); border-color: var(--warm); }
+
+  .log-entries { }
+  .log-entry {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 16px 18px;
+    margin-bottom: 10px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    position: relative;
+  }
+  .log-intensity-badge {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+  .log-entry-meta { font-size: 0.75rem; color: var(--muted); margin-bottom: 4px; }
+  .log-entry-reason { font-size: 0.88rem; color: var(--text); line-height: 1.5; }
+  .log-delete {
+    position: absolute;
+    top: 12px; right: 12px;
+    background: none;
+    border: none;
+    color: #ccc;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 6px;
+  }
+  .log-delete:hover { background: #fee; color: #c0392b; }
+  .log-empty {
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.88rem;
+    padding: 30px 20px;
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+  }
+  .log-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .log-stat {
+    background: var(--card);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    padding: 14px 10px;
+    text-align: center;
+  }
+  .log-stat .stat-num { font-size: 1.6rem; font-weight: 800; color: var(--green); }
+  .log-stat .stat-lbl { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+  .reasons-insight {
+    background: var(--teal-pale);
+    border-left: 3px solid var(--teal);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 0.82rem;
+    color: #2a5a5a;
+    margin-bottom: 14px;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 400px) {
+    .counter-big { font-size: 3.2rem; }
+    .counter-sub { gap: 16px; }
+    .intensity-btn { width: 32px; height: 32px; font-size: 0.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="app-header">
+  <h1>Clear &amp; Free</h1>
+  <p>Your cannabis recovery companion</p>
+</div>
+
+<!-- Counter Card -->
+<div class="counter-card">
+  <!-- Setup state -->
+  <div class="counter-setup visible" id="counterSetup">
+    <div class="counter-label">Set your quit date &amp; time</div>
+    <div class="date-input-group">
+      <label>When did you last use?</label>
+      <input type="datetime-local" id="quitDateInput">
+      <button class="btn-primary" onclick="setQuitDate()">Start My Journey</button>
+    </div>
+  </div>
+
+  <!-- Display state -->
+  <div class="counter-display" id="counterDisplay">
+    <div class="counter-label">Days Clean</div>
+    <div class="counter-big" id="dayCount">0</div>
+    <div class="counter-unit" id="dayLabel">days</div>
+    <div class="counter-sub">
+      <div class="counter-sub-item">
+        <div class="num" id="hourCount">0</div>
+        <div class="lbl">hours</div>
+      </div>
+      <div class="counter-sub-item">
+        <div class="num" id="minCount">0</div>
+        <div class="lbl">minutes</div>
+      </div>
+      <div class="counter-sub-item">
+        <div class="num" id="secCount">0</div>
+        <div class="lbl">seconds</div>
+      </div>
+    </div>
+    <div class="milestones" id="milestones"></div>
+    <button class="btn-small" onclick="resetDate()">Change date</button>
+  </div>
+</div>
+
+<!-- Nav -->
+<nav class="nav-bar">
+  <button class="nav-item active" onclick="showSection('today', this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    <span>Today</span>
+  </button>
+  <button class="nav-item" onclick="showSection('supplements', this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+    <span>Supplements</span>
+  </button>
+  <button class="nav-item" onclick="showSection('cravings', this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    <span>Cravings</span>
+  </button>
+  <button class="nav-item" onclick="showSection('eft', this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+    <span>EFT</span>
+  </button>
+  <button class="nav-item" onclick="showSection('cbt', this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    <span>CBT</span>
+  </button>
+  <button class="nav-item" onclick="showSection('log', this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+    <span>Log</span>
+  </button>
+</nav>
+
+<!-- SECTION: Today -->
+<div class="section active" id="section-today">
+  <div class="section-title">What's Happening Today</div>
+  <p class="edu-note" id="eduNote">Set your quit date to see personalized info</p>
+
+  <div id="phaseContent">
+    <!-- Injected by JS -->
+  </div>
+
+  <!-- Static brain/body overview -->
+  <div class="card" style="margin-top:4px;">
+    <div class="card-title">
+      <span>🧠</span> How Cannabis Affects Your Brain
+    </div>
+    <div class="card-body">
+      THC mimics anandamide — your brain's natural "bliss" molecule — and floods CB1 receptors in the limbic system, prefrontal cortex, and hippocampus. Over time, the brain <strong>downregulates</strong> these receptors (makes fewer of them) to compensate. When you stop, your brain needs time to rebuild its natural endocannabinoid tone.
+      <div class="info-box" style="margin-top:10px;">The good news: CB1 receptors begin recovering within <strong>2 days</strong> and show significant normalization by <strong>4 weeks</strong>. Full recovery can take 3–6 months depending on use history.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span>📅</span> Full Recovery Timeline</div>
+    <div class="card-body">
+      <div style="margin-bottom: 10px;">
+        <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:3px;"><span>Sleep normalization</span><span style="color:var(--green);font-weight:600;">2–4 weeks</span></div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:25%"></div></div>
+      </div>
+      <div style="margin-bottom: 10px;">
+        <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:3px;"><span>Appetite regulation</span><span style="color:var(--green);font-weight:600;">1–3 weeks</span></div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:20%"></div></div>
+      </div>
+      <div style="margin-bottom: 10px;">
+        <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:3px;"><span>Mood stabilization</span><span style="color:var(--green);font-weight:600;">2–6 weeks</span></div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:40%"></div></div>
+      </div>
+      <div style="margin-bottom: 10px;">
+        <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:3px;"><span>Cognitive clarity</span><span style="color:var(--green);font-weight:600;">1–3 months</span></div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:60%"></div></div>
+      </div>
+      <div style="margin-bottom: 0;">
+        <div style="display:flex;justify-content:space-between;font-size:0.8rem;margin-bottom:3px;"><span>Full receptor recovery</span><span style="color:var(--green);font-weight:600;">3–6 months</span></div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:100%"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION: Supplements -->
+<div class="section" id="section-supplements">
+  <div class="section-title">Supplement Protocol</div>
+  <div class="disclaimer">
+    <strong>Heads up:</strong> These are general wellness supplements used in recovery contexts. Always consult your doctor before starting, especially if you take medications or have health conditions.
+  </div>
+
+  <div class="supp-phase-header" style="background:var(--warm);">Before You Quit — Preparation (1 Week Prior)</div>
+  <div class="supp-item">
+    <div class="supp-icon">🌿</div>
+    <div>
+      <div class="supp-name">NAC (N-Acetyl Cysteine)</div>
+      <div class="supp-dose">600mg twice daily</div>
+      <div class="supp-why">Regulates glutamate — the brain chemical that drives compulsive cravings. One of the most evidence-backed supplements for addiction recovery.</div>
+    </div>
+  </div>
+  <div class="supp-item">
+    <div class="supp-icon">🐟</div>
+    <div>
+      <div class="supp-name">Omega-3 Fish Oil</div>
+      <div class="supp-dose">2,000–3,000mg EPA+DHA daily</div>
+      <div class="supp-why">Supports brain cell membrane health, reduces inflammation, and improves mood. The brain is 60% fat — feed it well.</div>
+    </div>
+  </div>
+  <div class="supp-item">
+    <div class="supp-icon">🪨</div>
+    <div>
+      <div class="supp-name">Magnesium Glycinate</div>
+      <div class="supp-dose">300–400mg at night</div>
+      <div class="supp-why">Calms the nervous system, reduces anxiety, and dramatically improves sleep quality. The glycinate form is gentlest on digestion.</div>
+    </div>
+  </div>
+  <div class="supp-item">
+    <div class="supp-icon">☀️</div>
+    <div>
+      <div class="supp-name">Vitamin D3 + K2</div>
+      <div class="supp-dose">2,000–5,000 IU D3 + 100mcg K2</div>
+      <div class="supp-why">Supports mood regulation, immune health, and cognitive function. Most people are deficient, especially those who smoke.</div>
+    </div>
+  </div>
+  <div class="supp-item" style="border-radius:0 0 10px 10px;">
+    <div class="supp-icon">⚡</div>
+    <div>
+      <div class="supp-name">B-Complex</div>
+      <div class="supp-dose">1 tablet daily with food</div>
+      <div class="supp-why">B vitamins are essential for neurotransmitter production (serotonin, dopamine). Smoking depletes B12 and folate.</div>
+    </div>
+  </div>
+
+  <div class="supp-phase-header" style="background:var(--teal); margin-top:20px;">During Withdrawal — Acute Phase (Days 1–30)</div>
+  <div class="supp-item">
+    <div class="supp-icon">☕</div>
+    <div>
+      <div class="supp-name">L-Theanine</div>
+      <div class="supp-dose">200mg as needed (up to 2x daily)</div>
+      <div class="supp-why">Produces calm alertness without sedation. Works synergistically with the nervous system to reduce anxiety and agitation without drowsiness.</div>
+    </div>
+  </div>
+  <div class="supp-item">
+    <div class="supp-icon">🌙</div>
+    <div>
+      <div class="supp-name">Melatonin</div>
+      <div class="supp-dose">0.5–3mg, 30 min before bed</div>
+      <div class="supp-why">Cannabis suppresses REM sleep. Without it, vivid dreams and insomnia are common. Start low (0.5mg) — more isn't better.</div>
+    </div>
+  </div>
+  <div class="supp-item">
+    <div class="supp-icon">🌱</div>
+    <div>
+      <div class="supp-name">Ashwagandha (KSM-66)</div>
+      <div class="supp-dose">300–600mg daily</div>
+      <div class="supp-why">Adaptogen that lowers cortisol, reduces anxiety, and stabilizes mood. Particularly helpful during the stress of early withdrawal.</div>
+    </div>
+  </div>
+  <div class="supp-item">
+    <div class="supp-icon">🦪</div>
+    <div>
+      <div class="supp-name">Zinc</div>
+      <div class="supp-dose">15–30mg with food</div>
+      <div class="supp-why">Supports appetite recovery and immune function. Zinc is depleted by stress and is critical for taste/smell (which dulls with heavy use).</div>
+    </div>
+  </div>
+  <div class="supp-item" style="border-radius:0 0 10px 10px;">
+    <div class="supp-icon">💊</div>
+    <div>
+      <div class="supp-name">Continue all "Before" supplements</div>
+      <div class="supp-dose">NAC, Omega-3, Magnesium, D3, B-Complex</div>
+      <div class="supp-why">These form the foundation of your recovery stack. Don't skip them during withdrawal — they matter most now.</div>
+    </div>
+  </div>
+
+  <div class="supp-phase-header" style="background:var(--green); margin-top:20px;">After — Long-Term Recovery (30+ Days)</div>
+  <div class="supp-item">
+    <div class="supp-icon">🦁</div>
+    <div>
+      <div class="supp-name">Lion's Mane Mushroom</div>
+      <div class="supp-dose">500–1,000mg daily</div>
+      <div class="supp-why">Stimulates NGF (nerve growth factor), promoting neuroplasticity and new neural connections. Supports memory, focus, and mood long-term.</div>
+    </div>
+  </div>
+  <div class="supp-item">
+    <div class="supp-icon">🌺</div>
+    <div>
+      <div class="supp-name">Rhodiola Rosea</div>
+      <div class="supp-dose">200–400mg in the morning</div>
+      <div class="supp-why">Adaptogen that combats fatigue and brain fog while improving energy and stress resilience. Take in the morning — can be stimulating.</div>
+    </div>
+  </div>
+  <div class="supp-item" style="border-radius:0 0 10px 10px;">
+    <div class="supp-icon">📉</div>
+    <div>
+      <div class="supp-name">Taper Sleep Aids</div>
+      <div class="supp-dose">Reduce melatonin gradually</div>
+      <div class="supp-why">As natural sleep patterns restore, you'll need less sleep support. Taper melatonin from 3mg → 1mg → 0.5mg over weeks 4–8.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION: Cravings -->
+<div class="section" id="section-cravings">
+  <div class="section-title">Craving Strategies</div>
+
+  <div class="card" style="background:var(--warm-pale); border-left: 4px solid var(--warm);">
+    <div class="card-title" style="color:var(--warm);">Remember: Cravings peak in 15–20 minutes, then pass. You just have to outlast the wave.</div>
+  </div>
+
+  <div class="strategy-card">
+    <div class="strategy-emoji">🌊</div>
+    <div>
+      <div class="strategy-name">Urge Surfing</div>
+      <div class="strategy-desc">Observe your craving like a surfer watching a wave — without riding it. Cravings are not commands. They're sensations that rise and fall.</div>
+      <ol class="strategy-steps">
+        <li>Close your eyes and notice where you feel the craving in your body</li>
+        <li>Describe it — tight chest? restless hands? a pull in your gut?</li>
+        <li>Breathe into it and watch it shift, change, or soften</li>
+        <li>Remind yourself: "This is temporary. It will pass."</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="strategy-card">
+    <div class="strategy-emoji">🖐️</div>
+    <div>
+      <div class="strategy-name">5-4-3-2-1 Grounding</div>
+      <div class="strategy-desc">Pulls you out of the craving spiral and back into the present moment using your senses.</div>
+      <ol class="strategy-steps">
+        <li>Name <strong>5 things</strong> you can see</li>
+        <li>Name <strong>4 things</strong> you can touch</li>
+        <li>Name <strong>3 things</strong> you can hear</li>
+        <li>Name <strong>2 things</strong> you can smell</li>
+        <li>Name <strong>1 thing</strong> you can taste</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="strategy-card">
+    <div class="strategy-emoji">🚨</div>
+    <div>
+      <div class="strategy-name">HALT Check</div>
+      <div class="strategy-desc">Many cravings are disguised basic needs. Check in before assuming you "need" to use.</div>
+      <ol class="strategy-steps">
+        <li><strong>H</strong> — Am I Hungry? (eat something)</li>
+        <li><strong>A</strong> — Am I Angry or Anxious? (name the feeling)</li>
+        <li><strong>L</strong> — Am I Lonely? (reach out to someone)</li>
+        <li><strong>T</strong> — Am I Tired? (rest, don't use)</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="strategy-card">
+    <div class="strategy-emoji">🔲</div>
+    <div>
+      <div class="strategy-name">Box Breathing</div>
+      <div class="strategy-desc">Activates the parasympathetic nervous system, reducing anxiety and craving intensity within minutes.</div>
+      <ol class="strategy-steps">
+        <li>Inhale slowly for <strong>4 counts</strong></li>
+        <li>Hold for <strong>4 counts</strong></li>
+        <li>Exhale slowly for <strong>4 counts</strong></li>
+        <li>Hold for <strong>4 counts</strong></li>
+        <li>Repeat 4–6 cycles</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="strategy-card">
+    <div class="strategy-emoji">🏃</div>
+    <div>
+      <div class="strategy-name">Move Your Body</div>
+      <div class="strategy-desc">Physical movement burns off restless energy and releases endorphins that dampen cravings. Even 5 minutes works.</div>
+      <ol class="strategy-steps">
+        <li>Walk briskly around the block</li>
+        <li>Do 20 jumping jacks or push-ups</li>
+        <li>Stretch for 5 minutes</li>
+        <li>Dance to one song</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="strategy-card">
+    <div class="strategy-emoji">🌡️</div>
+    <div>
+      <div class="strategy-name">Cold Water Reset</div>
+      <div class="strategy-desc">Triggers the dive reflex, rapidly slowing heart rate and clearing the mind. Fast and powerful.</div>
+      <ol class="strategy-steps">
+        <li>Splash cold water on your face</li>
+        <li>Or hold ice cubes for 30 seconds</li>
+        <li>Or step outside into cold air</li>
+        <li>The shock interrupts the craving loop</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="strategy-card">
+    <div class="strategy-emoji">⏱️</div>
+    <div>
+      <div class="strategy-name">Delay 20 Minutes</div>
+      <div class="strategy-desc">Commit to doing nothing for just 20 minutes. Don't say never — just not right now. Most cravings collapse in this window.</div>
+      <ol class="strategy-steps">
+        <li>Set a 20-minute timer</li>
+        <li>Choose a distraction: show, game, call</li>
+        <li>When timer goes off, reassess</li>
+        <li>Most of the time, the craving will have moved on</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="strategy-card">
+    <div class="strategy-emoji">📞</div>
+    <div>
+      <div class="strategy-name">Reach Out</div>
+      <div class="strategy-desc">Isolation fuels cravings. Connection dissolves them. You don't have to explain — just be with someone.</div>
+      <ol class="strategy-steps">
+        <li>Text or call someone you trust</li>
+        <li>Post in a recovery community or Reddit</li>
+        <li>Tell them how you're feeling right now</li>
+        <li>Ask them to stay on the line for a bit</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="strategy-card">
+    <div class="strategy-emoji">✏️</div>
+    <div>
+      <div class="strategy-name">Write It Out</div>
+      <div class="strategy-desc">Externalizing the craving by writing it down interrupts automatic thinking and reduces its power.</div>
+      <ol class="strategy-steps">
+        <li>Grab any paper or open notes</li>
+        <li>Write: "Right now I'm feeling ____ because ____"</li>
+        <li>Write what you're afraid will happen if you don't use</li>
+        <li>Write one thing you're proud of since quitting</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION: EFT -->
+<div class="section" id="section-eft">
+  <div class="section-title">EFT Tapping</div>
+
+  <div class="card" style="background:var(--lavender-pale); border-left:4px solid var(--lavender);">
+    <div class="card-title" style="color:var(--lavender);">What is EFT?</div>
+    <div class="card-body">
+      Emotional Freedom Technique (EFT) combines gentle tapping on acupressure points with spoken affirmations. Research shows it lowers cortisol, reduces cravings, and calms the amygdala — your brain's alarm system. It can feel strange at first; that's okay. It works.
+    </div>
+  </div>
+
+  <div class="section-title" style="margin-top: 8px;">Step 1 — Setup Statement</div>
+  <div class="card">
+    <div class="card-body">
+      Tap the <strong>Karate Chop point</strong> (outside edge of hand) while saying each phrase aloud <strong>3 times</strong>:
+      <div style="margin-top:12px; background:var(--lavender-pale); border-radius:10px; padding:14px;">
+        <div style="font-style:italic; color:var(--lavender); font-size:0.9rem; line-height:1.8;">
+          "Even though I have this craving right now, I deeply and completely accept myself."<br><br>
+          "Even though my body is craving relief, I choose to offer it something better."<br><br>
+          "Even though this feels uncomfortable, I am safe, I am healing, and I am enough."
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title" style="margin-top:8px;">Step 2 — Tapping Sequence</div>
+  <p style="font-size:0.83rem; color:var(--muted); margin: -8px 16px 12px; font-style:italic;">Tap each point 5–7 times while saying the phrase. Repeat the full sequence 2–3 times.</p>
+
+  <div class="tapping-point">
+    <div class="tapping-num">1</div>
+    <div>
+      <div class="tapping-name">Top of Head</div>
+      <div class="tapping-location">Center crown of the skull</div>
+      <div class="tapping-phrase">"This craving in my body..." / "This urge to escape..."</div>
+    </div>
+  </div>
+
+  <div class="tapping-point">
+    <div class="tapping-num">2</div>
+    <div>
+      <div class="tapping-name">Eyebrow Point</div>
+      <div class="tapping-location">Inner edge of the eyebrow, above the nose</div>
+      <div class="tapping-phrase">"I'm tired of feeling this way..." / "This anxious feeling..."</div>
+    </div>
+  </div>
+
+  <div class="tapping-point">
+    <div class="tapping-num">3</div>
+    <div>
+      <div class="tapping-name">Side of Eye</div>
+      <div class="tapping-location">Outer corner of the eye, on the bone</div>
+      <div class="tapping-phrase">"I want relief right now..." / "This restlessness..."</div>
+    </div>
+  </div>
+
+  <div class="tapping-point">
+    <div class="tapping-num">4</div>
+    <div>
+      <div class="tapping-name">Under Eye</div>
+      <div class="tapping-location">Under the pupil, on the cheekbone</div>
+      <div class="tapping-phrase">"My body remembers the feeling..." / "This pull inside me..."</div>
+    </div>
+  </div>
+
+  <div class="tapping-point">
+    <div class="tapping-num">5</div>
+    <div>
+      <div class="tapping-name">Under Nose</div>
+      <div class="tapping-location">Between nose and upper lip</div>
+      <div class="tapping-phrase">"Even this craving..." / "This discomfort I'm in..."</div>
+    </div>
+  </div>
+
+  <div class="tapping-point">
+    <div class="tapping-num">6</div>
+    <div>
+      <div class="tapping-name">Chin Point</div>
+      <div class="tapping-location">In the crease between lower lip and chin</div>
+      <div class="tapping-phrase">"I'm doing the hard thing..." / "I'm choosing differently..."</div>
+    </div>
+  </div>
+
+  <div class="tapping-point">
+    <div class="tapping-num">7</div>
+    <div>
+      <div class="tapping-name">Collarbone Point</div>
+      <div class="tapping-location">Just below and inward from the collarbone notch</div>
+      <div class="tapping-phrase">"My body is healing..." / "I'm safe without it..."</div>
+    </div>
+  </div>
+
+  <div class="tapping-point">
+    <div class="tapping-num">8</div>
+    <div>
+      <div class="tapping-name">Under Arm</div>
+      <div class="tapping-location">About 4 inches below the armpit</div>
+      <div class="tapping-phrase">"I release what no longer serves me..." / "I'm stronger than this urge..."</div>
+    </div>
+  </div>
+
+  <div class="tapping-point">
+    <div class="tapping-num">9</div>
+    <div>
+      <div class="tapping-name">Wrist Points</div>
+      <div class="tapping-location">Inner wrists tapped together</div>
+      <div class="tapping-phrase">"I love and accept myself..." / "Peace. Clarity. Strength."</div>
+    </div>
+  </div>
+
+  <div class="section-title" style="margin-top:8px;">Step 3 — Closing</div>
+  <div class="card" style="background:var(--lavender-pale);">
+    <div class="card-body">
+      Take a <strong>deep breath in</strong> and release slowly. Rate your craving intensity from 0–10. If still above 4, repeat the sequence with fresh phrases. End with:
+      <div style="font-style:italic; color:var(--lavender); margin-top:10px; font-size:0.9rem; line-height:1.9;">
+        "I am healing. I choose myself. My brain is getting clearer every day."
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION: Log -->
+<div class="section" id="section-log">
+  <div class="section-title">Usage Log</div>
+
+  <div class="log-stats">
+    <div class="log-stat">
+      <div class="stat-num" id="logTotal">0</div>
+      <div class="stat-lbl">Entries</div>
+    </div>
+    <div class="log-stat">
+      <div class="stat-num" id="logAvgInt">—</div>
+      <div class="stat-lbl">Avg Intensity</div>
+    </div>
+    <div class="log-stat">
+      <div class="stat-num" id="logTopReason">—</div>
+      <div class="stat-lbl">Top Trigger</div>
+    </div>
+  </div>
+
+  <div class="reasons-insight" id="reasonsInsight" style="display:none;"></div>
+
+  <div class="log-form">
+    <h3>Add Entry</h3>
+    <div class="form-field">
+      <label>Date &amp; Time</label>
+      <input type="datetime-local" id="logDateTime">
+    </div>
+    <div class="form-field">
+      <label>Craving Intensity (1–10)</label>
+      <div class="intensity-row" id="intensityBtns">
+        <!-- rendered by JS -->
+      </div>
+    </div>
+    <div class="form-field">
+      <label>Trigger / Reason</label>
+      <select id="logTrigger">
+        <option value="">— Select a trigger —</option>
+        <option>Stress / anxiety</option>
+        <option>Boredom</option>
+        <option>Social pressure</option>
+        <option>Loneliness</option>
+        <option>Habit / routine</option>
+        <option>Celebration / reward</option>
+        <option>Anger / frustration</option>
+        <option>Sadness / depression</option>
+        <option>Sleep issues</option>
+        <option>Physical pain</option>
+        <option>Other</option>
+      </select>
+    </div>
+    <div class="form-field">
+      <label>Notes (optional)</label>
+      <textarea id="logNotes" placeholder="What was going on? How did you feel before, during, after?"></textarea>
+    </div>
+    <button class="btn-primary" style="width:100%;" onclick="saveLogEntry()">Save Entry</button>
+  </div>
+
+  <div id="logEntriesContainer"></div>
+</div>
+
+<!-- SECTION: CBT -->
+<div class="section" id="section-cbt">
+  <div class="section-title">CBT Strategies</div>
+
+  <div class="cbt-card">
+    <div class="cbt-header">
+      <div class="cbt-icon">🔍</div>
+      <div>
+        <div class="cbt-title">Identify Your Triggers (PPTE)</div>
+        <span class="tag tag-teal">Foundation</span>
+      </div>
+    </div>
+    <div class="cbt-body">
+      Triggers fall into four categories. Once you know yours, you can plan around them.
+      <ul class="cbt-steps" style="margin-top:10px;">
+        <li><strong>People</strong> — Who do you use with? Who stresses you out?</li>
+        <li><strong>Places</strong> — Where do you typically use? Where do you go after?</li>
+        <li><strong>Things</strong> — What objects, smells, or times of day cue the urge?</li>
+        <li><strong>Emotions</strong> — Boredom? Anxiety? Loneliness? Celebration?</li>
+      </ul>
+      <div class="info-box">Write your top 3 triggers below. Having them written makes the pattern visible — and visible patterns can be interrupted.</div>
+    </div>
+  </div>
+
+  <div class="cbt-card">
+    <div class="cbt-header">
+      <div class="cbt-icon">📝</div>
+      <div>
+        <div class="cbt-title">Thought Record (ABC Model)</div>
+        <span class="tag tag-lavender">In-the-moment tool</span>
+      </div>
+    </div>
+    <div class="cbt-body">
+      When a craving hits, use this to slow down automatic thinking.
+      <div class="thought-record">
+        <label>A — Activating Event (What happened?)</label>
+        <textarea placeholder="e.g. I got home from a stressful day at work..."></textarea>
+        <label>B — Belief / Automatic Thought</label>
+        <textarea placeholder="e.g. I need to unwind. I deserve this. Just once won't hurt."></textarea>
+        <label>C — Consequence (How did/would that feel?)</label>
+        <textarea placeholder="e.g. Guilt, shame, back to day 0, or... relief, pride, growth."></textarea>
+        <label>D — Dispute the Thought</label>
+        <textarea placeholder="e.g. Stress is real but using won't solve it. I've gotten through this before. What else could I do right now?"></textarea>
+        <label>E — Effective New Response</label>
+        <textarea placeholder="e.g. I'll go for a walk, eat dinner, and call a friend. I don't need to escape — I need support."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="cbt-card">
+    <div class="cbt-header">
+      <div class="cbt-icon">🧩</div>
+      <div>
+        <div class="cbt-title">Challenge Cognitive Distortions</div>
+        <span class="tag tag-warm">Thought patterns</span>
+      </div>
+    </div>
+    <div class="cbt-body">
+      Cannabis use is often maintained by predictable thinking traps. Learn to spot them:
+      <ul class="cbt-steps" style="margin-top:10px;">
+        <li><strong>"Just this once"</strong> — Is once ever really once? What does the data say?</li>
+        <li><strong>"I can't handle this sober"</strong> — Have you ever handled hard things sober? You likely have.</li>
+        <li><strong>"It's not like it's a real drug"</strong> — Addiction is defined by compulsion and consequences, not the substance.</li>
+        <li><strong>"I need it to sleep/focus/relax"</strong> — Feels true, but these are withdrawal symptoms, not proof of need.</li>
+        <li><strong>"I've already ruined it"</strong> — A slip isn't failure. It's information. Restart doesn't erase progress.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="cbt-card">
+    <div class="cbt-header">
+      <div class="cbt-icon">⚖️</div>
+      <div>
+        <div class="cbt-title">Cost-Benefit Analysis</div>
+        <span class="tag tag-green">Clarity tool</span>
+      </div>
+    </div>
+    <div class="cbt-body">
+      When you're tempted to use, run this honest accounting in your head (or on paper):
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px;">
+        <div style="background:#fff0ee; border-radius:8px; padding:10px; font-size:0.82rem;">
+          <div style="font-weight:700; color:#c0392b; margin-bottom:5px;">Cost of using</div>
+          <div style="color:#7a4a45; line-height:1.7;">Reset counter<br>Guilt / shame<br>Brain fog tomorrow<br>Sleep disruption<br>Hiding it<br>Losing your momentum</div>
+        </div>
+        <div style="background:var(--green-pale); border-radius:8px; padding:10px; font-size:0.82rem;">
+          <div style="font-weight:700; color:var(--green); margin-bottom:5px;">Benefit of not using</div>
+          <div style="color:#2a5a3a; line-height:1.7;">Keep your streak<br>Self-respect<br>Clearer mind<br>Better sleep tonight<br>Nothing to hide<br>Pride in yourself</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cbt-card">
+    <div class="cbt-header">
+      <div class="cbt-icon">🌱</div>
+      <div>
+        <div class="cbt-title">Values Clarification</div>
+        <span class="tag tag-green">Big picture</span>
+      </div>
+    </div>
+    <div class="cbt-body">
+      When cravings make the short-term feel overwhelming, reconnect with the long game.
+      <ul class="cbt-steps" style="margin-top:10px;">
+        <li>What does freedom from cannabis <strong>give you back</strong>? (energy, money, clarity, presence)</li>
+        <li>What kind of person do you want to be — and does using align with that?</li>
+        <li>Who is watching you succeed? (even just future-you)</li>
+        <li>Write your "Why I'm quitting" statement and keep it somewhere you'll see it</li>
+      </ul>
+      <div class="info-box">Reading your values during a craving interrupts the dopamine chase and activates the prefrontal cortex — your wise, long-term thinking brain.</div>
+    </div>
+  </div>
+
+  <div class="cbt-card">
+    <div class="cbt-header">
+      <div class="cbt-icon">📋</div>
+      <div>
+        <div class="cbt-title">Behavioral Activation</div>
+        <span class="tag tag-teal">Mood &amp; energy</span>
+      </div>
+    </div>
+    <div class="cbt-body">
+      Cannabis often fills time that feels empty or uncomfortable. Replace it intentionally:
+      <ul class="cbt-steps" style="margin-top:10px;">
+        <li>Make a <strong>personal activity menu</strong>: 3 things you can do in 5 min, 3 in 30 min, 3 in 2+ hours</li>
+        <li>Schedule one enjoyable activity per day — don't wait to feel like it</li>
+        <li>Notice the high-risk times (evenings? weekends?) and pre-plan for them</li>
+        <li>Track your mood daily to see the link between activity and feeling better</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="cbt-card">
+    <div class="cbt-header">
+      <div class="cbt-icon">🛡️</div>
+      <div>
+        <div class="cbt-title">Relapse Prevention Plan</div>
+        <span class="tag tag-warm">Protect your progress</span>
+      </div>
+    </div>
+    <div class="cbt-body">
+      Build your plan before you need it, not during a crisis.
+      <ul class="cbt-steps" style="margin-top:10px;">
+        <li><strong>Early warning signs:</strong> What thoughts/feelings signal you're at risk?</li>
+        <li><strong>High-risk situations:</strong> List the top 3 and plan an exit for each</li>
+        <li><strong>Emergency contact:</strong> Name one person to call when things get hard</li>
+        <li><strong>If I slip:</strong> No shame spiral. Restart the clock. Ask what I can learn.</li>
+        <li><strong>Reward system:</strong> What will I give myself at day 7, 30, 90, 180?</li>
+      </ul>
+      <div style="background:#fff0f0; border-radius:8px; padding:10px; margin-top:10px; font-size:0.83rem; color:#7a2a2a; line-height:1.6;">
+        <strong>Important:</strong> A slip is not a relapse. A relapse is not a failure. Recovery is not linear. What matters is what you do next.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ——— Data ———
+const MILESTONES = [
+  { days: 1, label: '1 Day' },
+  { days: 3, label: '3 Days' },
+  { days: 7, label: '1 Week' },
+  { days: 14, label: '2 Weeks' },
+  { days: 30, label: '1 Month' },
+  { days: 60, label: '2 Months' },
+  { days: 90, label: '3 Months' },
+  { days: 180, label: '6 Months' },
+  { days: 365, label: '1 Year' },
+];
+
+const PHASES = [
+  {
+    min: 0, max: 0,
+    name: 'Before Quitting',
+    color: '#c4783a',
+    bgColor: '#fdf0e4',
+    borderColor: '#c4783a',
+    desc: 'Preparing Your Mind & Body',
+    sub: 'The most powerful thing you can do today is decide and prepare. Set your quit date, start your supplements, and tell one person you trust.',
+    brain: 'THC binds to CB1 receptors throughout your brain, especially in the prefrontal cortex (decision-making), hippocampus (memory), and amygdala (emotion). Regular use has downregulated your natural endocannabinoid system — but this reverses with time.',
+    body: 'Your lungs, liver, and immune system are ready to begin recovery the moment you stop. Start Omega-3, Magnesium, NAC, and Vitamin D now.',
+    symptoms: ['Anticipation', 'Anxiety about quitting', 'Planning mode'],
+  },
+  {
+    min: 1, max: 3,
+    name: 'Acute Withdrawal',
+    color: '#b03a3a',
+    bgColor: '#fff0f0',
+    borderColor: '#b03a3a',
+    desc: 'Days 1–3: The Storm',
+    sub: 'This is the hardest window. THC is leaving your bloodstream and your brain is scrambling to recalibrate. It is temporary. Every hour counts.',
+    brain: 'CB1 receptors are suddenly unoccupied. Your brain\'s dopamine system, which adapted to THC-driven stimulation, is now producing less natural dopamine. This is why you feel flat, irritable, or anxious.',
+    body: 'THC clears from blood within 3–4 days. Night sweats, chills, and restlessness are your nervous system resetting. This is physical — not weakness.',
+    symptoms: ['Irritability', 'Anxiety', 'Insomnia', 'Night sweats', 'Decreased appetite', 'Restlessness', 'Vivid dreams', 'Headaches'],
+  },
+  {
+    min: 4, max: 7,
+    name: 'Peak & Early Turning',
+    color: '#7c6b9e',
+    bgColor: '#f0ecf8',
+    borderColor: '#7c6b9e',
+    desc: 'Days 4–7: The Peak & First Shift',
+    sub: 'Symptoms often peak around day 3–4, then slowly begin to ease. You may start to feel occasional windows of clarity. Hold on.',
+    brain: 'CB1 receptors are rapidly upregulating (rebuilding). Your brain is producing more of its own anandamide. Sleep cycles are still disrupted as REM sleep rebounds.',
+    body: 'Appetite may start returning. Vivid, intense dreams are extremely common — this is healthy REM rebound after months of suppressed dreaming.',
+    symptoms: ['Vivid dreams', 'Mood swings', 'Brain fog', 'Fatigue', 'Sleep disruption', 'Appetite returning', 'Emotional waves'],
+  },
+  {
+    min: 8, max: 14,
+    name: 'Acute Phase Winding Down',
+    color: '#2d8a8a',
+    bgColor: '#e4f4f4',
+    borderColor: '#2d8a8a',
+    desc: 'Days 8–14: Acute Phase Easing',
+    sub: 'The worst is behind you. Physical symptoms are declining. Emotional flatness (anhedonia) is common — your dopamine system is rebuilding, not broken.',
+    brain: 'Dopamine pathways are recalibrating. The "blunted" feeling many people experience (nothing feels fun) is temporary and reflects the receptor sensitivity restoring to baseline.',
+    body: 'Physical symptoms significantly reduce. Sleep quality improving. Appetite largely restored. You may notice mental clarity in short bursts.',
+    symptoms: ['Anhedonia (flat mood)', 'Low motivation', 'Some irritability', 'Improving sleep', 'Occasional cravings', 'Brain fog lifting'],
+  },
+  {
+    min: 15, max: 30,
+    name: 'Post-Acute Phase',
+    color: '#3d7a5e',
+    bgColor: '#e8f5ee',
+    borderColor: '#3d7a5e',
+    desc: 'Days 15–30: Recalibration',
+    sub: 'Your endocannabinoid system is actively rebuilding. You may have good days and harder days — this is normal. The trend is upward.',
+    brain: 'Anandamide system is recalibrating. Natural reward circuitry is strengthening. The prefrontal cortex (willpower and decision-making) is recovering its baseline function.',
+    body: 'Most physical symptoms resolved. Occasional psychological cravings driven by habit memory — these will fade with time and trigger-interruption.',
+    symptoms: ['Psychological cravings', 'Mood variability', 'Improving clarity', 'Better sleep', 'Emotional sensitivity', 'Occasional anxiety'],
+  },
+  {
+    min: 31, max: 60,
+    name: 'Neurological Healing',
+    color: '#3d7a5e',
+    bgColor: '#e8f5ee',
+    borderColor: '#3d7a5e',
+    desc: 'Days 31–60: The Brain Rebuilds',
+    sub: 'Significant neurological improvements are happening. Cognitive function, memory, and emotional regulation are visibly improving. You\'re past the hardest part.',
+    brain: 'CB1 receptor density has largely normalized. Memory formation in the hippocampus is improving. Working memory and attention span increasing.',
+    body: 'Sleep deeply improved. Physical energy returning. Lung function (if smoked) noticeably better. Some people experience PAWS — mood waves that come and go.',
+    symptoms: ['Mostly good days', 'Occasional PAWS waves', 'Memory improving', 'Better focus', 'Stronger emotions (good and hard)', 'Residual cravings in triggers'],
+  },
+  {
+    min: 61, max: 90,
+    name: 'Consolidation',
+    color: '#2d8a8a',
+    bgColor: '#e4f4f4',
+    borderColor: '#2d8a8a',
+    desc: 'Days 61–90: Consolidating Recovery',
+    sub: 'You are a fundamentally different version of yourself than you were 90 days ago — neurologically and psychologically. Most people report feeling "like themselves again."',
+    brain: 'Dopamine receptor sensitivity normalized. Prefrontal cortex fully re-engaged. Emotional regulation significantly improved.',
+    body: 'Sustained energy, clear mind, regulated appetite and sleep. The gap between using-you and sober-you is now vivid.',
+    symptoms: ['Minimal cravings', 'Emotional stability', 'Cognitive sharpness', 'High-functioning', 'Trigger awareness'],
+  },
+  {
+    min: 91, max: 99999,
+    name: 'Long-Term Freedom',
+    color: '#d4a843',
+    bgColor: '#fdf8e4',
+    borderColor: '#d4a843',
+    desc: 'Day 91+: You Are Free',
+    sub: 'The neuroscience is clear: you have rebuilt your brain. The cravings that remain are psychological habit-ghosts — they have no real power over a brain that has healed.',
+    brain: 'Full endocannabinoid tone restored. Neuroplasticity at its peak — your brain is literally growing new connections. Cognition, creativity, and emotional depth all improved.',
+    body: 'Total system restoration. Lungs, liver, hormones, immune system operating at their natural best.',
+    symptoms: ['Rare cravings', 'High emotional intelligence', 'Sharp memory', 'Clear intuition', 'Authentic moods'],
+  },
+];
+
+function getPhase(days) {
+  return PHASES.find(p => days >= p.min && days <= p.max) || PHASES[PHASES.length - 1];
+}
+
+// ——— Counter ———
+let timerInterval;
+
+function setQuitDate() {
+  const input = document.getElementById('quitDateInput').value;
+  if (!input) return alert('Please select a date and time.');
+  localStorage.setItem('quitDate', input);
+  startCounter();
+}
+
+function startCounter() {
+  const stored = localStorage.getItem('quitDate');
+  if (!stored) {
+    document.getElementById('counterSetup').classList.add('visible');
+    document.getElementById('counterDisplay').classList.remove('visible');
+    return;
+  }
+  document.getElementById('counterSetup').classList.remove('visible');
+  document.getElementById('counterDisplay').classList.add('visible');
+
+  if (timerInterval) clearInterval(timerInterval);
+  timerInterval = setInterval(updateCounter, 1000);
+  updateCounter();
+}
+
+function updateCounter() {
+  const stored = localStorage.getItem('quitDate');
+  if (!stored) return;
+  const quit = new Date(stored);
+  const now = new Date();
+  const diff = Math.max(0, now - quit);
+
+  const totalSecs = Math.floor(diff / 1000);
+  const days = Math.floor(totalSecs / 86400);
+  const hours = Math.floor((totalSecs % 86400) / 3600);
+  const mins = Math.floor((totalSecs % 3600) / 60);
+  const secs = totalSecs % 60;
+
+  document.getElementById('dayCount').textContent = days;
+  document.getElementById('dayLabel').textContent = days === 1 ? 'day' : 'days';
+  document.getElementById('hourCount').textContent = hours;
+  document.getElementById('minCount').textContent = mins;
+  document.getElementById('secCount').textContent = secs;
+
+  renderMilestones(days);
+  renderEducation(days);
+}
+
+function renderMilestones(days) {
+  const el = document.getElementById('milestones');
+  el.innerHTML = MILESTONES.map(m => `
+    <div class="milestone ${days >= m.days ? 'reached' : ''}">
+      ${days >= m.days ? '★' : '○'} ${m.label}
+    </div>
+  `).join('');
+}
+
+function resetDate() {
+  localStorage.removeItem('quitDate');
+  clearInterval(timerInterval);
+  document.getElementById('counterSetup').classList.add('visible');
+  document.getElementById('counterDisplay').classList.remove('visible');
+  document.getElementById('phaseContent').innerHTML = '';
+  document.getElementById('eduNote').textContent = 'Set your quit date to see personalized info';
+}
+
+function renderEducation(days) {
+  const phase = getPhase(days);
+  const noteEl = document.getElementById('eduNote');
+  noteEl.textContent = `Day ${days} — information updated to your journey`;
+
+  const content = document.getElementById('phaseContent');
+  content.innerHTML = `
+    <div class="phase-banner" style="background:${phase.bgColor}; border-left-color:${phase.borderColor};">
+      <div class="phase-name" style="color:${phase.color};">${phase.name}</div>
+      <div class="phase-desc">${phase.desc}</div>
+      <div class="phase-sub">${phase.sub}</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>🧠</span> Your Brain Right Now</div>
+      <div class="card-body">${phase.brain}</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>🫀</span> Your Body Right Now</div>
+      <div class="card-body">${phase.body}</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>⚡</span> You May Be Experiencing</div>
+      <div class="card-body">
+        <div class="chip-list">
+          ${phase.symptoms.map(s => `<div class="chip">${s}</div>`).join('')}
+        </div>
+        <div class="info-box" style="margin-top:12px;">All of these are normal and temporary. They are signs your brain is healing, not signs that something is wrong.</div>
+      </div>
+    </div>
+  `;
+}
+
+// ——— Nav ———
+function showSection(name, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  document.getElementById('section-' + name).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ——— Accordion ———
+document.addEventListener('click', e => {
+  const hdr = e.target.closest('.accordion-header');
+  if (!hdr) return;
+  const body = hdr.nextElementSibling;
+  const isOpen = hdr.classList.contains('open');
+  hdr.classList.toggle('open', !isOpen);
+  body.classList.toggle('open', !isOpen);
+});
+
+// ——— Log ———
+let selectedIntensity = null;
+
+function renderIntensityBtns() {
+  const container = document.getElementById('intensityBtns');
+  container.innerHTML = Array.from({length: 10}, (_, i) => {
+    const n = i + 1;
+    const cls = n >= 8 ? 'high' : n >= 5 ? 'med' : '';
+    return `<button class="intensity-btn ${cls}" onclick="selectIntensity(${n}, this)">${n}</button>`;
+  }).join('');
+}
+
+function selectIntensity(n, btn) {
+  selectedIntensity = n;
+  document.querySelectorAll('.intensity-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+function saveLogEntry() {
+  const dt = document.getElementById('logDateTime').value;
+  const trigger = document.getElementById('logTrigger').value;
+  const notes = document.getElementById('logNotes').value.trim();
+
+  if (!dt) return alert('Please set a date and time.');
+  if (!selectedIntensity) return alert('Please select a craving intensity.');
+  if (!trigger) return alert('Please select a trigger.');
+
+  const entries = getLogEntries();
+  entries.unshift({ id: Date.now(), dt, intensity: selectedIntensity, trigger, notes });
+  localStorage.setItem('usageLog', JSON.stringify(entries));
+
+  // Reset quit date to match the logged entry's date/time
+  localStorage.setItem('quitDate', dt);
+  if (timerInterval) clearInterval(timerInterval);
+  timerInterval = setInterval(updateCounter, 1000);
+  updateCounter();
+  document.getElementById('counterSetup').classList.remove('visible');
+  document.getElementById('counterDisplay').classList.add('visible');
+
+  // Reset form
+  selectedIntensity = null;
+  document.querySelectorAll('.intensity-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('logTrigger').value = '';
+  document.getElementById('logNotes').value = '';
+
+  renderLog();
+}
+
+function getLogEntries() {
+  try { return JSON.parse(localStorage.getItem('usageLog') || '[]'); } catch { return []; }
+}
+
+function deleteLogEntry(id) {
+  const entries = getLogEntries().filter(e => e.id !== id);
+  localStorage.setItem('usageLog', JSON.stringify(entries));
+  renderLog();
+}
+
+function renderLog() {
+  const entries = getLogEntries();
+  const container = document.getElementById('logEntriesContainer');
+
+  // Stats
+  document.getElementById('logTotal').textContent = entries.length;
+  if (entries.length > 0) {
+    const avg = (entries.reduce((s, e) => s + e.intensity, 0) / entries.length).toFixed(1);
+    document.getElementById('logAvgInt').textContent = avg;
+
+    const triggerCounts = {};
+    entries.forEach(e => { triggerCounts[e.trigger] = (triggerCounts[e.trigger] || 0) + 1; });
+    const topTrigger = Object.entries(triggerCounts).sort((a,b) => b[1]-a[1])[0];
+    const shortTrigger = topTrigger[0].split('/')[0].trim();
+    document.getElementById('logTopReason').textContent = shortTrigger.length > 8 ? shortTrigger.slice(0,8)+'…' : shortTrigger;
+
+    const insight = document.getElementById('reasonsInsight');
+    insight.style.display = 'block';
+    insight.innerHTML = `<strong>Pattern insight:</strong> Your most common trigger is <strong>${topTrigger[0]}</strong> (${topTrigger[1]} ${topTrigger[1] === 1 ? 'time' : 'times'}). Check the CBT tab for strategies targeting this trigger type.`;
+  } else {
+    document.getElementById('logAvgInt').textContent = '—';
+    document.getElementById('logTopReason').textContent = '—';
+    document.getElementById('reasonsInsight').style.display = 'none';
+  }
+
+  // Entry list
+  if (entries.length === 0) {
+    container.innerHTML = `<div class="log-empty">No entries yet. Log a craving or use to start seeing your patterns.</div>`;
+    return;
+  }
+
+  container.innerHTML = entries.map(e => {
+    const date = new Date(e.dt);
+    const dateStr = date.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' });
+    const timeStr = date.toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit' });
+    const intColor = e.intensity >= 8 ? '#c0392b' : e.intensity >= 5 ? '#c4783a' : '#3d7a5e';
+    const intBg = e.intensity >= 8 ? '#fff0f0' : e.intensity >= 5 ? '#fdf0e4' : '#e8f5ee';
+    return `
+      <div class="log-entry">
+        <div class="log-intensity-badge" style="background:${intBg}; color:${intColor};">${e.intensity}</div>
+        <div style="flex:1; min-width:0;">
+          <div class="log-entry-meta">${dateStr} at ${timeStr}</div>
+          <div class="log-entry-reason"><strong>${e.trigger}</strong>${e.notes ? ' — ' + e.notes : ''}</div>
+        </div>
+        <button class="log-delete" onclick="deleteLogEntry(${e.id})" title="Delete">✕</button>
+      </div>
+    `;
+  }).join('');
+}
+
+// ——— Init ———
+window.addEventListener('DOMContentLoaded', () => {
+  // Set default datetime to now
+  const now = new Date();
+  now.setSeconds(0, 0);
+  const local = new Date(now - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+  document.getElementById('quitDateInput').value = local;
+  document.getElementById('logDateTime').value = local;
+
+  renderIntensityBtns();
+  renderLog();
+  startCounter();
+});
+</script>
+</body>
+</html>
