@@ -1330,8 +1330,14 @@ function getPhase(days) {
 let timerInterval;
 
 function setQuitDate() {
-  const input = document.getElementById('quitDateInput').value;
-  if (!input) return alert('Please select a date and time.');
+  let input = document.getElementById('quitDateInput').value;
+  // If empty, default to right now
+  if (!input) {
+    const now = new Date();
+    now.setSeconds(0, 0);
+    input = new Date(now - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+    document.getElementById('quitDateInput').value = input;
+  }
   localStorage.setItem('quitDate', input);
   startCounter();
 }
