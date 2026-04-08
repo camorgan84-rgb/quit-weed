@@ -1464,6 +1464,14 @@ function renderEducation(days) {
     </div>
 
     <div class="card">
+      <div class="card-title"><span>🧠</span> How Cannabis Affects Your Brain</div>
+      <div class="card-body">
+        THC mimics anandamide — your brain's natural "bliss" molecule — and floods CB1 receptors in the limbic system, prefrontal cortex, and hippocampus. Over time, the brain <strong>downregulates</strong> these receptors (makes fewer of them) to compensate. When you stop, your brain needs time to rebuild its natural endocannabinoid tone.
+        <div class="info-box" style="margin-top:10px;">CB1 receptors begin recovering within <strong>2 days</strong> and show significant normalization by <strong>4 weeks</strong>. Full recovery can take 3–6 months depending on use history.</div>
+      </div>
+    </div>
+
+    <div class="card">
       <div class="card-title"><span>🧠</span> Your Brain Right Now</div>
       <div class="card-body">${phase.brain}</div>
     </div>
@@ -1480,14 +1488,6 @@ function renderEducation(days) {
           ${phase.symptoms.map(s => `<div class="chip">${s}</div>`).join('')}
         </div>
         <div class="info-box" style="margin-top:12px;">All of these are normal and temporary. They are signs your brain is healing, not signs that something is wrong.</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title"><span>🧠</span> How Cannabis Affects Your Brain</div>
-      <div class="card-body">
-        THC mimics anandamide — your brain's natural "bliss" molecule — and floods CB1 receptors in the limbic system, prefrontal cortex, and hippocampus. Over time, the brain <strong>downregulates</strong> these receptors (makes fewer of them) to compensate. When you stop, your brain needs time to rebuild its natural endocannabinoid tone.
-        <div class="info-box" style="margin-top:10px;">CB1 receptors begin recovering within <strong>2 days</strong> and show significant normalization by <strong>4 weeks</strong>. Full recovery can take 3–6 months depending on use history.</div>
       </div>
     </div>
   `;
