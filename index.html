@@ -1326,24 +1326,48 @@ function getPhase(days) {
   return PHASES.find(p => days >= p.min && days <= p.max) || PHASES[PHASES.length - 1];
 }
 
+// ——— Storage (localStorage with in-memory fallback for iOS privacy mode) ———
+let memoryStore = {};
+function storageSet(key, val) {
+  try { localStorage.setItem(key, val); } catch(e) {}
+  memoryStore[key] = val;
+}
+function storageGet(key) {
+  try { const v = localStorage.getItem(key); if (v !== null) return v; } catch(e) {}
+  return memoryStore[key] || null;
+}
+function storageRemove(key) {
+  try { localStorage.removeItem(key); } catch(e) {}
+  delete memoryStore[key];
+}
+
+// Parse datetime-local string safely on iOS (avoid timezone interpretation bugs)
+function parseLocalDate(str) {
+  if (!str) return null;
+  // "2026-04-08T10:30" → treat as local time
+  const [datePart, timePart] = str.split('T');
+  const [y, mo, d] = datePart.split('-').map(Number);
+  const [h, mi] = (timePart || '00:00').split(':').map(Number);
+  return new Date(y, mo - 1, d, h, mi, 0, 0);
+}
+
 // ——— Counter ———
 let timerInterval;
 
 function setQuitDate() {
   let input = document.getElementById('quitDateInput').value;
-  // If empty, default to right now
   if (!input) {
     const now = new Date();
     now.setSeconds(0, 0);
     input = new Date(now - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
     document.getElementById('quitDateInput').value = input;
   }
-  localStorage.setItem('quitDate', input);
+  storageSet('quitDate', input);
   startCounter();
 }
 
 function startCounter() {
-  const stored = localStorage.getItem('quitDate');
+  const stored = storageGet('quitDate');
   if (!stored) {
     document.getElementById('counterSetup').classList.add('visible');
     document.getElementById('counterDisplay').classList.remove('visible');
@@ -1358,9 +1382,9 @@ function startCounter() {
 }
 
 function updateCounter() {
-  const stored = localStorage.getItem('quitDate');
+  const stored = storageGet('quitDate');
   if (!stored) return;
-  const quit = new Date(stored);
+  const quit = parseLocalDate(stored);
   const now = new Date();
   const diff = Math.max(0, now - quit);
 
@@ -1390,7 +1414,7 @@ function renderMilestones(days) {
 }
 
 function resetDate() {
-  localStorage.removeItem('quitDate');
+  storageRemove('quitDate');
   clearInterval(timerInterval);
   document.getElementById('counterSetup').classList.add('visible');
   document.getElementById('counterDisplay').classList.remove('visible');
@@ -1518,7 +1542,7 @@ function saveLogEntry() {
   } else {
     entries.unshift({ id: Date.now(), dt, intensity: selectedIntensity, trigger, notes });
     // Reset quit date to match the logged entry's date/time
-    localStorage.setItem('quitDate', dt);
+    storageSet('quitDate', dt);
     if (timerInterval) clearInterval(timerInterval);
     timerInterval = setInterval(updateCounter, 1000);
     updateCounter();
@@ -1526,7 +1550,7 @@ function saveLogEntry() {
     document.getElementById('counterDisplay').classList.add('visible');
   }
 
-  localStorage.setItem('usageLog', JSON.stringify(entries));
+  storageSet('usageLog', JSON.stringify(entries));
 
   // Reset form
   selectedIntensity = null;
@@ -1559,12 +1583,12 @@ function editLogEntry(id) {
 }
 
 function getLogEntries() {
-  try { return JSON.parse(localStorage.getItem('usageLog') || '[]'); } catch { return []; }
+  try { return JSON.parse(storageGet('usageLog') || '[]'); } catch { return []; }
 }
 
 function deleteLogEntry(id) {
   const entries = getLogEntries().filter(e => e.id !== id);
-  localStorage.setItem('usageLog', JSON.stringify(entries));
+  storageSet('usageLog', JSON.stringify(entries));
   renderLog();
 }
 
