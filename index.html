@@ -1363,46 +1363,52 @@ function setQuitDate() {
   var hoursAgo = parseFloat(document.getElementById('quitHoursAgo').value) || 0;
   var quitTime = Date.now() - (hoursAgo * 60 * 60 * 1000);
   storageSet('quitDate', String(Math.floor(quitTime)));
-  startCounter();
+  showCounter();
+}
+
+function showCounter() {
+  document.getElementById('counterSetup').style.display = 'none';
+  document.getElementById('counterDisplay').style.display = 'block';
+  if (timerInterval) clearInterval(timerInterval);
+  timerInterval = setInterval(tickCounter, 1000);
+  tickCounter();
 }
 
 function startCounter() {
-  const stored = storageGet('quitDate');
+  var stored = storageGet('quitDate');
   if (!stored) {
-    document.getElementById('counterSetup').classList.add('visible');
-    document.getElementById('counterDisplay').classList.remove('visible');
+    document.getElementById('counterSetup').style.display = 'block';
+    document.getElementById('counterDisplay').style.display = 'none';
     return;
   }
-  document.getElementById('counterSetup').classList.remove('visible');
-  document.getElementById('counterDisplay').classList.add('visible');
-
-  if (timerInterval) clearInterval(timerInterval);
-  timerInterval = setInterval(updateCounter, 1000);
-  updateCounter();
+  showCounter();
 }
 
-function updateCounter() {
-  const stored = storageGet('quitDate');
-  if (!stored) return;
-  const quit = parseLocalDate(stored);
-  const now = new Date();
-  const diff = Math.max(0, now - quit);
+function tickCounter() {
+  try {
+    var stored = storageGet('quitDate');
+    if (!stored) return;
+    var quitMs = parseInt(stored, 10);
+    var diff = Math.max(0, Date.now() - quitMs);
+    var totalSecs = Math.floor(diff / 1000);
+    var days  = Math.floor(totalSecs / 86400);
+    var hours = Math.floor((totalSecs % 86400) / 3600);
+    var mins  = Math.floor((totalSecs % 3600) / 60);
+    var secs  = totalSecs % 60;
 
-  const totalSecs = Math.floor(diff / 1000);
-  const days = Math.floor(totalSecs / 86400);
-  const hours = Math.floor((totalSecs % 86400) / 3600);
-  const mins = Math.floor((totalSecs % 3600) / 60);
-  const secs = totalSecs % 60;
+    document.getElementById('dayCount').textContent = days;
+    document.getElementById('dayLabel').textContent = days === 1 ? 'day' : 'days';
+    document.getElementById('hourCount').textContent = hours;
+    document.getElementById('minCount').textContent = mins;
+    document.getElementById('secCount').textContent = secs;
 
-  document.getElementById('dayCount').textContent = days;
-  document.getElementById('dayLabel').textContent = days === 1 ? 'day' : 'days';
-  document.getElementById('hourCount').textContent = hours;
-  document.getElementById('minCount').textContent = mins;
-  document.getElementById('secCount').textContent = secs;
-
-  renderMilestones(days);
-  renderEducation(days);
+    try { renderMilestones(days); } catch(e) {}
+    try { renderEducation(days); } catch(e) {}
+  } catch(e) {}
 }
+
+// keep updateCounter as alias
+function updateCounter() { tickCounter(); }
 
 function renderMilestones(days) {
   const el = document.getElementById('milestones');
