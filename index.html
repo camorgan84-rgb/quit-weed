@@ -1411,7 +1411,8 @@ function tickCounter() {
     var quitMs = parseInt(stored, 10);
     var diff = Math.max(0, Date.now() - quitMs);
     var totalSecs = Math.floor(diff / 1000);
-    var days  = Math.floor(totalSecs / 86400) + 1;
+    var days  = Math.floor(totalSecs / 86400);
+    var dataDay = days + 1;
     var hours = Math.floor((totalSecs % 86400) / 3600);
     var mins  = Math.floor((totalSecs % 3600) / 60);
     var secs  = totalSecs % 60;
@@ -1423,7 +1424,7 @@ function tickCounter() {
     document.getElementById('secCount').textContent = secs;
 
     try { renderMilestones(days); } catch(e) {}
-    try { renderEducation(days); } catch(e) {}
+    try { renderEducation(dataDay); } catch(e) {}
   } catch(e) {}
 }
 
