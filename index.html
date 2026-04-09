@@ -268,6 +268,15 @@
   /* ─── Log ───────────────────────────────────────── */
   .log-form { background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); padding: 20px; margin-bottom: 14px; }
   .log-form h3 { font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); margin-bottom: 16px; }
+
+  .used-toggle { display: flex; gap: 8px; margin-bottom: 16px; }
+  .used-btn { flex: 1; padding: 12px; border-radius: 12px; border: 2px solid var(--border); background: var(--bg); font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: all 0.15s; color: var(--muted); }
+  .used-btn.selected-no  { border-color: #3d7a5e; background: #e8f5ee; color: #3d7a5e; }
+  .used-btn.selected-yes { border-color: var(--red); background: #fff0f0; color: var(--red); }
+
+  .used-badge { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 0.68rem; font-weight: 700; margin-left: 4px; }
+  .used-badge-no  { background: #e8f5ee; color: #3d7a5e; }
+  .used-badge-yes { background: #fff0f0; color: var(--red); }
   .form-field { margin-bottom: 14px; }
   .form-field label { display: block; font-size: 0.68rem; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
   .form-field input, .form-field select, .form-field textarea { width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 12px; font-size: 0.9rem; color: var(--text); background: var(--bg); font-family: inherit; transition: border-color 0.15s; -webkit-appearance: none; }
@@ -903,6 +912,14 @@
   <div class="log-form">
     <h3>Add Entry</h3>
     <div class="form-field">
+      <label>Did you use?</label>
+      <div class="used-toggle">
+        <button type="button" class="used-btn selected-no" id="usedNo"  onclick="setUsed('no')">🚫 No — Craving Only</button>
+        <button type="button" class="used-btn"             id="usedYes" onclick="setUsed('yes')">✅ Yes — I Used</button>
+      </div>
+    </div>
+    <div id="useFieldsWrapper">
+    <div class="form-field">
       <label>Date &amp; Time</label>
       <input type="datetime-local" id="logDateTime">
     </div>
@@ -935,6 +952,7 @@
         </select>
       </div>
     </div>
+    </div><!-- /useFieldsWrapper -->
     <div class="form-field">
       <label>Craving Intensity (1–10)</label>
       <div class="intensity-row" id="intensityBtns">
@@ -1582,6 +1600,15 @@ document.addEventListener('click', e => {
 
 // ——— Log ———
 let selectedIntensity = null;
+let selectedUsed = 'no';
+
+function setUsed(val) {
+  selectedUsed = val;
+  document.getElementById('usedNo').className  = 'used-btn' + (val === 'no'  ? ' selected-no'  : '');
+  document.getElementById('usedYes').className = 'used-btn' + (val === 'yes' ? ' selected-yes' : '');
+  // Show/hide method+amount fields
+  document.getElementById('useFieldsWrapper').style.display = val === 'yes' ? 'block' : 'none';
+}
 
 function renderIntensityBtns() {
   const container = document.getElementById('intensityBtns');
@@ -1602,6 +1629,7 @@ let editingId = null;
 
 function saveLogEntry() {
   const dt = document.getElementById('logDateTime').value;
+  const used = selectedUsed;
   const method = document.getElementById('logMethod').value;
   const amount = document.getElementById('logAmount').value;
   const amountUnit = document.getElementById('logAmountUnit').value;
@@ -1620,16 +1648,18 @@ function saveLogEntry() {
     document.querySelector('#section-log .btn-primary').textContent = 'Save Entry';
     document.querySelector('.log-form h3').textContent = 'Add Entry';
   } else {
-    entries.unshift({ id: Date.now(), dt, method, amount, amountUnit, intensity: selectedIntensity, trigger, notes });
-    // Reset quit date to match the logged entry's date/time (store as ms)
-    var logMs = new Date(dt).getTime();
-    if (logMs && !isNaN(logMs)) {
-      storageSet('quitDate', String(logMs));
-      if (timerInterval) clearInterval(timerInterval);
-      timerInterval = setInterval(updateCounter, 1000);
-      updateCounter();
-      document.getElementById('counterSetup').style.display = 'none';
-      document.getElementById('counterDisplay').style.display = 'block';
+    entries.unshift({ id: Date.now(), dt, used, method, amount, amountUnit, intensity: selectedIntensity, trigger, notes });
+    // Only reset quit date if they actually used
+    if (used === 'yes') {
+      var logMs = new Date(dt).getTime();
+      if (logMs && !isNaN(logMs)) {
+        storageSet('quitDate', String(logMs));
+        if (timerInterval) clearInterval(timerInterval);
+        timerInterval = setInterval(updateCounter, 1000);
+        updateCounter();
+        document.getElementById('counterSetup').style.display = 'none';
+        document.getElementById('counterDisplay').style.display = 'block';
+      }
     }
   }
 
@@ -1638,6 +1668,7 @@ function saveLogEntry() {
   // Reset form
   selectedIntensity = null;
   document.querySelectorAll('.intensity-btn').forEach(b => b.classList.remove('selected'));
+  setUsed('no');
   document.getElementById('logMethod').value = '';
   document.getElementById('logAmount').value = '';
   document.getElementById('logAmountUnit').value = 'hits';
@@ -1654,6 +1685,7 @@ function editLogEntry(id) {
 
   editingId = id;
   document.getElementById('logDateTime').value = e.dt;
+  setUsed(e.used || 'no');
   document.getElementById('logMethod').value = e.method || '';
   document.getElementById('logAmount').value = e.amount || '';
   document.getElementById('logAmountUnit').value = e.amountUnit || 'hits';
@@ -1722,7 +1754,7 @@ function renderLog() {
       <div class="log-entry">
         <div class="log-intensity-badge" style="background:${intBg}; color:${intColor};">${e.intensity}</div>
         <div style="flex:1; min-width:0;">
-          <div class="log-entry-meta">${dateStr} at ${timeStr}${e.method ? ' · ' + e.method : ''}${e.amount ? ' · ' + e.amount + ' ' + (e.amountUnit || 'hits') : ''}</div>
+          <div class="log-entry-meta">${dateStr} at ${timeStr}${e.method ? ' · ' + e.method : ''}${e.amount ? ' · ' + e.amount + ' ' + (e.amountUnit || 'hits') : ''}<span class="used-badge ${e.used === 'yes' ? 'used-badge-yes' : 'used-badge-no'}">${e.used === 'yes' ? 'Used' : 'Craving'}</span></div>
           <div class="log-entry-reason"><strong>${e.trigger}</strong>${e.notes ? ' — ' + e.notes : ''}</div>
         </div>
         <div class="log-actions">
@@ -1750,6 +1782,7 @@ window.addEventListener('DOMContentLoaded', () => {
   renderIntensityBtns();
   renderLog();
   startCounter();
+  setUsed('no');
 });
 </script>
 </body>
