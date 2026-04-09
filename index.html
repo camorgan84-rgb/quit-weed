@@ -389,15 +389,14 @@
 <!-- Counter Card -->
 <div class="counter-card">
   <!-- Setup state -->
-  <div class="counter-setup visible" id="counterSetup">
-    <div class="counter-label">How long have you been clean?</div>
+  <div class="counter-setup visible" id="counterSetup" style="display:block;">
+    <div class="counter-label">When did you last use?</div>
     <div class="date-input-group">
-      <div style="display:flex; gap:8px; width:100%; max-width:300px; align-items:center; justify-content:center;">
-        <input type="number" id="quitHoursAgo" min="0" max="99999" value="0" style="width:80px; padding:10px 12px; border:1.5px solid rgba(255,255,255,0.2); border-radius:12px; font-size:1.1rem; font-weight:700; color:white; background:rgba(255,255,255,0.1); text-align:center;">
-        <span style="color:rgba(255,255,255,0.6); font-size:0.9rem;">hours ago</span>
+      <div style="display:flex; flex-direction:column; gap:10px; width:100%; max-width:280px;">
+        <input type="date" id="quitDatePicker" style="padding:12px 14px; border:1.5px solid rgba(255,255,255,0.2); border-radius:12px; font-size:1rem; font-weight:600; color:white; background:rgba(255,255,255,0.1); width:100%; color-scheme:dark;">
+        <input type="time" id="quitTimePicker" style="padding:12px 14px; border:1.5px solid rgba(255,255,255,0.2); border-radius:12px; font-size:1rem; font-weight:600; color:white; background:rgba(255,255,255,0.1); width:100%; color-scheme:dark;">
       </div>
-      <p style="font-size:0.75rem; color:rgba(255,255,255,0.4); margin-top:4px;">Enter 0 if you just quit right now</p>
-      <button class="btn-primary" onclick="setQuitDate()" style="margin-top:8px;">Start My Journey</button>
+      <button class="btn-primary" onclick="setQuitDate()" style="margin-top:12px;">Start My Journey</button>
     </div>
   </div>
 
@@ -439,17 +438,17 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
     <span>Cravings</span>
   </button>
-  <button class="nav-item" onclick="showSection('cbt', this)">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-    <span>CBT</span>
+  <button class="nav-item" onclick="showSection('supplements', this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+    <span>Supps</span>
   </button>
   <button class="nav-item" onclick="showSection('eft', this)">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
     <span>EFT</span>
   </button>
-  <button class="nav-item" onclick="showSection('supplements', this)">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
-    <span>Supps</span>
+  <button class="nav-item" onclick="showSection('cbt', this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    <span>CBT</span>
   </button>
 </nav>
 
@@ -908,6 +907,23 @@
       <input type="datetime-local" id="logDateTime">
     </div>
     <div class="form-field">
+      <label>Method</label>
+      <select id="logMethod">
+        <option value="">— Select method —</option>
+        <option>Joint</option>
+        <option>Blunt</option>
+        <option>Pipe</option>
+        <option>Bong</option>
+        <option>Vape (flower)</option>
+        <option>Vape (cartridge)</option>
+        <option>Edible</option>
+        <option>Tincture</option>
+        <option>Dab / concentrate</option>
+        <option>Topical</option>
+        <option>Other</option>
+      </select>
+    </div>
+    <div class="form-field">
       <label>Craving Intensity (1–10)</label>
       <div class="intensity-row" id="intensityBtns">
         <!-- rendered by JS -->
@@ -1355,8 +1371,17 @@ function parseLocalDate(str) {
 let timerInterval;
 
 function setQuitDate() {
-  var hoursAgo = parseFloat(document.getElementById('quitHoursAgo').value) || 0;
-  var quitTime = Date.now() - (hoursAgo * 60 * 60 * 1000);
+  var datePart = document.getElementById('quitDatePicker').value;
+  var timePart = document.getElementById('quitTimePicker').value;
+  var quitTime;
+  if (datePart && timePart) {
+    quitTime = new Date(datePart + 'T' + timePart).getTime();
+  } else if (datePart) {
+    quitTime = new Date(datePart).getTime();
+  } else {
+    quitTime = Date.now();
+  }
+  if (!quitTime || isNaN(quitTime)) quitTime = Date.now();
   storageSet('quitDate', String(Math.floor(quitTime)));
   showCounter();
 }
@@ -1386,7 +1411,7 @@ function tickCounter() {
     var quitMs = parseInt(stored, 10);
     var diff = Math.max(0, Date.now() - quitMs);
     var totalSecs = Math.floor(diff / 1000);
-    var days  = Math.floor(totalSecs / 86400);
+    var days  = Math.floor(totalSecs / 86400) + 1;
     var hours = Math.floor((totalSecs % 86400) / 3600);
     var mins  = Math.floor((totalSecs % 3600) / 60);
     var secs  = totalSecs % 60;
@@ -1417,8 +1442,8 @@ function renderMilestones(days) {
 function resetDate() {
   storageRemove('quitDate');
   clearInterval(timerInterval);
-  document.getElementById('counterSetup').classList.add('visible');
-  document.getElementById('counterDisplay').classList.remove('visible');
+  document.getElementById('counterSetup').style.display = 'block';
+  document.getElementById('counterDisplay').style.display = 'none';
   document.getElementById('phaseContent').innerHTML = '';
   document.getElementById('eduNote').textContent = 'Set your quit date to see personalized info';
 }
@@ -1533,6 +1558,7 @@ let editingId = null;
 
 function saveLogEntry() {
   const dt = document.getElementById('logDateTime').value;
+  const method = document.getElementById('logMethod').value;
   const trigger = document.getElementById('logTrigger').value;
   const notes = document.getElementById('logNotes').value.trim();
 
@@ -1548,7 +1574,7 @@ function saveLogEntry() {
     document.querySelector('#section-log .btn-primary').textContent = 'Save Entry';
     document.querySelector('.log-form h3').textContent = 'Add Entry';
   } else {
-    entries.unshift({ id: Date.now(), dt, intensity: selectedIntensity, trigger, notes });
+    entries.unshift({ id: Date.now(), dt, method, intensity: selectedIntensity, trigger, notes });
     // Reset quit date to match the logged entry's date/time
     storageSet('quitDate', dt);
     if (timerInterval) clearInterval(timerInterval);
@@ -1563,6 +1589,7 @@ function saveLogEntry() {
   // Reset form
   selectedIntensity = null;
   document.querySelectorAll('.intensity-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('logMethod').value = '';
   document.getElementById('logTrigger').value = '';
   document.getElementById('logNotes').value = '';
 
@@ -1576,6 +1603,7 @@ function editLogEntry(id) {
 
   editingId = id;
   document.getElementById('logDateTime').value = e.dt;
+  document.getElementById('logMethod').value = e.method || '';
   document.getElementById('logTrigger').value = e.trigger;
   document.getElementById('logNotes').value = e.notes || '';
 
@@ -1641,7 +1669,7 @@ function renderLog() {
       <div class="log-entry">
         <div class="log-intensity-badge" style="background:${intBg}; color:${intColor};">${e.intensity}</div>
         <div style="flex:1; min-width:0;">
-          <div class="log-entry-meta">${dateStr} at ${timeStr}</div>
+          <div class="log-entry-meta">${dateStr} at ${timeStr}${e.method ? ' · ' + e.method : ''}</div>
           <div class="log-entry-reason"><strong>${e.trigger}</strong>${e.notes ? ' — ' + e.notes : ''}</div>
         </div>
         <div class="log-actions">
@@ -1658,6 +1686,13 @@ window.addEventListener('DOMContentLoaded', () => {
   const now = new Date();
   const logNow = new Date(now - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
   document.getElementById('logDateTime').value = logNow;
+
+  // Pre-fill quit date/time pickers with current date and time
+  var pad = function(n) { return String(n).padStart(2,'0'); };
+  var todayStr = now.getFullYear() + '-' + pad(now.getMonth()+1) + '-' + pad(now.getDate());
+  var timeStr = pad(now.getHours()) + ':' + pad(now.getMinutes());
+  document.getElementById('quitDatePicker').value = todayStr;
+  document.getElementById('quitTimePicker').value = timeStr;
 
   renderIntensityBtns();
   renderLog();
