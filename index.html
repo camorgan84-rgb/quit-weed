@@ -1143,7 +1143,7 @@ const MILESTONES = [
 
 const PHASES = [
   {
-    min: 0, max: 0,
+    min: -1, max: -1,
     name: 'Before Quitting',
     color: '#ffffff', bgColor: '#1a3560', borderColor: '#f0b429',
     desc: 'Preparing Your Mind & Body',
@@ -1164,6 +1164,30 @@ const PHASES = [
       'Write your "why" on a sticky note and put it somewhere you\'ll see it every morning.',
       'Plan what you will do in the first hour after your quit time — have a specific activity ready.',
       'Stock up on healthy snacks now. Your appetite and cravings will both spike early on.',
+    ],
+  },
+  {
+    min: 0, max: 0,
+    name: 'Day 0 — You Just Started',
+    color: '#ffffff', bgColor: '#2a4f9a', borderColor: '#c8960c',
+    desc: 'Hour 0–24: The Decision Is Made',
+    sub: 'You did it. The hardest part is making the choice — and you have. Your body begins recovering within hours. Stay close to your plan, your water, and your reasons.',
+    brain: 'THC is still present in your bloodstream but is no longer being replenished. Your CB1 receptors — which had adapted to constant THC input — are beginning to wake up. You may feel a mix of relief, anxiety, and restlessness. This is your brain noticing the absence.',
+    body: 'Within 4–8 hours of your last use, THC levels in blood begin dropping. Your lungs are already beginning to clear. You may feel tightness, mild headache, or restlessness — this is normal and temporary.',
+    symptoms: ['Restlessness', 'Anxiety', 'Irritability', 'Mild headache', 'Yawning', 'Difficulty concentrating', 'Strong urge to use'],
+    journal: [
+      'Why today? What made this the moment I finally started?',
+      'What am I feeling in my body right now, and what does it remind me of?',
+      'What is the first craving telling me? What do I actually need right now?',
+      'What is one thing I can do in the next hour instead of using?',
+      'Who am I doing this for — and what do I want them (or myself) to see?',
+    ],
+    tips: [
+      'Drink water constantly — hydration helps flush THC metabolites and reduces headaches.',
+      'Keep your hands busy. Hold ice, chew gum, go for a walk — anything physical interrupts the urge loop.',
+      'Don\'t try to control your emotions today. Let feelings move through without acting on them.',
+      'Remove or hide any remaining cannabis or paraphernalia — availability is the biggest short-term risk.',
+      'Text or call one person right now and tell them you started. Accountability activates commitment.',
     ],
   },
   {
@@ -1399,6 +1423,7 @@ function startCounter() {
   if (!stored) {
     document.getElementById('counterSetup').style.display = 'block';
     document.getElementById('counterDisplay').style.display = 'none';
+    try { renderEducation(-1); } catch(e) {}
     return;
   }
   showCounter();
@@ -1412,7 +1437,7 @@ function tickCounter() {
     var diff = Math.max(0, Date.now() - quitMs);
     var totalSecs = Math.floor(diff / 1000);
     var days  = Math.floor(totalSecs / 86400);
-    var dataDay = days + 1;
+    var dataDay = days;
     var hours = Math.floor((totalSecs % 86400) / 3600);
     var mins  = Math.floor((totalSecs % 3600) / 60);
     var secs  = totalSecs % 60;
@@ -1445,8 +1470,7 @@ function resetDate() {
   clearInterval(timerInterval);
   document.getElementById('counterSetup').style.display = 'block';
   document.getElementById('counterDisplay').style.display = 'none';
-  document.getElementById('phaseContent').innerHTML = '';
-  document.getElementById('eduNote').textContent = 'Set your quit date to see personalized info';
+  try { renderEducation(-1); } catch(e) {}
 }
 
 function renderCBT(days) {
@@ -1479,7 +1503,13 @@ function renderEducation(days) {
   renderCBT(days);
   const phase = getPhase(days);
   const noteEl = document.getElementById('eduNote');
-  noteEl.textContent = `Day ${days} — information updated to your journey`;
+  if (days < 0) {
+    noteEl.textContent = 'Content tailored to your preparation stage';
+  } else if (days === 0) {
+    noteEl.textContent = 'Day 0 — your journey begins now';
+  } else {
+    noteEl.textContent = `Day ${days} — content updated to your journey`;
+  }
 
   const content = document.getElementById('phaseContent');
   content.innerHTML = `
