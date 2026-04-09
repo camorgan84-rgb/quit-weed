@@ -1606,13 +1606,16 @@ function saveLogEntry() {
     document.querySelector('.log-form h3').textContent = 'Add Entry';
   } else {
     entries.unshift({ id: Date.now(), dt, method, intensity: selectedIntensity, trigger, notes });
-    // Reset quit date to match the logged entry's date/time
-    storageSet('quitDate', dt);
-    if (timerInterval) clearInterval(timerInterval);
-    timerInterval = setInterval(updateCounter, 1000);
-    updateCounter();
-    document.getElementById('counterSetup').classList.remove('visible');
-    document.getElementById('counterDisplay').classList.add('visible');
+    // Reset quit date to match the logged entry's date/time (store as ms)
+    var logMs = new Date(dt).getTime();
+    if (logMs && !isNaN(logMs)) {
+      storageSet('quitDate', String(logMs));
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = setInterval(updateCounter, 1000);
+      updateCounter();
+      document.getElementById('counterSetup').style.display = 'none';
+      document.getElementById('counterDisplay').style.display = 'block';
+    }
   }
 
   storageSet('usageLog', JSON.stringify(entries));
