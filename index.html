@@ -930,6 +930,18 @@
       </div>
     </div>
     <div class="form-field">
+      <label>Amount</label>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <input type="number" id="logAmount" min="0" step="0.1" placeholder="e.g. 2" style="width:90px; padding:10px 12px; border:1.5px solid var(--border); border-radius:10px; font-size:1rem; color:var(--text);">
+        <select id="logAmountUnit" style="flex:1; padding:10px 12px; border:1.5px solid var(--border); border-radius:10px; font-size:0.95rem; color:var(--text);">
+          <option value="hits">Hits</option>
+          <option value="mg">mg</option>
+          <option value="g">g</option>
+          <option value="ml">ml</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-field">
       <label>Trigger / Reason</label>
       <select id="logTrigger">
         <option value="">— Select a trigger —</option>
@@ -938,6 +950,7 @@
         <option>Social pressure</option>
         <option>Loneliness</option>
         <option>Habit / routine</option>
+        <option>Transition</option>
         <option>Celebration / reward</option>
         <option>Anger / frustration</option>
         <option>Sadness / depression</option>
@@ -1590,6 +1603,8 @@ let editingId = null;
 function saveLogEntry() {
   const dt = document.getElementById('logDateTime').value;
   const method = document.getElementById('logMethod').value;
+  const amount = document.getElementById('logAmount').value;
+  const amountUnit = document.getElementById('logAmountUnit').value;
   const trigger = document.getElementById('logTrigger').value;
   const notes = document.getElementById('logNotes').value.trim();
 
@@ -1605,7 +1620,7 @@ function saveLogEntry() {
     document.querySelector('#section-log .btn-primary').textContent = 'Save Entry';
     document.querySelector('.log-form h3').textContent = 'Add Entry';
   } else {
-    entries.unshift({ id: Date.now(), dt, method, intensity: selectedIntensity, trigger, notes });
+    entries.unshift({ id: Date.now(), dt, method, amount, amountUnit, intensity: selectedIntensity, trigger, notes });
     // Reset quit date to match the logged entry's date/time (store as ms)
     var logMs = new Date(dt).getTime();
     if (logMs && !isNaN(logMs)) {
@@ -1624,6 +1639,8 @@ function saveLogEntry() {
   selectedIntensity = null;
   document.querySelectorAll('.intensity-btn').forEach(b => b.classList.remove('selected'));
   document.getElementById('logMethod').value = '';
+  document.getElementById('logAmount').value = '';
+  document.getElementById('logAmountUnit').value = 'hits';
   document.getElementById('logTrigger').value = '';
   document.getElementById('logNotes').value = '';
 
@@ -1638,6 +1655,8 @@ function editLogEntry(id) {
   editingId = id;
   document.getElementById('logDateTime').value = e.dt;
   document.getElementById('logMethod').value = e.method || '';
+  document.getElementById('logAmount').value = e.amount || '';
+  document.getElementById('logAmountUnit').value = e.amountUnit || 'hits';
   document.getElementById('logTrigger').value = e.trigger;
   document.getElementById('logNotes').value = e.notes || '';
 
@@ -1703,7 +1722,7 @@ function renderLog() {
       <div class="log-entry">
         <div class="log-intensity-badge" style="background:${intBg}; color:${intColor};">${e.intensity}</div>
         <div style="flex:1; min-width:0;">
-          <div class="log-entry-meta">${dateStr} at ${timeStr}${e.method ? ' · ' + e.method : ''}</div>
+          <div class="log-entry-meta">${dateStr} at ${timeStr}${e.method ? ' · ' + e.method : ''}${e.amount ? ' · ' + e.amount + ' ' + (e.amountUnit || 'hits') : ''}</div>
           <div class="log-entry-reason"><strong>${e.trigger}</strong>${e.notes ? ' — ' + e.notes : ''}</div>
         </div>
         <div class="log-actions">
