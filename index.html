@@ -1489,9 +1489,10 @@ function updateCounter() { tickCounter(); }
 
 function renderMilestones(days) {
   const el = document.getElementById('milestones');
-  el.innerHTML = MILESTONES.map(m => `
-    <div class="milestone ${days >= m.days ? 'reached' : ''}">
-      ${days >= m.days ? '★' : '○'} ${m.label}
+  const reached = MILESTONES.filter(m => days >= m.days);
+  el.innerHTML = reached.map(m => `
+    <div class="milestone reached">
+      ★ ${m.label}
     </div>
   `).join('');
 }
