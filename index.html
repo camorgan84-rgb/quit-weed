@@ -265,6 +265,20 @@
   ul.clean-list { padding-left: 18px; }
   ul.clean-list li { margin-bottom: 5px; font-size: 0.87rem; line-height: 1.6; }
 
+  /* ─── Science Timeline ──────────────────────────── */
+  .science-current { border-radius: var(--radius); border-left: 4px solid #2d8a8a; padding: 20px; margin-bottom: 12px; }
+  .science-window-label { font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 4px; }
+  .science-window-title { font-size: 1.05rem; font-weight: 800; color: var(--text); margin-bottom: 16px; line-height: 1.3; }
+  .science-section { margin-bottom: 14px; }
+  .science-section:last-child { margin-bottom: 0; }
+  .science-section-label { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 5px; }
+  .science-section-body { font-size: 0.88rem; line-height: 1.65; color: var(--text); }
+  .science-next { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px 16px; margin-bottom: 12px; display: flex; flex-direction: column; gap: 3px; }
+  .science-next-label { font-size: 0.63rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); }
+  .science-next-title { font-size: 0.85rem; font-weight: 600; color: var(--navy); }
+  .science-prev-list { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .science-prev-chip { background: var(--blue-pale); color: var(--blue); border-radius: 20px; padding: 4px 12px; font-size: 0.7rem; font-weight: 700; }
+
   /* ─── Log ───────────────────────────────────────── */
   .log-form { background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); padding: 20px; margin-bottom: 14px; }
   .log-form h3 { font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); margin-bottom: 16px; }
@@ -1172,6 +1186,137 @@ const MILESTONES = [
   { days: 365, label: '1 Year' },
 ];
 
+const SCIENCE_TIMELINE = [
+  {
+    minHours: 0,
+    label: 'Hour 0',
+    title: 'The Decision Is Made',
+    brain: 'Your CB1 receptors are fully occupied by THC. Your brain\'s natural endocannabinoid system — which produces anandamide, your own "bliss molecule" — has been suppressed for as long as you\'ve been using regularly. The machinery is intact. It just needs time to wake up.',
+    body: 'THC is at peak concentration in your bloodstream. Your lungs have already begun clearing particulates. Your liver is preparing to metabolize THC into inactive compounds called THC-COOH.',
+    feel: 'You may feel a mix of resolve, anxiety, and restlessness. The anxiety is neurologically real — your amygdala has adapted to THC as a mood regulator, and it\'s noticing the shift. This discomfort is your brain beginning to recalibrate. It is not weakness.',
+  },
+  {
+    minHours: 2,
+    label: 'Hour 2',
+    title: 'THC Begins Clearing Your Blood',
+    brain: 'Blood THC levels are dropping. CB1 receptors are starting to notice the absence — not yet enough to cause significant symptoms, but the signal is registered. Your brain has not yet compensated.',
+    body: 'Your liver is actively converting THC into inactive metabolites. Heart rate is normalizing if it was elevated. Blood flow and circulation are improving within hours of stopping.',
+    feel: 'Mild restlessness or irritability is common. You may feel a subtle pull toward using — this is your brain\'s first withdrawal signal. It is mild, manageable, and temporary. Notice it without acting on it.',
+  },
+  {
+    minHours: 6,
+    label: 'Hour 6',
+    title: 'First Withdrawal Signals',
+    brain: 'With CB1 receptors underoccupied, your amygdala — the brain\'s threat-detection center — is becoming more reactive. THC was dampening this alarm system. Without it, baseline anxiety rises. Your brain\'s GABA (calming neurotransmitter) pathways are also adjusting.',
+    body: 'Temperature regulation is fluctuating — mild sweating or chills as your autonomic nervous system recalibrates. Blood pressure may be slightly elevated. Digestion may feel off.',
+    feel: 'Irritability, difficulty concentrating, restlessness. These are your nervous system\'s first responses to absence. They feel significant but are neurologically mild. Drink water, move your body, breathe slowly. You are not in danger.',
+  },
+  {
+    minHours: 12,
+    label: 'Hour 12',
+    title: 'Blood THC Nearly Gone',
+    brain: 'THC is largely cleared from your bloodstream. CB1 receptors are now mostly unoccupied — for the first time in a while, they\'re "empty." Dopamine release in your nucleus accumbens (reward center) is below your natural baseline as the system recalibrates.',
+    body: 'If you sleep tonight, expect disruption. THC suppresses REM sleep, and your brain will attempt REM rebound — more vivid, sometimes intense dreams as dream sleep increases to compensate. This is healthy and normal.',
+    feel: 'Low mood, foggy thinking, and a strong pull toward using. This is peak neurological hunger for THC — the system demanding what it has adapted to receive. Naming it helps: "This is withdrawal. It is temporary. My brain is adjusting."',
+  },
+  {
+    minHours: 24,
+    label: 'Day 1',
+    title: 'CB1 Receptor Upregulation Begins',
+    brain: 'Your brain has begun upregulation — literally growing new CB1 receptor sites to compensate for the absence of THC stimulation. This is the biological foundation of your recovery. The brain is not broken; it is actively rebuilding itself.',
+    body: 'THC metabolites remain in fat cells and urine (detectable for weeks), but your blood is clean. Your immune system — which THC suppresses by acting on CB2 receptors in immune cells — is beginning to recover its full function.',
+    feel: 'Withdrawal symptoms peak for most people between hours 24–72. Irritability, anxiety, and insomnia are most intense now. You are in the hardest window. Every hour you stay in it is an hour of genuine neurological repair happening inside you.',
+  },
+  {
+    minHours: 48,
+    label: 'Day 2',
+    title: 'Dopamine at Its Lowest Point',
+    brain: 'This is typically when dopamine function is most suppressed. Your nucleus accumbens is producing less dopamine than your natural baseline — it had adapted to THC-driven stimulation and is now recalibrating. Nothing feels rewarding right now because the chemistry genuinely isn\'t there yet. This is temporary and measurably reverses.',
+    body: 'Night sweats, vivid dreams, and disrupted sleep are peaking. Your body is working hard on thermoregulation and sleep architecture reorganization. This physical discomfort is your nervous system actively resetting — not suffering without purpose.',
+    feel: 'Flat, unmotivated, emotionally dull. This is neurological anhedonia — not depression, but a temporary chemical valley. Research is unambiguous: dopamine function recovers, and it recovers measurably. The valley has a floor, and you\'re near it.',
+  },
+  {
+    minHours: 72,
+    label: 'Day 3',
+    title: 'Blood Fully Clear — Recovery Accelerates',
+    brain: 'THC is completely gone from your bloodstream. CB1 receptor upregulation is accelerating. Your brain\'s own anandamide system is beginning to stir — producing more of its natural endocannabinoids to fill the gap. This is your endocannabinoid system waking up after a long sleep.',
+    body: 'Appetite is beginning to return. The endocannabinoid system regulates hunger via CB1 receptors in the hypothalamus; as they upregulate, normal appetite signals resume. Many people feel physically better from day 3 onward.',
+    feel: 'You may notice brief windows — minutes, maybe longer — where you feel almost normal. These are your first glimpses of your natural neurochemistry reasserting itself. They will get longer and more frequent. Write them down.',
+  },
+  {
+    minHours: 120,
+    label: 'Day 5',
+    title: 'The Acute Phase Turns',
+    brain: 'Research using PET imaging shows measurable CB1 receptor density increases by days 4–7. Your prefrontal cortex — the seat of decision-making and impulse control — is regaining baseline function. The worst neurological disruption is behind you.',
+    body: 'Physical symptoms are declining for most people. Sleep is still disrupted but trending toward improvement. The autonomic nervous system has largely stabilized — heart rate, temperature regulation, and digestion are normalizing.',
+    feel: 'Emotional swings continue but physical discomfort is easing. Cravings are present but shorter in duration and easier to ride out. You are past the peak. The slope is now upward and it doesn\'t reverse.',
+  },
+  {
+    minHours: 168,
+    label: 'Day 7',
+    title: 'One Week — Measurable Brain Recovery',
+    brain: 'Landmark milestone. PET scan studies show significant CB1 receptor density recovery at one week of abstinence. Your brain\'s natural reward system is beginning to respond to non-cannabis stimuli again — food, exercise, connection, music. Dopamine is rising toward baseline.',
+    body: 'Most acute physical withdrawal symptoms have resolved. Sleep quality is improving. Appetite is largely normalized. If you smoked, lung function is noticeably improving — airway cilia are recovering and mucus clearance is increasing.',
+    feel: 'You may start having genuinely good hours — moments of real clarity, pleasure, or calm. This is your authentic neurochemistry. Not THC. Not the memory of THC. You. It gets stronger from here.',
+  },
+  {
+    minHours: 336,
+    label: 'Day 14',
+    title: 'Dopamine System Actively Normalizing',
+    brain: 'The prefrontal cortex is significantly re-engaged. Studies show measurable improvements in working memory, attention, and impulse control by week two. Dopamine pathways are normalizing — the reward circuit is learning to respond to natural, unenhanced stimuli again.',
+    body: 'Inflammation markers are dropping. Your body is producing more of its own anandamide and 2-AG — the brain\'s two primary endocannabinoids — to fill the gap THC occupied. This is your endocannabinoid system rebuilding its natural tone.',
+    feel: 'Psychological cravings have replaced physical ones. These are habit-loops and emotional memory — not chemistry. They respond well to behavioral tools: pattern interruption, CBT reframing, EFT tapping. Willpower alone isn\'t the primary tool anymore.',
+  },
+  {
+    minHours: 504,
+    label: 'Day 21',
+    title: 'Anhedonia Lifting — Feeling Returns',
+    brain: 'Research shows significant CB1 receptor normalization around weeks 3–4. The anhedonia most people experience — the flat, joyless feeling — begins lifting as natural dopamine sensitivity is restored. Your brain is relearning to feel pleasure without a chemical shortcut.',
+    body: 'Your immune system is measurably stronger. THC suppresses lymphocyte and NK (natural killer) cell activity via CB2 receptors. Three weeks out, your immune cells are functioning at full capacity — you are genuinely more resilient.',
+    feel: 'Emotional range is returning. You may start feeling things more intensely — both good emotions and difficult ones. This is your nervous system waking up after being numbed. The intensity settles over time. What stays is depth.',
+  },
+  {
+    minHours: 720,
+    label: 'Day 30',
+    title: 'One Month — CB1 Receptors Largely Restored',
+    brain: 'A landmark neuroimaging study found that after 4 weeks of abstinence, former heavy users\' brain reward circuits were statistically indistinguishable from non-users on PET scans. CB1 receptor density has largely normalized. Your reward system is no longer chemically dependent on cannabis.',
+    body: 'Sleep architecture is largely restored — REM and deep sleep cycles have normalized. Cortisol (your primary stress hormone) patterns are stabilizing. Your metabolic rate and blood glucose regulation have normalized.',
+    feel: 'Most people report a meaningful shift around day 30 — more consistent energy, better recall, improved mood stability, genuine enjoyment of things. You are past the hardest neurological work. What comes next is consolidation and growth.',
+  },
+  {
+    minHours: 1440,
+    label: 'Day 60',
+    title: 'The Hippocampus Heals',
+    brain: 'The hippocampus — your center for memory formation and spatial navigation — is showing measurable structural recovery. Chronic cannabis use reduces hippocampal volume; abstinence reverses this through neurogenesis (the growth of new neurons). Your brain is literally building new cells.',
+    body: 'Sustained systemic recovery. Testosterone and other hormones suppressed by chronic THC are back to natural baseline. If you smoked, lung capacity has significantly improved — many people notice easier breathing and better physical endurance.',
+    feel: 'Working memory and focus are noticeably sharper. Many people report this as the point where they feel "like themselves again" — not just sober, but genuinely restored. That\'s because the restoration is real. The neuroscience confirms it.',
+  },
+  {
+    minHours: 2160,
+    label: 'Day 90',
+    title: 'Near-Complete Neurological Recovery',
+    brain: 'For most users, 90 days marks near-complete neurological recovery. Dopamine receptor sensitivity is fully normalized. Prefrontal cortex function is at baseline — decision-making, emotional regulation, and impulse control are all restored. Your brain has rebuilt itself.',
+    body: 'Full systemic recovery. Your endocannabinoid system is producing natural anandamide and 2-AG at baseline levels — regulating your mood, sleep, appetite, and pain response without any external input. This is whole-body restoration.',
+    feel: 'The gap between using-you and sober-you is now vivid and undeniable. Cravings are rare and brief. What you have built over 90 days is not just the absence of cannabis — it is the neurological architecture of a free person.',
+  },
+  {
+    minHours: 4320,
+    label: 'Day 180',
+    title: 'Peak Neuroplasticity',
+    brain: 'Cannabis chronically suppresses BDNF — brain-derived neurotrophic factor, the protein that drives neuroplasticity, learning, and memory consolidation. Six months out, BDNF levels are elevated above your using-baseline. Your brain is growing new connections faster than it has in years.',
+    body: 'Complete restoration across every organ system THC affected — immune, endocrine, cardiovascular, respiratory. Every biological marker has returned to or exceeded your natural baseline.',
+    feel: 'You are living proof of neurological recovery. The science is unambiguous: your brain at six months is measurably, structurally different from your brain when using. Not just different. Better.',
+  },
+  {
+    minHours: 8760,
+    label: 'Day 365',
+    title: 'One Year — Full Restoration',
+    brain: 'Research shows that at one year, former users\' brains show no statistically significant differences from never-users on cognitive testing, neuroimaging, or neurochemical markers. Full endocannabinoid tone is restored. Neurologically, you are a non-user.',
+    body: 'Complete. Your body has replaced and regenerated every affected tissue. Every system — immune, hormonal, respiratory, cardiovascular — is operating at natural peak capacity. The biological slate is clean.',
+    feel: 'This is not just a year of sobriety. This is a rebuilt life. One year ago you made a decision, and your brain honored it by healing itself completely. The neuroscience is unanimous: you are not the person who used. You are more.',
+  },
+];
+
 const PHASES = [
   {
     min: -1, max: -1,
@@ -1468,7 +1613,6 @@ function tickCounter() {
     var diff = Math.max(0, Date.now() - quitMs);
     var totalSecs = Math.floor(diff / 1000);
     var days  = Math.floor(totalSecs / 86400);
-    var dataDay = days;
     var hours = Math.floor((totalSecs % 86400) / 3600);
     var mins  = Math.floor((totalSecs % 3600) / 60);
     var secs  = totalSecs % 60;
@@ -1480,7 +1624,7 @@ function tickCounter() {
     document.getElementById('secCount').textContent = secs;
 
     try { renderMilestones(days); } catch(e) {}
-    try { renderEducation(dataDay); } catch(e) {}
+    try { renderEducation(diff / 3600000); } catch(e) {}
   } catch(e) {}
 }
 
@@ -1531,54 +1675,71 @@ function renderCBT(days) {
   document.getElementById('todayJournalContent').innerHTML = journalHTML;
 }
 
-function renderEducation(days) {
-  renderCBT(days);
-  const phase = getPhase(days);
-  const noteEl = document.getElementById('eduNote');
-  if (days < 0) {
-    noteEl.textContent = 'Content tailored to your preparation stage';
-  } else if (days === 0) {
-    noteEl.textContent = 'Day 0 — your journey begins now';
-  } else {
-    noteEl.textContent = `Day ${days} — content updated to your journey`;
+function renderScienceTimeline(totalHours) {
+  if (totalHours < 0) return '';
+  var unlocked = SCIENCE_TIMELINE.filter(function(e) { return totalHours >= e.minHours; });
+  if (unlocked.length === 0) return '';
+
+  var current = unlocked[unlocked.length - 1];
+  var previous = unlocked.slice(0, -1);
+  var next = SCIENCE_TIMELINE.find(function(e) { return totalHours < e.minHours; });
+
+  var h = totalHours;
+  var color = h < 24 ? '#c0392b' : h < 72 ? '#b8621a' : h < 168 ? '#7c6b9e' : h < 720 ? '#2d8a8a' : '#3d7a5e';
+  var bgColor = h < 24 ? '#fff5f5' : h < 72 ? '#fef3e8' : h < 168 ? '#f2eef9' : h < 720 ? '#e6f4f4' : '#eaf5ee';
+
+  var nextHTML = '';
+  if (next) {
+    var hoursLeft = next.minHours - totalHours;
+    var dLeft = Math.floor(hoursLeft / 24);
+    var hLeft = Math.floor(hoursLeft % 24);
+    var mLeft = Math.floor((hoursLeft * 60) % 60);
+    var timeStr = dLeft > 0 ? (dLeft + 'd ' + hLeft + 'h') : (hLeft > 0 ? hLeft + 'h ' + mLeft + 'm' : mLeft + 'm');
+    nextHTML = '<div class="science-next"><span class="science-next-label">Next milestone in ' + timeStr + '</span><span class="science-next-title">' + next.label + ' — ' + next.title + '</span></div>';
   }
 
-  const content = document.getElementById('phaseContent');
-  content.innerHTML = `
-    <div class="phase-banner" style="background:${phase.bgColor}; border-left-color:${phase.borderColor};">
-      <div class="phase-name" style="color:${phase.color};">${phase.name}</div>
-      <div class="phase-desc">${phase.desc}</div>
-      <div class="phase-sub">${phase.sub}</div>
-    </div>
+  var prevHTML = '';
+  if (previous.length > 0) {
+    prevHTML = '<div class="science-prev-list">' + previous.map(function(e) { return '<div class="science-prev-chip">✓ ' + e.label + '</div>'; }).join('') + '</div>';
+  }
 
-    <div class="card">
-      <div class="card-title"><span>🧠</span> How Cannabis Affects Your Brain</div>
-      <div class="card-body">
-        THC mimics anandamide — your brain's natural "bliss" molecule — and floods CB1 receptors in the limbic system, prefrontal cortex, and hippocampus. Over time, the brain <strong>downregulates</strong> these receptors (makes fewer of them) to compensate. When you stop, your brain needs time to rebuild its natural endocannabinoid tone.
-        <div class="info-box" style="margin-top:10px;">CB1 receptors begin recovering within <strong>2 days</strong> and show significant normalization by <strong>4 weeks</strong>. Full recovery can take 3–6 months depending on use history.</div>
-      </div>
-    </div>
+  return '<div class="science-current" style="border-left-color:' + color + '; background:' + bgColor + ';">' +
+    '<div class="science-window-label" style="color:' + color + ';">' + current.label + '</div>' +
+    '<div class="science-window-title">' + current.title + '</div>' +
+    '<div class="science-section"><div class="science-section-label">🧠 Your Brain</div><div class="science-section-body">' + current.brain + '</div></div>' +
+    '<div class="science-section"><div class="science-section-label">🫀 Your Body</div><div class="science-section-body">' + current.body + '</div></div>' +
+    '<div class="science-section"><div class="science-section-label">💭 Why You Feel This</div><div class="science-section-body">' + current.feel + '</div></div>' +
+    '</div>' + nextHTML + prevHTML;
+}
 
-    <div class="card">
-      <div class="card-title"><span>🧠</span> Your Brain Right Now</div>
-      <div class="card-body">${phase.brain}</div>
-    </div>
+function renderEducation(totalHours) {
+  var days = totalHours < 0 ? -1 : Math.floor(totalHours / 24);
+  renderCBT(days);
+  var phase = getPhase(days);
+  var noteEl = document.getElementById('eduNote');
+  if (totalHours < 0) {
+    noteEl.textContent = 'Content tailored to your preparation stage';
+  } else if (totalHours < 24) {
+    noteEl.textContent = 'Day 0 — your journey begins now';
+  } else {
+    noteEl.textContent = 'Day ' + days + ' — science updated to your timeline';
+  }
 
-    <div class="card">
-      <div class="card-title"><span>🫀</span> Your Body Right Now</div>
-      <div class="card-body">${phase.body}</div>
-    </div>
+  var scienceHTML = renderScienceTimeline(totalHours);
 
-    <div class="card">
-      <div class="card-title"><span>⚡</span> You May Be Experiencing</div>
-      <div class="card-body">
-        <div class="chip-list">
-          ${phase.symptoms.map(s => `<div class="chip">${s}</div>`).join('')}
-        </div>
-        <div class="info-box" style="margin-top:12px;">All of these are normal and temporary. They are signs your brain is healing, not signs that something is wrong.</div>
-      </div>
-    </div>
-  `;
+  var symptomsHTML = '<div class="card"><div class="card-title"><span>⚡</span> You May Be Experiencing</div><div class="card-body"><div class="chip-list">' +
+    phase.symptoms.map(function(s) { return '<div class="chip">' + s + '</div>'; }).join('') +
+    '</div><div class="info-box" style="margin-top:12px;">All of these are normal and temporary. They are signs your brain is healing, not signs that something is wrong.</div></div></div>';
+
+  var content = document.getElementById('phaseContent');
+  content.innerHTML =
+    '<div class="phase-banner" style="background:' + phase.bgColor + '; border-left-color:' + phase.borderColor + ';">' +
+      '<div class="phase-name" style="color:' + phase.color + ';">' + phase.name + '</div>' +
+      '<div class="phase-desc">' + phase.desc + '</div>' +
+      '<div class="phase-sub">' + phase.sub + '</div>' +
+    '</div>' +
+    (scienceHTML ? '<div class="section-title" style="margin-top:20px;">What\'s Happening Right Now</div>' + scienceHTML : '') +
+    symptomsHTML;
 }
 
 // ——— Nav ———
