@@ -492,11 +492,11 @@
     <!-- Injected by JS -->
   </div>
 
-  <div class="section-title">Journal Prompts for Today</div>
+  <div class="section-title">Today's Journal Prompt</div>
   <div id="todayJournalContent">
     <div class="journal-card">
-      <div class="journal-header">✏️ Reflections</div>
-      <div class="journal-no-date" style="color:rgba(255,255,255,0.4);">Set your quit date to see prompts tailored to where you are.</div>
+      <div class="journal-header">✏️ Reflection</div>
+      <div class="journal-no-date" style="color:rgba(255,255,255,0.4);">Set your quit date to see a prompt tailored to where you are.</div>
     </div>
   </div>
 
@@ -1156,7 +1156,7 @@
   </div>
 
   <!-- Day-specific Journal Prompts -->
-  <div class="section-title">Journal Prompts for Today</div>
+  <div class="section-title">Journal Prompts — Full Set</div>
   <div id="cbtJournalContent">
     <div class="journal-card">
       <div class="journal-header">✏️ Reflections</div>
@@ -1665,14 +1665,24 @@ function renderCBT(days) {
     </div>
   `;
 
-  // Journal prompts (CBT tab + Today tab)
-  const journalHTML = `
+  // CBT tab — full set of prompts
+  const cbtJournalHTML = `
     <div class="journal-card">
       <div class="journal-header">✏️ Journal Prompts — ${phase.name}</div>
       ${phase.journal.map(p => `<div class="journal-prompt">${p}</div>`).join('')}
     </div>`;
-  document.getElementById('cbtJournalContent').innerHTML = journalHTML;
-  document.getElementById('todayJournalContent').innerHTML = journalHTML;
+  document.getElementById('cbtJournalContent').innerHTML = cbtJournalHTML;
+
+  // Today tab — single rotating prompt (changes each day)
+  const promptIndex = days >= 0 ? days % phase.journal.length : 0;
+  const featuredPrompt = phase.journal[promptIndex];
+  const todayJournalHTML = `
+    <div class="journal-card">
+      <div class="journal-header">✏️ Reflection for ${phase.name}</div>
+      <div class="journal-prompt" style="font-size:1rem; line-height:1.7;">${featuredPrompt}</div>
+      <div style="margin-top:14px; font-size:0.7rem; color:rgba(255,255,255,0.35); text-transform:uppercase; letter-spacing:1px;">Full set of prompts in the CBT tab</div>
+    </div>`;
+  document.getElementById('todayJournalContent').innerHTML = todayJournalHTML;
 }
 
 function renderScienceTimeline(totalHours) {
