@@ -285,12 +285,14 @@
 
   .used-toggle { display: flex; gap: 8px; margin-bottom: 16px; }
   .used-btn { flex: 1; padding: 12px; border-radius: 12px; border: 2px solid var(--border); background: var(--bg); font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: all 0.15s; color: var(--muted); }
-  .used-btn.selected-no  { border-color: #3d7a5e; background: #e8f5ee; color: #3d7a5e; }
-  .used-btn.selected-yes { border-color: var(--red); background: #fff0f0; color: var(--red); }
+  .used-btn.selected-no   { border-color: #3d7a5e; background: #e8f5ee; color: #3d7a5e; }
+  .used-btn.selected-yes  { border-color: var(--red); background: #fff0f0; color: var(--red); }
+  .used-btn.selected-note { border-color: var(--blue); background: var(--blue-pale); color: var(--blue); }
 
   .used-badge { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 0.68rem; font-weight: 700; margin-left: 4px; }
-  .used-badge-no  { background: #e8f5ee; color: #3d7a5e; }
-  .used-badge-yes { background: #fff0f0; color: var(--red); }
+  .used-badge-no   { background: #e8f5ee; color: #3d7a5e; }
+  .used-badge-yes  { background: #fff0f0; color: var(--red); }
+  .used-badge-note { background: var(--blue-pale); color: var(--blue); }
   .form-field { margin-bottom: 14px; }
   .form-field label { display: block; font-size: 0.68rem; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
   .form-field input, .form-field select, .form-field textarea { width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 12px; font-size: 0.9rem; color: var(--text); background: var(--bg); font-family: inherit; transition: border-color 0.15s; -webkit-appearance: none; }
@@ -927,9 +929,10 @@
     <h3>Add Entry</h3>
     <div class="form-field">
       <label>Did you use?</label>
-      <div class="used-toggle">
-        <button type="button" class="used-btn selected-no" id="usedNo"  onclick="setUsed('no')">🚫 No — Craving Only</button>
-        <button type="button" class="used-btn"             id="usedYes" onclick="setUsed('yes')">✅ Yes — I Used</button>
+      <div class="used-toggle" style="flex-wrap:wrap;">
+        <button type="button" class="used-btn selected-no" id="usedNo"   onclick="setUsed('no')">🚫 Craving</button>
+        <button type="button" class="used-btn"             id="usedYes"  onclick="setUsed('yes')">✅ Used</button>
+        <button type="button" class="used-btn"             id="usedNote" onclick="setUsed('note')" style="flex-basis:100%;">📝 Note Only</button>
       </div>
     </div>
     <div class="form-field">
@@ -967,6 +970,7 @@
       </div>
     </div>
     </div><!-- /useFieldsWrapper -->
+    <div id="cravingFieldsWrapper">
     <div class="form-field">
       <label>Craving Intensity (1–10)</label>
       <div class="intensity-row" id="intensityBtns">
@@ -997,8 +1001,9 @@
         <option>Other</option>
       </select>
     </div>
+    </div><!-- /cravingFieldsWrapper -->
     <div class="form-field">
-      <label>Notes (optional)</label>
+      <label>Notes</label>
       <textarea id="logNotes" placeholder="What was going on? How did you feel before, during, after?"></textarea>
     </div>
     <button class="btn-primary" style="width:100%;" onclick="saveLogEntry()">Save Entry</button>
@@ -1782,10 +1787,11 @@ let selectedUsed = 'no';
 
 function setUsed(val) {
   selectedUsed = val;
-  document.getElementById('usedNo').className  = 'used-btn' + (val === 'no'  ? ' selected-no'  : '');
-  document.getElementById('usedYes').className = 'used-btn' + (val === 'yes' ? ' selected-yes' : '');
-  // Show/hide method+amount fields
-  document.getElementById('useFieldsWrapper').style.display = val === 'yes' ? 'block' : 'none';
+  document.getElementById('usedNo').className   = 'used-btn' + (val === 'no'   ? ' selected-no'   : '');
+  document.getElementById('usedYes').className  = 'used-btn' + (val === 'yes'  ? ' selected-yes'  : '');
+  document.getElementById('usedNote').className = 'used-btn' + (val === 'note' ? ' selected-note' : '');
+  document.getElementById('useFieldsWrapper').style.display    = val === 'yes'  ? 'block' : 'none';
+  document.getElementById('cravingFieldsWrapper').style.display = val === 'note' ? 'none'  : 'block';
 }
 
 function renderIntensityBtns() {
@@ -1815,8 +1821,8 @@ function saveLogEntry() {
   const notes = document.getElementById('logNotes').value.trim();
 
   if (!dt) return alert('Please set a date and time.');
-  if (!selectedIntensity) return alert('Please select a craving intensity.');
-  if (!trigger) return alert('Please select a trigger.');
+  if (used !== 'note' && !selectedIntensity) return alert('Please select a craving intensity.');
+  if (used !== 'note' && !trigger) return alert('Please select a trigger.');
 
   let entries = getLogEntries();
 
@@ -1920,7 +1926,7 @@ function renderLog() {
       <div class="log-entry">
         <div class="log-intensity-badge" style="background:${intBg}; color:${intColor};">${e.intensity}</div>
         <div style="flex:1; min-width:0;">
-          <div class="log-entry-meta">${dateStr} at ${timeStr}${e.method ? ' · ' + e.method : ''}${e.amount ? ' · ' + e.amount + ' ' + (e.amountUnit || 'hits') : ''}<span class="used-badge ${e.used === 'yes' ? 'used-badge-yes' : 'used-badge-no'}">${e.used === 'yes' ? 'Used' : 'Craving'}</span></div>
+          <div class="log-entry-meta">${dateStr} at ${timeStr}${e.method ? ' · ' + e.method : ''}${e.amount ? ' · ' + e.amount + ' ' + (e.amountUnit || 'hits') : ''}<span class="used-badge ${e.used === 'yes' ? 'used-badge-yes' : e.used === 'note' ? 'used-badge-note' : 'used-badge-no'}">${e.used === 'yes' ? 'Used' : e.used === 'note' ? 'Note' : 'Craving'}</span></div>
           <div class="log-entry-reason"><strong>${e.trigger}</strong>${e.notes ? ' — ' + e.notes : ''}</div>
         </div>
         <div class="log-actions">
