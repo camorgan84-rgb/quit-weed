@@ -1821,7 +1821,7 @@ function saveLogEntry() {
   let entries = getLogEntries();
 
   if (editingId !== null) {
-    entries = entries.map(e => e.id === editingId ? { ...e, dt, intensity: selectedIntensity, trigger, notes } : e);
+    entries = entries.map(e => e.id === editingId ? { ...e, dt, used, method, amount, amountUnit, intensity: selectedIntensity, trigger, notes } : e);
     editingId = null;
     document.querySelector('#section-log .btn-primary').textContent = 'Save Entry';
     document.querySelector('.log-form h3').textContent = 'Add Entry';
