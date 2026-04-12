@@ -1994,6 +1994,17 @@ function saveLogEntry() {
     document.querySelector('.log-form h3').textContent = 'Add Entry';
   } else {
     entries.unshift({ id: Date.now(), dt, used, method, amount, amountUnit, intensity: selectedIntensity, trigger, notes });
+    if (used === 'yes') {
+      var logMs = new Date(dt).getTime();
+      if (logMs && !isNaN(logMs)) {
+        storageSet('quitDate', String(logMs));
+        if (timerInterval) clearInterval(timerInterval);
+        timerInterval = setInterval(updateCounter, 1000);
+        updateCounter();
+        document.getElementById('counterSetup').style.display = 'none';
+        document.getElementById('counterDisplay').style.display = 'block';
+      }
+    }
   }
 
   storageSet('usageLog', JSON.stringify(entries));
