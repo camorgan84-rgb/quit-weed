@@ -265,6 +265,18 @@
   ul.clean-list { padding-left: 18px; }
   ul.clean-list li { margin-bottom: 5px; font-size: 0.87rem; line-height: 1.6; }
 
+  /* ─── Reflections ───────────────────────────────── */
+  .reflection-compose { background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); padding: 18px; margin-bottom: 16px; }
+  .reflection-entry { background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); padding: 18px; margin-bottom: 10px; position: relative; }
+  .reflection-entry-date { font-size: 0.68rem; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .reflection-entry-title { font-size: 1rem; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
+  .reflection-entry-body { font-size: 0.9rem; color: var(--text); line-height: 1.7; white-space: pre-wrap; }
+  .reflection-actions { display: flex; gap: 6px; margin-top: 12px; justify-content: flex-end; }
+  .reflection-btn { background: none; border: 1px solid var(--border); color: var(--muted); padding: 5px 12px; border-radius: 8px; font-size: 0.75rem; cursor: pointer; }
+  .reflection-btn:hover { background: var(--blue-pale); color: var(--blue); border-color: var(--blue); }
+  .reflection-btn.delete:hover { background: #fff0f0; color: var(--red); border-color: var(--red); }
+  .reflection-empty { text-align: center; color: var(--muted); font-size: 0.88rem; padding: 32px 16px; }
+
   /* ─── Science Timeline ──────────────────────────── */
   .science-current { border-radius: var(--radius); border-left: 4px solid #2d8a8a; padding: 20px; margin-bottom: 12px; }
   .science-window-label { font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 4px; }
@@ -454,6 +466,10 @@
   <button class="nav-item active" onclick="showSection('today', this)">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
     <span>Today</span>
+  </button>
+  <button class="nav-item" onclick="showSection('reflections', this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+    <span>Journal</span>
   </button>
   <button class="nav-item" onclick="showSection('log', this)">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
@@ -902,6 +918,19 @@
       </div>
     </div>
   </div>
+</div>
+
+<!-- SECTION: Reflections -->
+<div class="section" id="section-reflections">
+  <div class="section-title">Reflections</div>
+
+  <div class="reflection-compose">
+    <input type="text" id="reflectionTitle" placeholder="Title (optional)" style="width:100%; padding:12px 14px; border:1.5px solid var(--border); border-radius:12px; font-size:0.95rem; color:var(--text); margin-bottom:10px; background:var(--bg);">
+    <textarea id="reflectionBody" placeholder="Write freely. This is your space." style="width:100%; padding:14px; border:1.5px solid var(--border); border-radius:12px; font-size:0.95rem; color:var(--text); min-height:140px; resize:vertical; line-height:1.6; background:var(--bg);"></textarea>
+    <button class="btn-primary" style="width:100%; margin-top:10px;" onclick="saveReflection()">Save Reflection</button>
+  </div>
+
+  <div id="reflectionsList"></div>
 </div>
 
 <!-- SECTION: Log -->
@@ -1924,6 +1953,53 @@ function renderEducation(totalHours) {
     symptomsHTML;
 }
 
+// ——— Reflections ———
+function getReflections() {
+  try { return JSON.parse(storageGet('reflections') || '[]'); } catch(e) { return []; }
+}
+
+function saveReflection() {
+  var title = document.getElementById('reflectionTitle').value.trim();
+  var body = document.getElementById('reflectionBody').value.trim();
+  if (!body) return alert('Please write something before saving.');
+  var reflections = getReflections();
+  reflections.unshift({ id: Date.now(), title: title, body: body });
+  storageSet('reflections', JSON.stringify(reflections));
+  document.getElementById('reflectionTitle').value = '';
+  document.getElementById('reflectionBody').value = '';
+  renderReflections();
+}
+
+function deleteReflection(id) {
+  if (!confirm('Delete this reflection?')) return;
+  var reflections = getReflections().filter(function(r) { return r.id !== id; });
+  storageSet('reflections', JSON.stringify(reflections));
+  renderReflections();
+}
+
+function renderReflections() {
+  var reflections = getReflections();
+  var container = document.getElementById('reflectionsList');
+  if (!container) return;
+  if (reflections.length === 0) {
+    container.innerHTML = '<div class="reflection-empty">Your reflections will appear here.<br>Write your first one above.</div>';
+    return;
+  }
+  container.innerHTML = reflections.map(function(r) {
+    var d = new Date(r.id);
+    var dateStr = d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+    var timeStr = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+    return '<div class="reflection-entry">' +
+      '<div class="reflection-entry-date">' + dateStr + ' at ' + timeStr + '</div>' +
+      (r.title ? '<div class="reflection-entry-title">' + r.title + '</div>' : '') +
+      '<div class="reflection-entry-body">' + r.body.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</div>' +
+      '<div class="reflection-actions">' +
+        '<button class="reflection-btn delete" onclick="deleteReflection(' + r.id + ')">Delete</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
 // ——— Nav ———
 function showSection(name, btn) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
@@ -2127,6 +2203,7 @@ window.addEventListener('DOMContentLoaded', () => {
   renderLog();
   startCounter();
   setUsed('no');
+  renderReflections();
 });
 </script>
 </body>
