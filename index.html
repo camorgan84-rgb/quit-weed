@@ -1909,18 +1909,13 @@ function renderScienceTimeline(totalHours) {
     nextHTML = '<div class="science-next"><span class="science-next-label">Next milestone in ' + timeStr + '</span><span class="science-next-title">' + next.label + ' — ' + next.title + '</span></div>';
   }
 
-  var prevHTML = '';
-  if (previous.length > 0) {
-    prevHTML = '<div class="science-prev-list">' + previous.map(function(e) { return '<div class="science-prev-chip">✓ ' + e.label + '</div>'; }).join('') + '</div>';
-  }
-
   return '<div class="science-current" style="border-left-color:' + color + '; background:' + bgColor + ';">' +
     '<div class="science-window-label" style="color:' + color + ';">' + current.label + '</div>' +
     '<div class="science-window-title">' + current.title + '</div>' +
     '<div class="science-section"><div class="science-section-label">🧠 Your Brain</div><div class="science-section-body">' + current.brain + '</div></div>' +
     '<div class="science-section"><div class="science-section-label">🫀 Your Body</div><div class="science-section-body">' + current.body + '</div></div>' +
     '<div class="science-section"><div class="science-section-label">💭 Why You Feel This</div><div class="science-section-body">' + current.feel + '</div></div>' +
-    '</div>' + nextHTML + prevHTML;
+    '</div>' + nextHTML;
 }
 
 function renderEducation(totalHours) {
