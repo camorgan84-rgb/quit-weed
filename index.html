@@ -275,6 +275,7 @@
   .reflection-btn { background: none; border: 1px solid var(--border); color: var(--muted); padding: 5px 12px; border-radius: 8px; font-size: 0.75rem; cursor: pointer; }
   .reflection-btn:hover { background: var(--blue-pale); color: var(--blue); border-color: var(--blue); }
   .reflection-btn.delete:hover { background: #fff0f0; color: var(--red); border-color: var(--red); }
+  .reflection-btn.edit:hover { background: var(--blue-pale); color: var(--blue); border-color: var(--blue); }
   .reflection-empty { text-align: center; color: var(--muted); font-size: 0.88rem; padding: 32px 16px; }
 
   /* ─── Science Timeline ──────────────────────────── */
@@ -927,7 +928,7 @@
   <div class="reflection-compose">
     <input type="text" id="reflectionTitle" placeholder="Title (optional)" style="width:100%; padding:12px 14px; border:1.5px solid var(--border); border-radius:12px; font-size:0.95rem; color:var(--text); margin-bottom:10px; background:var(--bg);">
     <textarea id="reflectionBody" placeholder="Write freely. This is your space." style="width:100%; padding:14px; border:1.5px solid var(--border); border-radius:12px; font-size:0.95rem; color:var(--text); min-height:140px; resize:vertical; line-height:1.6; background:var(--bg);"></textarea>
-    <button class="btn-primary" style="width:100%; margin-top:10px;" onclick="saveReflection()">Save Reflection</button>
+    <button class="btn-primary" id="reflectionSaveBtn" style="width:100%; margin-top:10px;" onclick="saveReflection()">Save Reflection</button>
   </div>
 
   <div id="reflectionsList"></div>
@@ -1953,22 +1954,50 @@ function getReflections() {
   try { return JSON.parse(storageGet('reflections') || '[]'); } catch(e) { return []; }
 }
 
+var editingReflectionId = null;
+
 function saveReflection() {
   var title = document.getElementById('reflectionTitle').value.trim();
   var body = document.getElementById('reflectionBody').value.trim();
   if (!body) return alert('Please write something before saving.');
   var reflections = getReflections();
-  reflections.unshift({ id: Date.now(), title: title, body: body });
+  if (editingReflectionId) {
+    reflections = reflections.map(function(r) {
+      return r.id === editingReflectionId ? { id: r.id, title: title, body: body } : r;
+    });
+    editingReflectionId = null;
+    document.getElementById('reflectionSaveBtn').textContent = 'Save Reflection';
+  } else {
+    reflections.unshift({ id: Date.now(), title: title, body: body });
+  }
   storageSet('reflections', JSON.stringify(reflections));
   document.getElementById('reflectionTitle').value = '';
   document.getElementById('reflectionBody').value = '';
   renderReflections();
 }
 
+function editReflection(id) {
+  var reflections = getReflections();
+  var r = reflections.find(function(r) { return r.id === id; });
+  if (!r) return;
+  document.getElementById('reflectionTitle').value = r.title || '';
+  document.getElementById('reflectionBody').value = r.body;
+  editingReflectionId = id;
+  document.getElementById('reflectionSaveBtn').textContent = 'Update Reflection';
+  document.getElementById('reflectionTitle').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.getElementById('reflectionBody').focus();
+}
+
 function deleteReflection(id) {
   if (!confirm('Delete this reflection?')) return;
   var reflections = getReflections().filter(function(r) { return r.id !== id; });
   storageSet('reflections', JSON.stringify(reflections));
+  if (editingReflectionId === id) {
+    editingReflectionId = null;
+    document.getElementById('reflectionTitle').value = '';
+    document.getElementById('reflectionBody').value = '';
+    document.getElementById('reflectionSaveBtn').textContent = 'Save Reflection';
+  }
   renderReflections();
 }
 
@@ -1989,6 +2018,7 @@ function renderReflections() {
       (r.title ? '<div class="reflection-entry-title">' + r.title + '</div>' : '') +
       '<div class="reflection-entry-body">' + r.body.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</div>' +
       '<div class="reflection-actions">' +
+        '<button class="reflection-btn edit" onclick="editReflection(' + r.id + ')">Edit</button>' +
         '<button class="reflection-btn delete" onclick="deleteReflection(' + r.id + ')">Delete</button>' +
       '</div>' +
     '</div>';
