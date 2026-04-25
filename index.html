@@ -466,7 +466,7 @@
   .reason-item:last-child { border-bottom: none; padding-bottom: 0; }
   .reason-num { width: 26px; height: 26px; border-radius: 50%; background: var(--blue-pale); color: var(--blue); font-size: 0.72rem; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
   .reason-text { flex: 1; font-size: 0.9rem; color: var(--text); line-height: 1.5; }
-  .reason-del { background: none; border: none; color: var(--border); font-size: 1.1rem; cursor: pointer; padding: 2px 4px; border-radius: 6px; line-height: 1; transition: all 0.15s; }
+  .reason-del { background: none; border: none; color: var(--muted); font-size: 1.1rem; cursor: pointer; padding: 2px 6px; border-radius: 6px; line-height: 1; transition: all 0.15s; }
   .reason-del:hover { color: var(--red); background: #fff0f0; }
   .reasons-empty { font-size: 0.85rem; color: var(--muted); font-style: italic; padding: 6px 0; }
 
@@ -636,10 +636,6 @@
   <button class="nav-item" onclick="showSection('log', this)">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
     <span>Log</span>
-  </button>
-  <button class="nav-item" onclick="showSection('reflections', this)">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-    <span>Journal</span>
   </button>
   <button class="nav-item" onclick="showSection('cbt', this)">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
@@ -1342,19 +1338,6 @@
       </div>
     </div>
   </div>
-</div>
-
-<!-- SECTION: Reflections -->
-<div class="section" id="section-reflections">
-  <div class="section-title">Reflections</div>
-
-  <div class="reflection-compose">
-    <input type="text" id="reflectionTitle" placeholder="Title (optional)" style="width:100%; padding:12px 14px; border:1.5px solid var(--border); border-radius:12px; font-size:0.95rem; color:var(--text); margin-bottom:10px; background:var(--bg);">
-    <textarea id="reflectionBody" placeholder="Write freely. This is your space." style="width:100%; padding:14px; border:1.5px solid var(--border); border-radius:12px; font-size:0.95rem; color:var(--text); min-height:140px; resize:vertical; line-height:1.6; background:var(--bg);"></textarea>
-    <button class="btn-primary" id="reflectionSaveBtn" style="width:100%; margin-top:10px;" onclick="saveReflection()">Save Reflection</button>
-  </div>
-
-  <div id="reflectionsList"></div>
 </div>
 
 <!-- SECTION: Log -->
