@@ -414,6 +414,122 @@
     .counter-sub { gap: 20px; }
     .intensity-btn { width: 30px; height: 30px; font-size: 0.78rem; }
   }
+
+  /* ─── Emergency SOS ─────────────────────────────── */
+  .sos-float {
+    position: fixed; bottom: 80px; right: 16px; z-index: 200;
+    background: linear-gradient(135deg, #e85f5f, #c0392b);
+    color: white; border: none; border-radius: 50px;
+    padding: 11px 18px; font-size: 0.78rem; font-weight: 800;
+    cursor: pointer; box-shadow: 0 4px 20px rgba(200,50,50,0.45);
+    display: flex; align-items: center; gap: 6px; letter-spacing: 0.3px;
+    transition: transform 0.15s;
+  }
+  .sos-float:active { transform: scale(0.95); }
+  .sos-modal {
+    display: none; position: fixed; inset: 0;
+    background: rgba(8,12,36,0.92); z-index: 1000;
+    overflow-y: auto; padding: 24px 16px 110px;
+  }
+  .sos-modal.open { display: block; }
+  .sos-modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+  .sos-modal-title { font-size: 1.1rem; font-weight: 800; color: white; }
+  .sos-close { background: rgba(255,255,255,0.1); border: none; color: white; border-radius: 50%; width: 36px; height: 36px; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .sos-step { background: rgba(255,255,255,0.06); border-radius: 16px; padding: 20px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.09); }
+  .sos-step-num { font-size: 0.62rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.4); margin-bottom: 5px; }
+  .sos-step-title { font-size: 1rem; font-weight: 800; color: white; margin-bottom: 8px; }
+  .sos-step-body { font-size: 0.86rem; color: rgba(255,255,255,0.72); line-height: 1.65; }
+  .urge-bar-bg { background: rgba(255,255,255,0.1); border-radius: 8px; height: 18px; overflow: hidden; margin: 14px 0 6px; }
+  .urge-bar-fill { height: 100%; border-radius: 8px; background: linear-gradient(90deg, #5558e8, #e85f5f); transition: width 1s linear; width: 0%; }
+  .urge-bar-label { text-align: center; font-size: 0.8rem; color: rgba(255,255,255,0.6); }
+  .breath-ring {
+    width: 110px; height: 110px; border-radius: 50%;
+    border: 3px solid rgba(255,255,255,0.25);
+    margin: 16px auto 6px; display: flex; align-items: center; justify-content: center;
+    font-size: 0.88rem; font-weight: 800; color: white;
+    background: rgba(85,88,232,0.25);
+    transition: transform 4s ease-in-out, background 4s ease-in-out;
+  }
+  .breath-ring.inhale { transform: scale(1.38); background: rgba(85,88,232,0.55); }
+  .breath-ring.hold   { transform: scale(1.38); background: rgba(60,160,100,0.45); }
+  .breath-ring.exhale { transform: scale(1);    background: rgba(85,88,232,0.1); }
+  .breath-instr { text-align: center; font-size: 0.82rem; font-weight: 700; color: rgba(255,255,255,0.75); margin-top: 4px; }
+  .breath-count { text-align: center; font-size: 2rem; font-weight: 900; color: white; min-height: 2.4rem; }
+  .sos-action-btn { width: 100%; background: rgba(255,255,255,0.08); color: white; border: 1px solid rgba(255,255,255,0.18); border-radius: 12px; padding: 12px; font-weight: 700; font-size: 0.9rem; cursor: pointer; margin-top: 10px; }
+
+  /* ─── My Reasons ─────────────────────────────────── */
+  .reasons-add-row { display: flex; gap: 8px; margin-bottom: 12px; }
+  .reasons-add-row input { flex: 1; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 0.9rem; color: var(--text); background: var(--bg); font-family: inherit; }
+  .reasons-add-row input:focus { outline: none; border-color: var(--blue); }
+  .reasons-add-btn { background: var(--blue); color: white; border: none; border-radius: 10px; padding: 10px 16px; font-weight: 700; cursor: pointer; font-size: 0.9rem; white-space: nowrap; }
+  .reason-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .reason-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .reason-num { width: 26px; height: 26px; border-radius: 50%; background: var(--blue-pale); color: var(--blue); font-size: 0.72rem; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .reason-text { flex: 1; font-size: 0.9rem; color: var(--text); line-height: 1.5; }
+  .reason-del { background: none; border: none; color: var(--border); font-size: 1.1rem; cursor: pointer; padding: 2px 4px; border-radius: 6px; line-height: 1; transition: all 0.15s; }
+  .reason-del:hover { color: var(--red); background: #fff0f0; }
+  .reasons-empty { font-size: 0.85rem; color: var(--muted); font-style: italic; padding: 6px 0; }
+
+  /* ─── Health Milestone Countdown ─────────────────── */
+  .health-ms-card { background: linear-gradient(135deg, var(--navy) 0%, #2a4f9a 100%); border-radius: var(--radius); padding: 20px; margin-bottom: 10px; color: white; }
+  .health-ms-eyebrow { font-size: 0.62rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.5); margin-bottom: 4px; }
+  .health-ms-name { font-size: 1.0rem; font-weight: 800; line-height: 1.35; margin-bottom: 8px; }
+  .health-ms-benefit { font-size: 0.84rem; color: rgba(255,255,255,0.72); line-height: 1.6; margin-bottom: 12px; }
+  .health-ms-timer { font-size: 1.7rem; font-weight: 900; letter-spacing: -1px; color: var(--gold-bright); }
+  .health-ms-timer-sub { font-size: 0.65rem; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+  .health-ms-achieved { background: rgba(255,255,255,0.09); border-radius: 10px; padding: 9px 13px; font-size: 0.8rem; color: rgba(255,255,255,0.75); margin-top: 10px; }
+
+  /* ─── Mood Check-in ──────────────────────────────── */
+  .mood-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+  .mood-row:last-of-type { margin-bottom: 0; }
+  .mood-icon { font-size: 1.2rem; width: 26px; text-align: center; flex-shrink: 0; }
+  .mood-label { font-size: 0.8rem; font-weight: 700; color: var(--text); width: 52px; flex-shrink: 0; }
+  .mood-slider { flex: 1; -webkit-appearance: none; appearance: none; height: 4px; border-radius: 4px; background: var(--border); outline: none; cursor: pointer; }
+  .mood-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--blue); cursor: pointer; border: 2px solid white; box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
+  .mood-val { width: 20px; text-align: right; font-size: 0.9rem; font-weight: 800; color: var(--blue); }
+  .mood-save-btn { width: 100%; background: var(--blue); color: white; border: none; border-radius: 12px; padding: 12px; font-weight: 700; font-size: 0.9rem; cursor: pointer; margin-top: 14px; }
+  .mood-saved-note { text-align: center; font-size: 0.78rem; color: var(--muted); margin-top: 8px; min-height: 1.2em; }
+  .mood-trend-wrap { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
+  .mood-trend-title { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 10px; }
+  .mood-trend-row { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
+  .mood-trend-lbl { font-size: 0.72rem; color: var(--muted); width: 52px; flex-shrink: 0; }
+  .mood-trend-dots { display: flex; gap: 5px; }
+  .mood-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--border); }
+  .mood-dot.d1 { background: #dce6f5; }
+  .mood-dot.d2 { background: #b3c9ee; }
+  .mood-dot.d3 { background: var(--gold-bright); }
+  .mood-dot.d4 { background: #3d7a5e; }
+  .mood-dot.d5 { background: #1a5e40; }
+
+  /* ─── Science Tab ─────────────────────────────────── */
+  .brain-section { background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 10px; overflow: hidden; }
+  .brain-section-header { padding: 16px 18px 0; }
+  .brain-section-eyebrow { font-size: 0.62rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(--blue); margin-bottom: 4px; }
+  .brain-section-title { font-size: 1.0rem; font-weight: 800; color: var(--text); margin-bottom: 12px; }
+  .brain-section-body { padding: 0 18px 18px; font-size: 0.87rem; color: #333; line-height: 1.7; }
+  .brain-section-body p { margin-bottom: 10px; }
+  .brain-section-body p:last-child { margin-bottom: 0; }
+  .brain-highlight { background: var(--blue-pale); border-left: 3px solid var(--blue); border-radius: 8px; padding: 12px 14px; margin: 10px 0; font-size: 0.84rem; color: var(--navy); line-height: 1.6; }
+
+  .body-sys-card { background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 8px; overflow: hidden; }
+  .body-sys-header { padding: 14px 18px; display: flex; gap: 12px; align-items: center; cursor: pointer; }
+  .body-sys-icon { font-size: 1.5rem; flex-shrink: 0; }
+  .body-sys-name { font-weight: 800; font-size: 0.95rem; color: var(--text); }
+  .body-sys-timeline { font-size: 0.72rem; color: var(--blue); font-weight: 700; margin-top: 2px; }
+  .body-sys-body { display: none; padding: 0 18px 16px; font-size: 0.86rem; color: #333; line-height: 1.7; }
+  .body-sys-body.open { display: block; }
+  .body-sys-body ul { padding-left: 16px; }
+  .body-sys-body ul li { margin-bottom: 5px; }
+
+  .myth-card { background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 8px; overflow: hidden; }
+  .myth-header { padding: 14px 18px; display: flex; gap: 10px; align-items: flex-start; cursor: pointer; }
+  .myth-x { background: #fff0f0; color: var(--red); border-radius: 6px; padding: 3px 8px; font-size: 0.65rem; font-weight: 800; flex-shrink: 0; margin-top: 2px; letter-spacing: 0.3px; }
+  .myth-text { font-weight: 700; font-size: 0.9rem; color: var(--text); flex: 1; }
+  .myth-arrow { color: var(--muted); font-size: 0.75rem; flex-shrink: 0; margin-top: 3px; transition: transform 0.2s; }
+  .myth-card.open .myth-arrow { transform: rotate(180deg); }
+  .myth-fact { display: none; background: #edf7f1; border-top: 1px solid #c8e8d4; padding: 14px 18px; font-size: 0.86rem; color: #1a5e40; line-height: 1.65; }
+  .myth-fact.open { display: block; }
+  .myth-fact strong { font-weight: 800; }
 </style>
 </head>
 <body>
@@ -462,6 +578,55 @@
   </div>
 </div>
 
+<!-- SOS Modal -->
+<div class="sos-modal" id="sosModal">
+  <div class="sos-modal-header">
+    <div class="sos-modal-title">🆘 Craving SOS</div>
+    <button class="sos-close" onclick="closeSOS()">✕</button>
+  </div>
+
+  <div class="sos-step">
+    <div class="sos-step-num">Remember this</div>
+    <div class="sos-step-title">Cravings always peak — then always pass</div>
+    <div class="sos-step-body">The average craving peaks at 15–20 minutes then subsides on its own. You don't have to fight it. You just have to outlast it. Watch the wave.</div>
+    <div class="urge-bar-bg"><div class="urge-bar-fill" id="urgeBarFill"></div></div>
+    <div class="urge-bar-label" id="urgeBarLabel">Craving intensity over time →</div>
+  </div>
+
+  <div class="sos-step">
+    <div class="sos-step-num">Step 1 — Breathe</div>
+    <div class="sos-step-title">Box Breathing (4-4-4-4)</div>
+    <div class="sos-step-body">Activates your parasympathetic nervous system — your body's built-in off switch for anxiety and craving.</div>
+    <div class="breath-ring" id="breathRing">Ready</div>
+    <div class="breath-instr" id="breathInstr">Tap Start to begin</div>
+    <div class="breath-count" id="breathCount"></div>
+    <button class="sos-action-btn" id="breathBtn" onclick="toggleBreathing()">▶ Start Breathing</button>
+  </div>
+
+  <div class="sos-step">
+    <div class="sos-step-num">Step 2 — Cold Water</div>
+    <div class="sos-step-title">Drink a glass of cold water. Right now.</div>
+    <div class="sos-step-body">Cold water activates the vagus nerve, slows heart rate, and gives your hands and body something grounding to do. Simple — and it works.</div>
+  </div>
+
+  <div class="sos-step">
+    <div class="sos-step-num">Step 3 — Move Your Body</div>
+    <div class="sos-step-title">Change your physical state immediately</div>
+    <div class="sos-step-body">Go outside. Do 10 jumping jacks. Walk to another room. Splash cold water on your face. Cravings live in your body — movement interrupts the signal at the source.</div>
+  </div>
+
+  <div class="sos-step">
+    <div class="sos-step-num">Step 4 — Reach Out</div>
+    <div class="sos-step-title">Tell someone you're in a hard moment</div>
+    <div class="sos-step-body">You don't need to explain everything. A text saying "having a tough moment" is enough. Accountability is one of the single strongest protective factors in recovery research.</div>
+  </div>
+
+  <button class="sos-action-btn" onclick="closeSOS()" style="margin-top:6px; font-size:0.95rem;">✓ I'm okay — close SOS</button>
+</div>
+
+<!-- SOS Floating Button -->
+<button class="sos-float" onclick="openSOS()">🆘 Craving SOS</button>
+
 <!-- Nav -->
 <nav class="nav-bar">
   <button class="nav-item active" onclick="showSection('today', this)">
@@ -488,6 +653,10 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
     <span>Cravings</span>
   </button>
+  <button class="nav-item" onclick="showSection('science', this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.31l-4.24 6.36A2 2 0 0 0 7.41 18H16.6a2 2 0 0 0 1.65-3.13L14 9.31V2"/><path d="M8.5 2h7"/><path d="M7 16h10"/></svg>
+    <span>Learn</span>
+  </button>
   <button class="nav-item" onclick="showSection('supplements', this)">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
     <span>Supps</span>
@@ -496,6 +665,21 @@
 
 <!-- SECTION: Today -->
 <div class="section active" id="section-today">
+
+  <div class="section-title">My Reasons to Quit</div>
+  <div class="card">
+    <div class="card-title"><span>💛</span> Why I'm doing this</div>
+    <div class="card-body">
+      <div class="reasons-add-row">
+        <input type="text" id="reasonInput" placeholder="Add a reason…" onkeydown="if(event.key==='Enter')addReason()">
+        <button class="reasons-add-btn" onclick="addReason()">Add</button>
+      </div>
+      <div id="reasonsList"><div class="reasons-empty">Add your personal reasons above. The more specific, the more powerful.</div></div>
+    </div>
+  </div>
+
+  <div id="healthMilestoneCard"></div>
+
   <div class="section-title">Today's Tips</div>
   <div id="cbtTipsContent">
     <div class="tips-card">
@@ -519,7 +703,260 @@
     </div>
   </div>
 
+  <div class="section-title">Daily Check-in</div>
+  <div class="card">
+    <div class="card-title"><span>📊</span> How are you feeling today?</div>
+    <div class="card-body">
+      <div class="mood-row">
+        <div class="mood-icon">😊</div>
+        <div class="mood-label">Mood</div>
+        <input type="range" class="mood-slider" id="moodSlider" min="1" max="5" value="3" oninput="document.getElementById('moodVal').textContent=this.value">
+        <div class="mood-val" id="moodVal">3</div>
+      </div>
+      <div class="mood-row">
+        <div class="mood-icon">😴</div>
+        <div class="mood-label">Sleep</div>
+        <input type="range" class="mood-slider" id="sleepSlider" min="1" max="5" value="3" oninput="document.getElementById('sleepVal').textContent=this.value">
+        <div class="mood-val" id="sleepVal">3</div>
+      </div>
+      <div class="mood-row">
+        <div class="mood-icon">⚡</div>
+        <div class="mood-label">Energy</div>
+        <input type="range" class="mood-slider" id="energySlider" min="1" max="5" value="3" oninput="document.getElementById('energyVal').textContent=this.value">
+        <div class="mood-val" id="energyVal">3</div>
+      </div>
+      <button class="mood-save-btn" onclick="saveMoodCheckin()">Save Check-in</button>
+      <div class="mood-saved-note" id="moodSavedNote"></div>
+      <div id="moodTrendWrap"></div>
+    </div>
+  </div>
+
   <div id="recoveryTimelineCard"></div>
+</div>
+
+<!-- SECTION: Science / Learn -->
+<div class="section" id="section-science">
+
+  <div class="section-title">What THC Did to Your Brain</div>
+
+  <div class="brain-section">
+    <div class="brain-section-header">
+      <div class="brain-section-eyebrow">The Reward System</div>
+      <div class="brain-section-title">How THC hijacks your dopamine</div>
+    </div>
+    <div class="brain-section-body">
+      <p>Your brain releases dopamine when you do something beneficial — eat, connect socially, achieve a goal. It's your built-in motivator. THC artificially floods this same system, releasing <strong>2–5x more dopamine</strong> than any natural reward.</p>
+      <div class="brain-highlight">Over time, your brain compensates by reducing its own dopamine receptors — it literally turns down its volume. This is why things that used to feel good start to feel flat.</div>
+      <p>This is called <strong>downregulation</strong>. It's not a character flaw. It's a predictable neurological response to overstimulation. And it reverses when you stop.</p>
+    </div>
+  </div>
+
+  <div class="brain-section">
+    <div class="brain-section-header">
+      <div class="brain-section-eyebrow">Motivation & Drive</div>
+      <div class="brain-section-title">The prefrontal cortex slowdown</div>
+    </div>
+    <div class="brain-section-body">
+      <p>THC suppresses activity in the <strong>prefrontal cortex</strong> — the part of your brain responsible for planning, impulse control, and motivation. Long-term use can reduce your drive to pursue goals, even when you consciously want to.</p>
+      <p>This explains the "I know I should, but I just don't" feeling. It's not laziness — it's a suppressed executive system. Function returns as THC clears and receptor density rebuilds.</p>
+    </div>
+  </div>
+
+  <div class="brain-section">
+    <div class="brain-section-header">
+      <div class="brain-section-eyebrow">Sleep Architecture</div>
+      <div class="brain-section-title">Why THC destroys your real sleep</div>
+    </div>
+    <div class="brain-section-body">
+      <p>THC suppresses REM sleep — the stage where your brain processes emotion, consolidates memory, and restores itself. It may help you fall asleep, but it prevents the sleep that actually heals you.</p>
+      <div class="brain-highlight">If your dreams become intense or vivid after quitting, that's your brain catching up on months of suppressed REM. It's called REM rebound, and it's a sign of healing.</div>
+      <p>Natural sleep quality exceeds cannabis-assisted sleep within 2–4 weeks for most people.</p>
+    </div>
+  </div>
+
+  <div class="brain-section">
+    <div class="brain-section-header">
+      <div class="brain-section-eyebrow">The Endocannabinoid System</div>
+      <div class="brain-section-title">Your brain's own cannabis</div>
+    </div>
+    <div class="brain-section-body">
+      <p>Your brain naturally produces its own cannabinoids — anandamide and 2-AG — which regulate mood, appetite, pain, and memory. THC mimics these molecules and floods their receptors.</p>
+      <p>With chronic exposure, your brain stops producing as much of its own. When you quit, there's a temporary gap while natural production rebuilds. This gap is withdrawal. It passes as your endocannabinoid system recalibrates — typically within 2–4 weeks.</p>
+      <div class="brain-highlight">The irritability, anxiety, and sleep disruption you feel are not signs that something is wrong. They are signs your brain is actively rebuilding its own chemistry.</div>
+    </div>
+  </div>
+
+  <div class="section-title">Benefits by Body System</div>
+
+  <div class="body-sys-card">
+    <div class="body-sys-header accordion-header" onclick="toggleBodySys(this)">
+      <div class="body-sys-icon">🧠</div>
+      <div><div class="body-sys-name">Brain & Mental Health</div><div class="body-sys-timeline">Improves: Days 4 → Month 3</div></div>
+      <span class="arrow" style="margin-left:auto;">▾</span>
+    </div>
+    <div class="body-sys-body">
+      <ul>
+        <li>Dopamine receptor density begins increasing by <strong>day 4</strong></li>
+        <li>Working memory and concentration improve by <strong>week 2</strong></li>
+        <li>Anxiety and depression symptoms typically reduce by <strong>week 3–4</strong></li>
+        <li>Brain reward system largely normalized by <strong>month 3</strong></li>
+        <li>Long-term: creativity, problem-solving, and emotional depth return — often exceeding pre-use levels</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="body-sys-card">
+    <div class="body-sys-header accordion-header" onclick="toggleBodySys(this)">
+      <div class="body-sys-icon">😴</div>
+      <div><div class="body-sys-name">Sleep</div><div class="body-sys-timeline">Improves: Week 1 → Month 2</div></div>
+      <span class="arrow" style="margin-left:auto;">▾</span>
+    </div>
+    <div class="body-sys-body">
+      <ul>
+        <li>REM sleep starts returning at <strong>week 1</strong> (vivid dreams = healing)</li>
+        <li>Sleep quality measurably better by <strong>week 2–3</strong></li>
+        <li>Deep slow-wave sleep stages normalize by <strong>month 1</strong></li>
+        <li>Natural sleep hormone rhythms fully restored by <strong>month 2</strong></li>
+        <li>Most ex-users report sleeping better long-term than they ever did while using</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="body-sys-card">
+    <div class="body-sys-header accordion-header" onclick="toggleBodySys(this)">
+      <div class="body-sys-icon">🫀</div>
+      <div><div class="body-sys-name">Heart & Circulation</div><div class="body-sys-timeline">Improves: Hours → Month 1</div></div>
+      <span class="arrow" style="margin-left:auto;">▾</span>
+    </div>
+    <div class="body-sys-body">
+      <ul>
+        <li>Heart rate normalizes within <strong>hours</strong></li>
+        <li>Blood pressure drops within <strong>24 hours</strong></li>
+        <li>Risk of cannabis-induced arrhythmia eliminated</li>
+        <li>Circulation improves, reducing cardiovascular stress</li>
+        <li>Exercise capacity increases as heart strain reduces over <strong>weeks</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="body-sys-card">
+    <div class="body-sys-header accordion-header" onclick="toggleBodySys(this)">
+      <div class="body-sys-icon">🫁</div>
+      <div><div class="body-sys-name">Lungs & Respiratory</div><div class="body-sys-timeline">Improves: Day 2 → Month 3</div></div>
+      <span class="arrow" style="margin-left:auto;">▾</span>
+    </div>
+    <div class="body-sys-body">
+      <ul>
+        <li>Bronchial inflammation begins reducing within <strong>48 hours</strong></li>
+        <li>Cough and mucus production decrease in <strong>week 1</strong></li>
+        <li>Lung capacity measurably improves by <strong>month 1</strong></li>
+        <li>Respiratory infections become less frequent by <strong>month 3</strong></li>
+        <li>Cannabis smoke contains many of the same carcinogens as tobacco</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="body-sys-card">
+    <div class="body-sys-header accordion-header" onclick="toggleBodySys(this)">
+      <div class="body-sys-icon">🧘</div>
+      <div><div class="body-sys-name">Mood & Anxiety</div><div class="body-sys-timeline">Improves: Week 1 → Week 6</div></div>
+      <span class="arrow" style="margin-left:auto;">▾</span>
+    </div>
+    <div class="body-sys-body">
+      <ul>
+        <li>Irritability peaks at <strong>days 1–3</strong> then improves steadily</li>
+        <li>Natural mood regulation returns by <strong>week 3</strong></li>
+        <li>Anxiety that felt like "withdrawal" usually resolves by <strong>week 4</strong></li>
+        <li>Serotonin and oxytocin rebalance, improving social motivation</li>
+        <li>Most people report feeling more emotionally present and stable long-term</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="body-sys-card">
+    <div class="body-sys-header accordion-header" onclick="toggleBodySys(this)">
+      <div class="body-sys-icon">🧬</div>
+      <div><div class="body-sys-name">Hormones & Metabolism</div><div class="body-sys-timeline">Improves: Week 2 → Month 2</div></div>
+      <span class="arrow" style="margin-left:auto;">▾</span>
+    </div>
+    <div class="body-sys-body">
+      <ul>
+        <li>Testosterone levels increase — THC suppresses them in all genders</li>
+        <li>Cortisol (stress hormone) patterns normalize</li>
+        <li>Appetite regulation improves as ghrelin rebalances (<strong>week 1–2</strong>)</li>
+        <li>Blood sugar regulation improves</li>
+        <li>Fertility markers improve with sustained abstinence</li>
+        <li>Growth hormone (critical for tissue repair during sleep) increases</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-title">Myth-Busting</div>
+  <p class="edu-note" style="margin-top:-6px;">The stories that keep people stuck — and the science that breaks them.</p>
+
+  <div class="myth-card" onclick="toggleMyth(this)">
+    <div class="myth-header">
+      <div class="myth-x">MYTH</div>
+      <div class="myth-text">"Cannabis isn't actually addictive."</div>
+      <div class="myth-arrow">▾</div>
+    </div>
+    <div class="myth-fact"><strong>Fact:</strong> Cannabis Use Disorder is a recognized medical diagnosis in the DSM-5. It affects ~9% of people who try cannabis, rising to ~17% of those who start in adolescence, and up to ~50% of daily users. Addiction is defined by continued use despite consequences — not just physical dependence. The label doesn't determine your experience; your experience does.</div>
+  </div>
+
+  <div class="myth-card" onclick="toggleMyth(this)">
+    <div class="myth-header">
+      <div class="myth-x">MYTH</div>
+      <div class="myth-text">"Weed withdrawal isn't real."</div>
+      <div class="myth-arrow">▾</div>
+    </div>
+    <div class="myth-fact"><strong>Fact:</strong> Cannabis Withdrawal Syndrome is clinically documented. Symptoms — irritability, insomnia, anxiety, appetite loss, restlessness, and physical discomfort — are reported by up to 47% of regular users upon stopping. The fact that it's less severe than alcohol or opioid withdrawal doesn't make it imaginary. What you're feeling is real, and it has a known trajectory and endpoint.</div>
+  </div>
+
+  <div class="myth-card" onclick="toggleMyth(this)">
+    <div class="myth-header">
+      <div class="myth-x">MYTH</div>
+      <div class="myth-text">"I'll just have one hit to take the edge off."</div>
+      <div class="myth-arrow">▾</div>
+    </div>
+    <div class="myth-fact"><strong>Fact:</strong> Even a single use after abstinence resets dopamine sensitization and re-activates cue-reward pathways in your brain — making the next craving significantly stronger. Research consistently shows that "just one" leads back to regular use in the majority of cases. This is not a willpower failure; it's how the brain works. The craving telling you this is not your friend right now.</div>
+  </div>
+
+  <div class="myth-card" onclick="toggleMyth(this)">
+    <div class="myth-header">
+      <div class="myth-x">MYTH</div>
+      <div class="myth-text">"I've quit before — I can do it whenever I want."</div>
+      <div class="myth-arrow">▾</div>
+    </div>
+    <div class="myth-fact"><strong>Fact:</strong> Stopping and restarting repeatedly (yo-yo quitting) can make cravings more intense each cycle — a phenomenon called sensitization. Having quit before is a real strength; it proves you can do it. The skill being built now is staying quit. That's a different and harder thing, and it deserves to be treated that way.</div>
+  </div>
+
+  <div class="myth-card" onclick="toggleMyth(this)">
+    <div class="myth-header">
+      <div class="myth-x">MYTH</div>
+      <div class="myth-text">"My anxiety is worse without it, so it must help."</div>
+      <div class="myth-arrow">▾</div>
+    </div>
+    <div class="myth-fact"><strong>Fact:</strong> THC causes anxiety tolerance — your brain raises its baseline anxiety level to compensate for THC's dampening effect. When you stop, that elevated baseline feels like new or worsening anxiety. It isn't. It's your brain's compensation unwinding. This rebound anxiety fades within 3–4 weeks as your endocannabinoid system recalibrates. Using cannabis to treat anxiety caused by cannabis is a cycle, not a treatment.</div>
+  </div>
+
+  <div class="myth-card" onclick="toggleMyth(this)">
+    <div class="myth-header">
+      <div class="myth-x">MYTH</div>
+      <div class="myth-text">"I only use it to sleep, so I need it."</div>
+      <div class="myth-arrow">▾</div>
+    </div>
+    <div class="myth-fact"><strong>Fact:</strong> THC suppresses REM sleep. While it helps with sleep onset, it degrades sleep quality over time — which is why so many regular users wake unrested. The insomnia in early recovery is temporary (typically 1–3 weeks). After that window, natural sleep quality significantly exceeds anything cannabis-assisted sleep provides. You are not losing a sleep tool — you are getting real sleep back.</div>
+  </div>
+
+  <div class="myth-card" onclick="toggleMyth(this)">
+    <div class="myth-header">
+      <div class="myth-x">MYTH</div>
+      <div class="myth-text">"Other people can smoke without problems — why can't I?"</div>
+      <div class="myth-arrow">▾</div>
+    </div>
+    <div class="myth-fact"><strong>Fact:</strong> Vulnerability to Cannabis Use Disorder is shaped by genetics, age of first use, frequency, potency, and mental health history. The fact that others use without addiction doesn't make your experience invalid — it makes it specific to your neurobiology. Comparison is one of the most common ways the addicted brain talks people out of recovery. Your experience is real regardless of anyone else's.</div>
+  </div>
+
 </div>
 
 <!-- SECTION: Supplements -->
@@ -1803,6 +2240,7 @@ function tickCounter() {
 
     try { renderMilestones(days); } catch(e) {}
     try { renderEducation(diff / 3600000); } catch(e) {}
+    try { renderHealthMilestone(diff / 3600000); } catch(e) {}
   } catch(e) {}
 }
 
@@ -1825,6 +2263,7 @@ function resetDate() {
   document.getElementById('counterSetup').style.display = 'block';
   document.getElementById('counterDisplay').style.display = 'none';
   try { renderEducation(-1); } catch(e) {}
+  try { renderHealthMilestone(-1); } catch(e) {}
 }
 
 function renderCBT(days) {
@@ -2032,6 +2471,231 @@ function renderReflections() {
   }).join('');
 }
 
+// ——— SOS Emergency ———
+var urgeInterval = null;
+var urgeSeconds = 0;
+function openSOS() {
+  document.getElementById('sosModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  urgeSeconds = 0;
+  document.getElementById('urgeBarFill').style.width = '0%';
+  document.getElementById('urgeBarLabel').textContent = 'Craving intensity — watch it rise and fall';
+  clearInterval(urgeInterval);
+  urgeInterval = setInterval(function() {
+    urgeSeconds++;
+    var total = 1200;
+    var pct = urgeSeconds <= 600 ? (urgeSeconds / 600 * 100) : Math.max(0, 100 - (urgeSeconds - 600) / 600 * 100);
+    document.getElementById('urgeBarFill').style.width = pct.toFixed(1) + '%';
+    if (urgeSeconds < 600) {
+      document.getElementById('urgeBarLabel').textContent = 'Rising… peak in ~' + Math.ceil((600 - urgeSeconds) / 60) + ' min';
+    } else if (urgeSeconds < 1200) {
+      document.getElementById('urgeBarLabel').textContent = 'Past the peak — fading now ↓';
+    } else {
+      document.getElementById('urgeBarLabel').textContent = '✓ The craving has passed';
+      clearInterval(urgeInterval);
+    }
+  }, 1000);
+}
+function closeSOS() {
+  document.getElementById('sosModal').classList.remove('open');
+  document.body.style.overflow = '';
+  clearInterval(urgeInterval);
+  stopBreathing();
+}
+
+var breathActive = false;
+var breathPhaseIdx = 0;
+var breathTimer = null;
+var breathSecondsLeft = 0;
+var breathPhases = [
+  { label: 'Inhale', cls: 'inhale', secs: 4 },
+  { label: 'Hold',   cls: 'hold',   secs: 4 },
+  { label: 'Exhale', cls: 'exhale', secs: 4 },
+  { label: 'Hold',   cls: 'hold',   secs: 4 }
+];
+function toggleBreathing() {
+  if (breathActive) { stopBreathing(); return; }
+  breathActive = true;
+  breathPhaseIdx = 0;
+  document.getElementById('breathBtn').textContent = '⏹ Stop';
+  runBreathPhase();
+}
+function runBreathPhase() {
+  if (!breathActive) return;
+  var p = breathPhases[breathPhaseIdx];
+  var ring = document.getElementById('breathRing');
+  ring.className = 'breath-ring ' + p.cls;
+  ring.textContent = p.label;
+  document.getElementById('breathInstr').textContent = p.label + '…';
+  breathSecondsLeft = p.secs;
+  document.getElementById('breathCount').textContent = breathSecondsLeft;
+  breathTimer = setInterval(function() {
+    breathSecondsLeft--;
+    document.getElementById('breathCount').textContent = breathSecondsLeft > 0 ? breathSecondsLeft : '';
+    if (breathSecondsLeft <= 0) {
+      clearInterval(breathTimer);
+      breathPhaseIdx = (breathPhaseIdx + 1) % 4;
+      if (breathActive) runBreathPhase();
+    }
+  }, 1000);
+}
+function stopBreathing() {
+  breathActive = false;
+  clearInterval(breathTimer);
+  var ring = document.getElementById('breathRing');
+  if (ring) { ring.className = 'breath-ring'; ring.textContent = 'Ready'; }
+  var instr = document.getElementById('breathInstr');
+  if (instr) instr.textContent = 'Tap Start to begin';
+  var cnt = document.getElementById('breathCount');
+  if (cnt) cnt.textContent = '';
+  var btn = document.getElementById('breathBtn');
+  if (btn) btn.textContent = '▶ Start Breathing';
+}
+
+// ——— My Reasons ———
+function getReasons() {
+  try { return JSON.parse(storageGet('myReasons') || '[]'); } catch(e) { return []; }
+}
+function addReason() {
+  var input = document.getElementById('reasonInput');
+  var text = input.value.trim();
+  if (!text) return;
+  var reasons = getReasons();
+  reasons.push(text);
+  storageSet('myReasons', JSON.stringify(reasons));
+  input.value = '';
+  renderReasons();
+}
+function deleteReason(idx) {
+  var reasons = getReasons();
+  reasons.splice(idx, 1);
+  storageSet('myReasons', JSON.stringify(reasons));
+  renderReasons();
+}
+function renderReasons() {
+  var reasons = getReasons();
+  var el = document.getElementById('reasonsList');
+  if (!el) return;
+  if (reasons.length === 0) {
+    el.innerHTML = '<div class="reasons-empty">Add your personal reasons above. The more specific, the more powerful.</div>';
+    return;
+  }
+  el.innerHTML = reasons.map(function(r, i) {
+    return '<div class="reason-item">' +
+      '<div class="reason-num">' + (i + 1) + '</div>' +
+      '<div class="reason-text">' + r.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div>' +
+      '<button class="reason-del" onclick="deleteReason(' + i + ')">×</button>' +
+    '</div>';
+  }).join('');
+}
+
+// ——— Health Milestone Countdown ———
+var HEALTH_MILESTONES = [
+  { hours: 1,    label: '1 Hour Clean',    benefit: 'Heart rate and blood pressure begin to normalize as THC levels drop in your blood.' },
+  { hours: 6,    label: '6 Hours Clean',   benefit: 'THC concentration in your blood has dropped by ~50%. Your body is actively clearing it.' },
+  { hours: 12,   label: '12 Hours Clean',  benefit: 'Your sleep architecture starts shifting back toward natural REM cycles.' },
+  { hours: 24,   label: '24 Hours Clean',  benefit: 'Lungs begin clearing cannabis residue. Respiratory function starts to improve.' },
+  { hours: 48,   label: '48 Hours Clean',  benefit: 'Smell and taste sensitivity begin returning. Food tastes different — in a good way.' },
+  { hours: 72,   label: '72 Hours Clean',  benefit: 'THC is fully cleared from your bloodstream. Anxiety may peak briefly then begins to drop.' },
+  { hours: 168,  label: '1 Week Clean',    benefit: 'Sleep quality noticeably improving. Appetite stabilizing. The acute phase is behind you.' },
+  { hours: 336,  label: '2 Weeks Clean',   benefit: 'Dopamine receptors begin upregulating — your brain\'s reward system is rebalancing.' },
+  { hours: 720,  label: '1 Month Clean',   benefit: 'Memory, focus, and motivation measurably improved. Lungs significantly clearer.' },
+  { hours: 2160, label: '3 Months Clean',  benefit: 'Brain reward system largely normalized. Most people feel like themselves again.' },
+  { hours: 4320, label: '6 Months Clean',  benefit: 'Dopamine receptors near full recovery. Emotional regulation dramatically improved.' },
+  { hours: 8760, label: '1 Year Clean',    benefit: 'Full cognitive and emotional baseline restored. Your brain\'s natural chemistry is back.' }
+];
+function renderHealthMilestone(totalHours) {
+  var el = document.getElementById('healthMilestoneCard');
+  if (!el) return;
+  if (totalHours < 0) {
+    el.innerHTML = '<div class="health-ms-card"><div class="health-ms-eyebrow">Next Health Milestone</div><div class="health-ms-name">Set your quit date to track your milestones</div></div>';
+    return;
+  }
+  var next = null;
+  for (var i = 0; i < HEALTH_MILESTONES.length; i++) {
+    if (totalHours < HEALTH_MILESTONES[i].hours) { next = HEALTH_MILESTONES[i]; break; }
+  }
+  var achieved = HEALTH_MILESTONES.filter(function(m) { return totalHours >= m.hours; });
+  var last = achieved.length > 0 ? achieved[achieved.length - 1] : null;
+  var achievedHTML = last ? '<div class="health-ms-achieved">✓ Last milestone: <strong>' + last.label + '</strong></div>' : '';
+  if (!next) {
+    el.innerHTML = '<div class="health-ms-card"><div class="health-ms-eyebrow">🏆 All Milestones Reached</div><div class="health-ms-name">One year of complete healing.</div><div class="health-ms-benefit">Your brain chemistry, cardiovascular system, lungs, sleep, and emotional health have all been restored.</div>' + achievedHTML + '</div>';
+    return;
+  }
+  var h = next.hours - totalHours;
+  var d = Math.floor(h / 24);
+  var hr = Math.floor(h % 24);
+  var m = Math.floor((h * 60) % 60);
+  var t = d > 0 ? d + 'd ' + hr + 'h ' + m + 'm' : (hr > 0 ? hr + 'h ' + m + 'm' : m + 'm');
+  el.innerHTML = '<div class="health-ms-card">' +
+    '<div class="health-ms-eyebrow">Next Health Milestone</div>' +
+    '<div class="health-ms-name">' + next.label + '</div>' +
+    '<div class="health-ms-benefit">' + next.benefit + '</div>' +
+    '<div class="health-ms-timer">' + t + '</div>' +
+    '<div class="health-ms-timer-sub">away</div>' +
+    achievedHTML +
+  '</div>';
+}
+
+// ——— Mood / Sleep / Energy Check-in ———
+function getTodayKey() {
+  var d = new Date();
+  return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+}
+function getMoodLog() {
+  try { return JSON.parse(storageGet('moodLog') || '[]'); } catch(e) { return []; }
+}
+function saveMoodCheckin() {
+  var mood   = parseInt(document.getElementById('moodSlider').value);
+  var sleep  = parseInt(document.getElementById('sleepSlider').value);
+  var energy = parseInt(document.getElementById('energySlider').value);
+  var log = getMoodLog();
+  var key = getTodayKey();
+  var idx = log.findIndex(function(e) { return e.date === key; });
+  var entry = { date: key, mood: mood, sleep: sleep, energy: energy };
+  if (idx >= 0) log[idx] = entry; else log.unshift(entry);
+  if (log.length > 30) log = log.slice(0, 30);
+  storageSet('moodLog', JSON.stringify(log));
+  document.getElementById('moodSavedNote').textContent = 'Saved ✓  ' + new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+  renderMoodTrend();
+}
+function renderMoodTrend() {
+  var wrap = document.getElementById('moodTrendWrap');
+  if (!wrap) return;
+  var log = getMoodLog().slice(0, 7).reverse();
+  if (log.length === 0) { wrap.innerHTML = ''; return; }
+  var cats = [
+    { key: 'mood',   label: '😊 Mood'  },
+    { key: 'sleep',  label: '😴 Sleep' },
+    { key: 'energy', label: '⚡ Energy'}
+  ];
+  var rows = cats.map(function(c) {
+    var dots = log.map(function(e) {
+      var v = e[c.key] || 0;
+      var cls = v === 5 ? 'd5' : v === 4 ? 'd4' : v === 3 ? 'd3' : v === 2 ? 'd2' : 'd1';
+      return '<div class="mood-dot ' + cls + '" title="' + v + '/5"></div>';
+    }).join('');
+    return '<div class="mood-trend-row"><div class="mood-trend-lbl">' + c.label + '</div><div class="mood-trend-dots">' + dots + '</div></div>';
+  }).join('');
+  wrap.innerHTML = '<div class="mood-trend-wrap"><div class="mood-trend-title">Last ' + log.length + ' days</div>' + rows + '</div>';
+}
+
+// ——— Science Tab toggles ———
+function toggleBodySys(header) {
+  var body = header.parentElement.querySelector('.body-sys-body');
+  var arrow = header.querySelector('.arrow');
+  var isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  if (arrow) arrow.style.transform = isOpen ? '' : 'rotate(180deg)';
+}
+function toggleMyth(card) {
+  var fact = card.querySelector('.myth-fact');
+  var arrow = card.querySelector('.myth-arrow');
+  var isOpen = fact.classList.contains('open');
+  fact.classList.toggle('open', !isOpen);
+  card.classList.toggle('open', !isOpen);
+}
+
 // ——— Nav ———
 function showSection(name, btn) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
@@ -2236,6 +2900,9 @@ window.addEventListener('DOMContentLoaded', () => {
   startCounter();
   setUsed('no');
   renderReflections();
+  renderReasons();
+  renderMoodTrend();
+  renderHealthMilestone(-1);
 });
 </script>
 </body>
