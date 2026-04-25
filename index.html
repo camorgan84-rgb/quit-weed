@@ -653,6 +653,10 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
     <span>Cravings</span>
   </button>
+  <button class="nav-item" onclick="showSection('health', this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+    <span>Health</span>
+  </button>
   <button class="nav-item" onclick="showSection('science', this)">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.31l-4.24 6.36A2 2 0 0 0 7.41 18H16.6a2 2 0 0 0 1.65-3.13L14 9.31V2"/><path d="M8.5 2h7"/><path d="M7 16h10"/></svg>
     <span>Learn</span>
@@ -703,6 +707,13 @@
     </div>
   </div>
 
+</div>
+
+<!-- SECTION: Health -->
+<div class="section" id="section-health">
+
+  <div id="healthMilestoneCard"></div>
+
   <div class="section-title">Daily Check-in</div>
   <div class="card">
     <div class="card-title"><span>📊</span> How are you feeling today?</div>
@@ -732,59 +743,6 @@
   </div>
 
   <div id="recoveryTimelineCard"></div>
-</div>
-
-<!-- SECTION: Science / Learn -->
-<div class="section" id="section-science">
-
-  <div class="section-title">What THC Did to Your Brain</div>
-
-  <div class="brain-section">
-    <div class="brain-section-header">
-      <div class="brain-section-eyebrow">The Reward System</div>
-      <div class="brain-section-title">How THC hijacks your dopamine</div>
-    </div>
-    <div class="brain-section-body">
-      <p>Your brain releases dopamine when you do something beneficial — eat, connect socially, achieve a goal. It's your built-in motivator. THC artificially floods this same system, releasing <strong>2–5x more dopamine</strong> than any natural reward.</p>
-      <div class="brain-highlight">Over time, your brain compensates by reducing its own dopamine receptors — it literally turns down its volume. This is why things that used to feel good start to feel flat.</div>
-      <p>This is called <strong>downregulation</strong>. It's not a character flaw. It's a predictable neurological response to overstimulation. And it reverses when you stop.</p>
-    </div>
-  </div>
-
-  <div class="brain-section">
-    <div class="brain-section-header">
-      <div class="brain-section-eyebrow">Motivation & Drive</div>
-      <div class="brain-section-title">The prefrontal cortex slowdown</div>
-    </div>
-    <div class="brain-section-body">
-      <p>THC suppresses activity in the <strong>prefrontal cortex</strong> — the part of your brain responsible for planning, impulse control, and motivation. Long-term use can reduce your drive to pursue goals, even when you consciously want to.</p>
-      <p>This explains the "I know I should, but I just don't" feeling. It's not laziness — it's a suppressed executive system. Function returns as THC clears and receptor density rebuilds.</p>
-    </div>
-  </div>
-
-  <div class="brain-section">
-    <div class="brain-section-header">
-      <div class="brain-section-eyebrow">Sleep Architecture</div>
-      <div class="brain-section-title">Why THC destroys your real sleep</div>
-    </div>
-    <div class="brain-section-body">
-      <p>THC suppresses REM sleep — the stage where your brain processes emotion, consolidates memory, and restores itself. It may help you fall asleep, but it prevents the sleep that actually heals you.</p>
-      <div class="brain-highlight">If your dreams become intense or vivid after quitting, that's your brain catching up on months of suppressed REM. It's called REM rebound, and it's a sign of healing.</div>
-      <p>Natural sleep quality exceeds cannabis-assisted sleep within 2–4 weeks for most people.</p>
-    </div>
-  </div>
-
-  <div class="brain-section">
-    <div class="brain-section-header">
-      <div class="brain-section-eyebrow">The Endocannabinoid System</div>
-      <div class="brain-section-title">Your brain's own cannabis</div>
-    </div>
-    <div class="brain-section-body">
-      <p>Your brain naturally produces its own cannabinoids — anandamide and 2-AG — which regulate mood, appetite, pain, and memory. THC mimics these molecules and floods their receptors.</p>
-      <p>With chronic exposure, your brain stops producing as much of its own. When you quit, there's a temporary gap while natural production rebuilds. This gap is withdrawal. It passes as your endocannabinoid system recalibrates — typically within 2–4 weeks.</p>
-      <div class="brain-highlight">The irritability, anxiety, and sleep disruption you feel are not signs that something is wrong. They are signs your brain is actively rebuilding its own chemistry.</div>
-    </div>
-  </div>
 
   <div class="section-title">Benefits by Body System</div>
 
@@ -888,6 +846,60 @@
         <li>Fertility markers improve with sustained abstinence</li>
         <li>Growth hormone (critical for tissue repair during sleep) increases</li>
       </ul>
+    </div>
+  </div>
+
+</div>
+
+<!-- SECTION: Science / Learn -->
+<div class="section" id="section-science">
+
+  <div class="section-title">What THC Did to Your Brain</div>
+
+  <div class="brain-section">
+    <div class="brain-section-header">
+      <div class="brain-section-eyebrow">The Reward System</div>
+      <div class="brain-section-title">How THC hijacks your dopamine</div>
+    </div>
+    <div class="brain-section-body">
+      <p>Your brain releases dopamine when you do something beneficial — eat, connect socially, achieve a goal. It's your built-in motivator. THC artificially floods this same system, releasing <strong>2–5x more dopamine</strong> than any natural reward.</p>
+      <div class="brain-highlight">Over time, your brain compensates by reducing its own dopamine receptors — it literally turns down its volume. This is why things that used to feel good start to feel flat.</div>
+      <p>This is called <strong>downregulation</strong>. It's not a character flaw. It's a predictable neurological response to overstimulation. And it reverses when you stop.</p>
+    </div>
+  </div>
+
+  <div class="brain-section">
+    <div class="brain-section-header">
+      <div class="brain-section-eyebrow">Motivation & Drive</div>
+      <div class="brain-section-title">The prefrontal cortex slowdown</div>
+    </div>
+    <div class="brain-section-body">
+      <p>THC suppresses activity in the <strong>prefrontal cortex</strong> — the part of your brain responsible for planning, impulse control, and motivation. Long-term use can reduce your drive to pursue goals, even when you consciously want to.</p>
+      <p>This explains the "I know I should, but I just don't" feeling. It's not laziness — it's a suppressed executive system. Function returns as THC clears and receptor density rebuilds.</p>
+    </div>
+  </div>
+
+  <div class="brain-section">
+    <div class="brain-section-header">
+      <div class="brain-section-eyebrow">Sleep Architecture</div>
+      <div class="brain-section-title">Why THC destroys your real sleep</div>
+    </div>
+    <div class="brain-section-body">
+      <p>THC suppresses REM sleep — the stage where your brain processes emotion, consolidates memory, and restores itself. It may help you fall asleep, but it prevents the sleep that actually heals you.</p>
+      <div class="brain-highlight">If your dreams become intense or vivid after quitting, that's your brain catching up on months of suppressed REM. It's called REM rebound, and it's a sign of healing.</div>
+      <p>Natural sleep quality exceeds cannabis-assisted sleep within 2–4 weeks for most people.</p>
+    </div>
+  </div>
+
+  <div class="brain-section">
+    <div class="brain-section-header">
+      <div class="brain-section-eyebrow">The Endocannabinoid System</div>
+      <div class="brain-section-title">Your brain's own cannabis</div>
+    </div>
+    <div class="brain-section-body">
+      <p>Your brain naturally produces its own cannabinoids — anandamide and 2-AG — which regulate mood, appetite, pain, and memory. THC mimics these molecules and floods their receptors.</p>
+      <p>With chronic exposure, your brain stops producing as much of its own. When you quit, there's a temporary gap while natural production rebuilds. This gap is withdrawal. It passes as your endocannabinoid system recalibrates — typically within 2–4 weeks.</p>
+      <div class="brain-highlight">The irritability, anxiety, and sleep disruption you feel are not signs that something is wrong. They are signs your brain is actively rebuilding its own chemistry.</div>
     </div>
   </div>
 
