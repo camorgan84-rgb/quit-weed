@@ -475,9 +475,12 @@
   .health-ms-eyebrow { font-size: 0.62rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.5); margin-bottom: 4px; }
   .health-ms-name { font-size: 1.0rem; font-weight: 800; line-height: 1.35; margin-bottom: 8px; }
   .health-ms-benefit { font-size: 0.84rem; color: rgba(255,255,255,0.72); line-height: 1.6; margin-bottom: 12px; }
-  .health-ms-timer { font-size: 1.7rem; font-weight: 900; letter-spacing: -1px; color: var(--gold-bright); }
+  .health-ms-timer { font-size: 1.7rem; font-weight: 900; letter-spacing: -1px; color: var(--gold-bright); white-space: nowrap; flex-shrink: 0; }
   .health-ms-timer-sub { font-size: 0.65rem; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
   .health-ms-achieved { background: rgba(255,255,255,0.09); border-radius: 10px; padding: 9px 13px; font-size: 0.8rem; color: rgba(255,255,255,0.75); margin-top: 10px; }
+  .health-ms-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .health-ms-row > div:first-child { flex: 1; }
+  .health-ms-last { background: rgba(255,255,255,0.09); border-radius: 10px; padding: 9px 13px; font-size: 0.78rem; color: rgba(255,255,255,0.65); margin-top: 12px; line-height: 1.5; }
 
   /* ─── Mood Check-in ──────────────────────────────── */
   .mood-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
@@ -2576,24 +2579,37 @@ function renderReasons() {
 
 // ——— Health Milestone Countdown ———
 var HEALTH_MILESTONES = [
-  { hours: 1,    label: '1 Hour Clean',    benefit: 'Heart rate and blood pressure begin to normalize as THC levels drop in your blood.' },
-  { hours: 6,    label: '6 Hours Clean',   benefit: 'THC concentration in your blood has dropped by ~50%. Your body is actively clearing it.' },
-  { hours: 12,   label: '12 Hours Clean',  benefit: 'Your sleep architecture starts shifting back toward natural REM cycles.' },
-  { hours: 24,   label: '24 Hours Clean',  benefit: 'Lungs begin clearing cannabis residue. Respiratory function starts to improve.' },
-  { hours: 48,   label: '48 Hours Clean',  benefit: 'Smell and taste sensitivity begin returning. Food tastes different — in a good way.' },
-  { hours: 72,   label: '72 Hours Clean',  benefit: 'THC is fully cleared from your bloodstream. Anxiety may peak briefly then begins to drop.' },
-  { hours: 168,  label: '1 Week Clean',    benefit: 'Sleep quality noticeably improving. Appetite stabilizing. The acute phase is behind you.' },
-  { hours: 336,  label: '2 Weeks Clean',   benefit: 'Dopamine receptors begin upregulating — your brain\'s reward system is rebalancing.' },
-  { hours: 720,  label: '1 Month Clean',   benefit: 'Memory, focus, and motivation measurably improved. Lungs significantly clearer.' },
-  { hours: 2160, label: '3 Months Clean',  benefit: 'Brain reward system largely normalized. Most people feel like themselves again.' },
-  { hours: 4320, label: '6 Months Clean',  benefit: 'Dopamine receptors near full recovery. Emotional regulation dramatically improved.' },
-  { hours: 8760, label: '1 Year Clean',    benefit: 'Full cognitive and emotional baseline restored. Your brain\'s natural chemistry is back.' }
+  { hours: 1,    label: '1 Hour',      benefit: 'Heart rate and blood pressure begin to normalize.' },
+  { hours: 6,    label: '6 Hours',     benefit: 'THC in your blood has dropped ~50%.' },
+  { hours: 12,   label: '12 Hours',    benefit: 'Sleep architecture starts shifting toward natural REM.' },
+  { hours: 24,   label: '24 Hours',    benefit: 'Lungs begin clearing cannabis residue.' },
+  { hours: 48,   label: '2 Days',      benefit: 'Smell and taste sensitivity start returning.' },
+  { hours: 72,   label: '3 Days',      benefit: 'THC fully cleared from bloodstream.' },
+  { hours: 96,   label: '4 Days',      benefit: 'Dopamine receptors begin increasing.' },
+  { hours: 120,  label: '5 Days',      benefit: 'Acute withdrawal symptoms start to ease.' },
+  { hours: 144,  label: '6 Days',      benefit: 'Energy levels beginning to stabilize.' },
+  { hours: 168,  label: '1 Week',      benefit: 'The hardest week is behind you. Mood lifting.' },
+  { hours: 216,  label: '9 Days',      benefit: 'Lung function measurably improving.' },
+  { hours: 264,  label: '11 Days',     benefit: 'Sleep quality noticeably improving.' },
+  { hours: 336,  label: '2 Weeks',     benefit: 'Memory and concentration sharper.' },
+  { hours: 432,  label: '18 Days',     benefit: 'Natural mood regulation returning.' },
+  { hours: 504,  label: '3 Weeks',     benefit: 'Anxiety from withdrawal mostly resolved.' },
+  { hours: 600,  label: '25 Days',     benefit: 'Appetite and metabolism normalized.' },
+  { hours: 720,  label: '1 Month',     benefit: 'Cognitive clarity and motivation significantly improved.' },
+  { hours: 1080, label: '45 Days',     benefit: 'Emotional regulation improving steadily.' },
+  { hours: 1440, label: '2 Months',    benefit: 'Natural sleep hormone rhythms fully restored.' },
+  { hours: 2160, label: '3 Months',    benefit: 'Brain reward system largely normalized.' },
+  { hours: 2880, label: '4 Months',    benefit: 'Lung capacity near full recovery.' },
+  { hours: 3600, label: '5 Months',    benefit: 'Hormones and metabolism fully rebalanced.' },
+  { hours: 4320, label: '6 Months',    benefit: 'Dopamine receptors near full recovery.' },
+  { hours: 6480, label: '9 Months',    benefit: 'Cardiovascular health significantly restored.' },
+  { hours: 8760, label: '1 Year',      benefit: 'Full cognitive and emotional baseline restored.' }
 ];
 function renderHealthMilestone(totalHours) {
   var el = document.getElementById('healthMilestoneCard');
   if (!el) return;
   if (totalHours < 0) {
-    el.innerHTML = '<div class="health-ms-card"><div class="health-ms-eyebrow">Next Health Milestone</div><div class="health-ms-name">Set your quit date to track your milestones</div></div>';
+    el.innerHTML = '<div class="health-ms-card"><div class="health-ms-eyebrow">Your Next Milestone</div><div class="health-ms-name" style="opacity:0.6;">Set your quit date to start tracking</div></div>';
     return;
   }
   var next = null;
@@ -2602,9 +2618,8 @@ function renderHealthMilestone(totalHours) {
   }
   var achieved = HEALTH_MILESTONES.filter(function(m) { return totalHours >= m.hours; });
   var last = achieved.length > 0 ? achieved[achieved.length - 1] : null;
-  var achievedHTML = last ? '<div class="health-ms-achieved">✓ Last milestone: <strong>' + last.label + '</strong></div>' : '';
   if (!next) {
-    el.innerHTML = '<div class="health-ms-card"><div class="health-ms-eyebrow">🏆 All Milestones Reached</div><div class="health-ms-name">One year of complete healing.</div><div class="health-ms-benefit">Your brain chemistry, cardiovascular system, lungs, sleep, and emotional health have all been restored.</div>' + achievedHTML + '</div>';
+    el.innerHTML = '<div class="health-ms-card"><div class="health-ms-eyebrow">🏆 All Milestones Reached</div><div class="health-ms-name">One year of complete healing.</div><div class="health-ms-benefit">Your brain chemistry, lungs, sleep, and emotional health have all been restored.</div></div>';
     return;
   }
   var h = next.hours - totalHours;
@@ -2612,13 +2627,17 @@ function renderHealthMilestone(totalHours) {
   var hr = Math.floor(h % 24);
   var m = Math.floor((h * 60) % 60);
   var t = d > 0 ? d + 'd ' + hr + 'h ' + m + 'm' : (hr > 0 ? hr + 'h ' + m + 'm' : m + 'm');
+  var lastHTML = last ? '<div class="health-ms-last">✓ ' + last.label + ' reached — ' + last.benefit + '</div>' : '';
   el.innerHTML = '<div class="health-ms-card">' +
-    '<div class="health-ms-eyebrow">Next Health Milestone</div>' +
-    '<div class="health-ms-name">' + next.label + '</div>' +
-    '<div class="health-ms-benefit">' + next.benefit + '</div>' +
-    '<div class="health-ms-timer">' + t + '</div>' +
-    '<div class="health-ms-timer-sub">away</div>' +
-    achievedHTML +
+    '<div class="health-ms-row">' +
+      '<div>' +
+        '<div class="health-ms-eyebrow">Unlocks in ' + t + '</div>' +
+        '<div class="health-ms-name">' + next.label + ' Clean</div>' +
+        '<div class="health-ms-benefit">' + next.benefit + '</div>' +
+      '</div>' +
+      '<div class="health-ms-timer">' + t + '</div>' +
+    '</div>' +
+    lastHTML +
   '</div>';
 }
 
