@@ -478,24 +478,8 @@
   .snap-section-label { font-size: 0.6rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.8px; color: rgba(255,255,255,0.4); margin-bottom: 8px; }
   .snap-bullets { display: flex; flex-direction: column; gap: 7px; margin-bottom: 4px; }
   .snap-bullet { font-size: 0.84rem; color: rgba(255,255,255,0.88); background: rgba(255,255,255,0.08); border-radius: 9px; padding: 8px 12px; line-height: 1.4; }
-  .snap-divider { border-top: 1px solid rgba(255,255,255,0.12); margin: 14px 0 10px; }
-  .snap-stats { display: flex; justify-content: space-around; }
-  .snap-stat { text-align: center; }
-  .snap-stat-val { font-size: 1.5rem; font-weight: 900; color: var(--gold-bright); letter-spacing: -0.5px; }
-  .snap-stat-key { font-size: 0.68rem; color: rgba(255,255,255,0.55); margin-top: 2px; }
   .snap-empty { font-size: 0.85rem; color: rgba(255,255,255,0.5); margin-top: 8px; line-height: 1.6; }
 
-  /* ─── Mood Check-in ──────────────────────────────── */
-  .mood-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
-  .mood-row:last-of-type { margin-bottom: 0; }
-  .mood-icon { font-size: 1.2rem; width: 26px; text-align: center; flex-shrink: 0; }
-  .mood-label { font-size: 0.8rem; font-weight: 700; color: var(--text); width: 52px; flex-shrink: 0; }
-  .mood-slider { flex: 1; -webkit-appearance: none; appearance: none; height: 4px; border-radius: 4px; background: var(--border); outline: none; cursor: pointer; }
-  .mood-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--blue); cursor: pointer; border: 2px solid white; box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
-  .mood-val { width: 20px; text-align: right; font-size: 0.9rem; font-weight: 800; color: var(--blue); }
-  .mood-save-btn { width: 100%; background: var(--blue); color: white; border: none; border-radius: 12px; padding: 12px; font-weight: 700; font-size: 0.9rem; cursor: pointer; margin-top: 14px; }
-  .mood-saved-note { text-align: center; font-size: 0.78rem; color: var(--muted); margin-top: 8px; min-height: 1.2em; }
-  .mood-trend-wrap { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
   .mood-trend-title { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 10px; }
   .mood-trend-row { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
   .mood-trend-lbl { font-size: 0.72rem; color: var(--muted); width: 52px; flex-shrink: 0; }
@@ -707,34 +691,6 @@
 
 <!-- SECTION: Health -->
 <div class="section" id="section-health">
-
-  <div class="section-title">Daily Check-in</div>
-  <div class="card">
-    <div class="card-title"><span>📊</span> How are you feeling today?</div>
-    <div class="card-body">
-      <div class="mood-row">
-        <div class="mood-icon">😊</div>
-        <div class="mood-label">Mood</div>
-        <input type="range" class="mood-slider" id="moodSlider" min="1" max="5" value="3" oninput="document.getElementById('moodVal').textContent=this.value">
-        <div class="mood-val" id="moodVal">3</div>
-      </div>
-      <div class="mood-row">
-        <div class="mood-icon">😴</div>
-        <div class="mood-label">Sleep</div>
-        <input type="range" class="mood-slider" id="sleepSlider" min="1" max="5" value="3" oninput="document.getElementById('sleepVal').textContent=this.value">
-        <div class="mood-val" id="sleepVal">3</div>
-      </div>
-      <div class="mood-row">
-        <div class="mood-icon">⚡</div>
-        <div class="mood-label">Energy</div>
-        <input type="range" class="mood-slider" id="energySlider" min="1" max="5" value="3" oninput="document.getElementById('energyVal').textContent=this.value">
-        <div class="mood-val" id="energyVal">3</div>
-      </div>
-      <button class="mood-save-btn" onclick="saveMoodCheckin()">Save Check-in</button>
-      <div class="mood-saved-note" id="moodSavedNote"></div>
-      <div id="moodTrendWrap"></div>
-    </div>
-  </div>
 
   <div id="recoverySnapshotCard"></div>
 
@@ -2628,71 +2584,13 @@ function renderRecoverySnapshot(totalHours) {
   var bulletsHTML = recent.map(function(b) {
     return '<div class="snap-bullet">✓ ' + b.text + '</div>';
   }).join('');
-  var log = getMoodLog().slice(0, 7);
-  var statsHTML = '';
-  if (log.length >= 2) {
-    var avgMood   = (log.reduce(function(s,e){return s+e.mood;},0)   / log.length).toFixed(1);
-    var avgSleep  = (log.reduce(function(s,e){return s+e.sleep;},0)  / log.length).toFixed(1);
-    var avgEnergy = (log.reduce(function(s,e){return s+e.energy;},0) / log.length).toFixed(1);
-    statsHTML = '<div class="snap-divider"></div>' +
-      '<div class="snap-section-label">Your last ' + log.length + ' check-ins</div>' +
-      '<div class="snap-stats">' +
-        '<div class="snap-stat"><div class="snap-stat-val">' + avgMood   + '</div><div class="snap-stat-key">😊 Mood</div></div>' +
-        '<div class="snap-stat"><div class="snap-stat-val">' + avgSleep  + '</div><div class="snap-stat-key">😴 Sleep</div></div>' +
-        '<div class="snap-stat"><div class="snap-stat-val">' + avgEnergy + '</div><div class="snap-stat-key">⚡ Energy</div></div>' +
-      '</div>';
-  }
   el.innerHTML = '<div class="snap-card">' +
     '<div class="snap-header"><div class="snap-day">' + dayLabel + '</div><div class="snap-phase">' + phase + '</div></div>' +
     '<div class="snap-section-label">Happening in your body right now</div>' +
     '<div class="snap-bullets">' + bulletsHTML + '</div>' +
-    statsHTML +
   '</div>';
 }
 
-// ——— Mood / Sleep / Energy Check-in ———
-function getTodayKey() {
-  var d = new Date();
-  return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
-}
-function getMoodLog() {
-  try { return JSON.parse(storageGet('moodLog') || '[]'); } catch(e) { return []; }
-}
-function saveMoodCheckin() {
-  var mood   = parseInt(document.getElementById('moodSlider').value);
-  var sleep  = parseInt(document.getElementById('sleepSlider').value);
-  var energy = parseInt(document.getElementById('energySlider').value);
-  var log = getMoodLog();
-  var key = getTodayKey();
-  var idx = log.findIndex(function(e) { return e.date === key; });
-  var entry = { date: key, mood: mood, sleep: sleep, energy: energy };
-  if (idx >= 0) log[idx] = entry; else log.unshift(entry);
-  if (log.length > 30) log = log.slice(0, 30);
-  storageSet('moodLog', JSON.stringify(log));
-  document.getElementById('moodSavedNote').textContent = 'Saved ✓  ' + new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
-  renderMoodTrend();
-  try { var q = storageGet('quitDate'); renderRecoverySnapshot(q ? (Date.now() - new Date(q).getTime()) / 3600000 : -1); } catch(e) {}
-}
-function renderMoodTrend() {
-  var wrap = document.getElementById('moodTrendWrap');
-  if (!wrap) return;
-  var log = getMoodLog().slice(0, 7).reverse();
-  if (log.length === 0) { wrap.innerHTML = ''; return; }
-  var cats = [
-    { key: 'mood',   label: '😊 Mood'  },
-    { key: 'sleep',  label: '😴 Sleep' },
-    { key: 'energy', label: '⚡ Energy'}
-  ];
-  var rows = cats.map(function(c) {
-    var dots = log.map(function(e) {
-      var v = e[c.key] || 0;
-      var cls = v === 5 ? 'd5' : v === 4 ? 'd4' : v === 3 ? 'd3' : v === 2 ? 'd2' : 'd1';
-      return '<div class="mood-dot ' + cls + '" title="' + v + '/5"></div>';
-    }).join('');
-    return '<div class="mood-trend-row"><div class="mood-trend-lbl">' + c.label + '</div><div class="mood-trend-dots">' + dots + '</div></div>';
-  }).join('');
-  wrap.innerHTML = '<div class="mood-trend-wrap"><div class="mood-trend-title">Last ' + log.length + ' days</div>' + rows + '</div>';
-}
 
 // ——— Science Tab toggles ———
 function toggleBodySys(header) {
@@ -2915,7 +2813,6 @@ window.addEventListener('DOMContentLoaded', () => {
   setUsed('no');
   renderReflections();
   renderReasons();
-  renderMoodTrend();
   renderRecoverySnapshot(-1);
 });
 </script>
