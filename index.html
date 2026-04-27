@@ -470,17 +470,20 @@
   .reason-del:hover { color: var(--red); background: #fff0f0; }
   .reasons-empty { font-size: 0.85rem; color: var(--muted); font-style: italic; padding: 6px 0; }
 
-  /* ─── Health Milestone Countdown ─────────────────── */
-  .health-ms-card { background: linear-gradient(135deg, var(--navy) 0%, #2a4f9a 100%); border-radius: var(--radius); padding: 20px; margin-bottom: 10px; color: white; }
-  .health-ms-eyebrow { font-size: 0.62rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.5); margin-bottom: 4px; }
-  .health-ms-name { font-size: 1.0rem; font-weight: 800; line-height: 1.35; margin-bottom: 8px; }
-  .health-ms-benefit { font-size: 0.84rem; color: rgba(255,255,255,0.72); line-height: 1.6; margin-bottom: 12px; }
-  .health-ms-timer { font-size: 1.7rem; font-weight: 900; letter-spacing: -1px; color: var(--gold-bright); white-space: nowrap; flex-shrink: 0; }
-  .health-ms-timer-sub { font-size: 0.65rem; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
-  .health-ms-achieved { background: rgba(255,255,255,0.09); border-radius: 10px; padding: 9px 13px; font-size: 0.8rem; color: rgba(255,255,255,0.75); margin-top: 10px; }
-  .health-ms-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-  .health-ms-row > div:first-child { flex: 1; }
-  .health-ms-last { background: rgba(255,255,255,0.09); border-radius: 10px; padding: 9px 13px; font-size: 0.78rem; color: rgba(255,255,255,0.65); margin-top: 12px; line-height: 1.5; }
+  /* ─── Recovery Snapshot ─────────────────────────── */
+  .snap-card { background: linear-gradient(135deg, var(--navy) 0%, #2a4f9a 100%); border-radius: var(--radius); padding: 20px; margin-bottom: 10px; color: white; }
+  .snap-header { margin-bottom: 14px; }
+  .snap-day { font-size: 1.5rem; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 4px; }
+  .snap-phase { font-size: 0.82rem; color: rgba(255,255,255,0.65); line-height: 1.5; }
+  .snap-section-label { font-size: 0.6rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.8px; color: rgba(255,255,255,0.4); margin-bottom: 8px; }
+  .snap-bullets { display: flex; flex-direction: column; gap: 7px; margin-bottom: 4px; }
+  .snap-bullet { font-size: 0.84rem; color: rgba(255,255,255,0.88); background: rgba(255,255,255,0.08); border-radius: 9px; padding: 8px 12px; line-height: 1.4; }
+  .snap-divider { border-top: 1px solid rgba(255,255,255,0.12); margin: 14px 0 10px; }
+  .snap-stats { display: flex; justify-content: space-around; }
+  .snap-stat { text-align: center; }
+  .snap-stat-val { font-size: 1.5rem; font-weight: 900; color: var(--gold-bright); letter-spacing: -0.5px; }
+  .snap-stat-key { font-size: 0.68rem; color: rgba(255,255,255,0.55); margin-top: 2px; }
+  .snap-empty { font-size: 0.85rem; color: rgba(255,255,255,0.5); margin-top: 8px; line-height: 1.6; }
 
   /* ─── Mood Check-in ──────────────────────────────── */
   .mood-row { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
@@ -733,7 +736,7 @@
     </div>
   </div>
 
-  <div id="healthMilestoneCard"></div>
+  <div id="recoverySnapshotCard"></div>
 
   <div class="section-title">Recovery Progress</div>
 
@@ -2228,7 +2231,7 @@ function tickCounter() {
 
     try { renderMilestones(days); } catch(e) {}
     try { renderEducation(diff / 3600000); } catch(e) {}
-    try { renderHealthMilestone(diff / 3600000); } catch(e) {}
+    try { renderRecoverySnapshot(diff / 3600000); } catch(e) {}
   } catch(e) {}
 }
 
@@ -2251,7 +2254,7 @@ function resetDate() {
   document.getElementById('counterSetup').style.display = 'block';
   document.getElementById('counterDisplay').style.display = 'none';
   try { renderEducation(-1); } catch(e) {}
-  try { renderHealthMilestone(-1); } catch(e) {}
+  try { renderRecoverySnapshot(-1); } catch(e) {}
 }
 
 function renderCBT(days) {
@@ -2577,67 +2580,73 @@ function renderReasons() {
   }).join('');
 }
 
-// ——— Health Milestone Countdown ———
-var HEALTH_MILESTONES = [
-  { hours: 1,    label: '1 Hour',      benefit: 'Heart rate and blood pressure begin to normalize.' },
-  { hours: 6,    label: '6 Hours',     benefit: 'THC in your blood has dropped ~50%.' },
-  { hours: 12,   label: '12 Hours',    benefit: 'Sleep architecture starts shifting toward natural REM.' },
-  { hours: 24,   label: '24 Hours',    benefit: 'Lungs begin clearing cannabis residue.' },
-  { hours: 48,   label: '2 Days',      benefit: 'Smell and taste sensitivity start returning.' },
-  { hours: 72,   label: '3 Days',      benefit: 'THC fully cleared from bloodstream.' },
-  { hours: 96,   label: '4 Days',      benefit: 'Dopamine receptors begin increasing.' },
-  { hours: 120,  label: '5 Days',      benefit: 'Acute withdrawal symptoms start to ease.' },
-  { hours: 144,  label: '6 Days',      benefit: 'Energy levels beginning to stabilize.' },
-  { hours: 168,  label: '1 Week',      benefit: 'The hardest week is behind you. Mood lifting.' },
-  { hours: 216,  label: '9 Days',      benefit: 'Lung function measurably improving.' },
-  { hours: 264,  label: '11 Days',     benefit: 'Sleep quality noticeably improving.' },
-  { hours: 336,  label: '2 Weeks',     benefit: 'Memory and concentration sharper.' },
-  { hours: 432,  label: '18 Days',     benefit: 'Natural mood regulation returning.' },
-  { hours: 504,  label: '3 Weeks',     benefit: 'Anxiety from withdrawal mostly resolved.' },
-  { hours: 600,  label: '25 Days',     benefit: 'Appetite and metabolism normalized.' },
-  { hours: 720,  label: '1 Month',     benefit: 'Cognitive clarity and motivation significantly improved.' },
-  { hours: 1080, label: '45 Days',     benefit: 'Emotional regulation improving steadily.' },
-  { hours: 1440, label: '2 Months',    benefit: 'Natural sleep hormone rhythms fully restored.' },
-  { hours: 2160, label: '3 Months',    benefit: 'Brain reward system largely normalized.' },
-  { hours: 2880, label: '4 Months',    benefit: 'Lung capacity near full recovery.' },
-  { hours: 3600, label: '5 Months',    benefit: 'Hormones and metabolism fully rebalanced.' },
-  { hours: 4320, label: '6 Months',    benefit: 'Dopamine receptors near full recovery.' },
-  { hours: 6480, label: '9 Months',    benefit: 'Cardiovascular health significantly restored.' },
-  { hours: 8760, label: '1 Year',      benefit: 'Full cognitive and emotional baseline restored.' }
+// ——— Recovery Snapshot ———
+var RECOVERY_BEATS = [
+  { hours: 1,    text: 'Heart rate & blood pressure normalizing' },
+  { hours: 6,    text: 'THC in blood dropping fast' },
+  { hours: 12,   text: 'Sleep shifting toward natural REM' },
+  { hours: 24,   text: 'Lungs clearing cannabis residue' },
+  { hours: 48,   text: 'Smell & taste sensitivity returning' },
+  { hours: 72,   text: 'THC fully cleared from bloodstream' },
+  { hours: 96,   text: 'Dopamine receptors beginning to rebuild' },
+  { hours: 120,  text: 'Acute withdrawal easing' },
+  { hours: 144,  text: 'Energy levels stabilizing' },
+  { hours: 168,  text: 'The hardest week is behind you' },
+  { hours: 216,  text: 'Lung function measurably improving' },
+  { hours: 264,  text: 'Sleep quality noticeably improving' },
+  { hours: 336,  text: 'Memory & concentration sharpening' },
+  { hours: 432,  text: 'Natural mood regulation returning' },
+  { hours: 504,  text: 'Anxiety from withdrawal mostly resolved' },
+  { hours: 600,  text: 'Appetite & metabolism normalizing' },
+  { hours: 720,  text: 'Cognitive clarity & motivation lifting' },
+  { hours: 1080, text: 'Emotional regulation improving steadily' },
+  { hours: 1440, text: 'Sleep hormone rhythms restoring' },
+  { hours: 2160, text: 'Brain reward system largely normalized' },
+  { hours: 2880, text: 'Lung capacity near full recovery' },
+  { hours: 3600, text: 'Hormones & metabolism fully rebalanced' },
+  { hours: 4320, text: 'Dopamine receptors near full recovery' },
+  { hours: 6480, text: 'Cardiovascular health significantly restored' },
+  { hours: 8760, text: 'Full cognitive & emotional baseline restored' }
 ];
-function renderHealthMilestone(totalHours) {
-  var el = document.getElementById('healthMilestoneCard');
+function renderRecoverySnapshot(totalHours) {
+  var el = document.getElementById('recoverySnapshotCard');
   if (!el) return;
   if (totalHours < 0) {
-    el.innerHTML = '<div class="health-ms-card"><div class="health-ms-eyebrow">Your Next Milestone</div><div class="health-ms-name" style="opacity:0.6;">Set your quit date to start tracking</div></div>';
+    el.innerHTML = '<div class="snap-card"><div class="snap-day">Your Recovery</div><div class="snap-empty">Set your quit date above to see what\'s healing in your body right now.</div></div>';
     return;
   }
-  var next = null;
-  for (var i = 0; i < HEALTH_MILESTONES.length; i++) {
-    if (totalHours < HEALTH_MILESTONES[i].hours) { next = HEALTH_MILESTONES[i]; break; }
+  var days = Math.floor(totalHours / 24);
+  var dayLabel = days === 0 ? 'Less than a day in' : days === 1 ? 'Day 1' : 'Day ' + days;
+  var phase = totalHours < 72   ? 'The first 3 days are the hardest. You\'re doing it.' :
+              totalHours < 168  ? 'Your brain is already changing. Keep going.' :
+              totalHours < 720  ? 'Real progress is happening beneath the surface.' :
+              totalHours < 2160 ? 'Your body has done remarkable work. Don\'t stop now.' :
+                                  'You\'ve come so far. This is who you are now.';
+  var achieved = RECOVERY_BEATS.filter(function(b) { return totalHours >= b.hours; });
+  var recent = achieved.slice(-3).reverse();
+  if (recent.length === 0) recent = [{ text: 'Recovery has begun' }];
+  var bulletsHTML = recent.map(function(b) {
+    return '<div class="snap-bullet">✓ ' + b.text + '</div>';
+  }).join('');
+  var log = getMoodLog().slice(0, 7);
+  var statsHTML = '';
+  if (log.length >= 2) {
+    var avgMood   = (log.reduce(function(s,e){return s+e.mood;},0)   / log.length).toFixed(1);
+    var avgSleep  = (log.reduce(function(s,e){return s+e.sleep;},0)  / log.length).toFixed(1);
+    var avgEnergy = (log.reduce(function(s,e){return s+e.energy;},0) / log.length).toFixed(1);
+    statsHTML = '<div class="snap-divider"></div>' +
+      '<div class="snap-section-label">Your last ' + log.length + ' check-ins</div>' +
+      '<div class="snap-stats">' +
+        '<div class="snap-stat"><div class="snap-stat-val">' + avgMood   + '</div><div class="snap-stat-key">😊 Mood</div></div>' +
+        '<div class="snap-stat"><div class="snap-stat-val">' + avgSleep  + '</div><div class="snap-stat-key">😴 Sleep</div></div>' +
+        '<div class="snap-stat"><div class="snap-stat-val">' + avgEnergy + '</div><div class="snap-stat-key">⚡ Energy</div></div>' +
+      '</div>';
   }
-  var achieved = HEALTH_MILESTONES.filter(function(m) { return totalHours >= m.hours; });
-  var last = achieved.length > 0 ? achieved[achieved.length - 1] : null;
-  if (!next) {
-    el.innerHTML = '<div class="health-ms-card"><div class="health-ms-eyebrow">🏆 All Milestones Reached</div><div class="health-ms-name">One year of complete healing.</div><div class="health-ms-benefit">Your brain chemistry, lungs, sleep, and emotional health have all been restored.</div></div>';
-    return;
-  }
-  var h = next.hours - totalHours;
-  var d = Math.floor(h / 24);
-  var hr = Math.floor(h % 24);
-  var m = Math.floor((h * 60) % 60);
-  var t = d > 0 ? d + 'd ' + hr + 'h ' + m + 'm' : (hr > 0 ? hr + 'h ' + m + 'm' : m + 'm');
-  var lastHTML = last ? '<div class="health-ms-last">✓ ' + last.label + ' reached — ' + last.benefit + '</div>' : '';
-  el.innerHTML = '<div class="health-ms-card">' +
-    '<div class="health-ms-row">' +
-      '<div>' +
-        '<div class="health-ms-eyebrow">Unlocks in ' + t + '</div>' +
-        '<div class="health-ms-name">' + next.label + ' Clean</div>' +
-        '<div class="health-ms-benefit">' + next.benefit + '</div>' +
-      '</div>' +
-      '<div class="health-ms-timer">' + t + '</div>' +
-    '</div>' +
-    lastHTML +
+  el.innerHTML = '<div class="snap-card">' +
+    '<div class="snap-header"><div class="snap-day">' + dayLabel + '</div><div class="snap-phase">' + phase + '</div></div>' +
+    '<div class="snap-section-label">Happening in your body right now</div>' +
+    '<div class="snap-bullets">' + bulletsHTML + '</div>' +
+    statsHTML +
   '</div>';
 }
 
@@ -2662,6 +2671,7 @@ function saveMoodCheckin() {
   storageSet('moodLog', JSON.stringify(log));
   document.getElementById('moodSavedNote').textContent = 'Saved ✓  ' + new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
   renderMoodTrend();
+  try { var q = storageGet('quitDate'); renderRecoverySnapshot(q ? (Date.now() - new Date(q).getTime()) / 3600000 : -1); } catch(e) {}
 }
 function renderMoodTrend() {
   var wrap = document.getElementById('moodTrendWrap');
@@ -2906,7 +2916,7 @@ window.addEventListener('DOMContentLoaded', () => {
   renderReflections();
   renderReasons();
   renderMoodTrend();
-  renderHealthMilestone(-1);
+  renderRecoverySnapshot(-1);
 });
 </script>
 </body>
