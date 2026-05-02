@@ -530,6 +530,37 @@
   .ritual-del:hover { color: var(--red); background: #fff0f0; }
   .ritual-empty { font-size: 0.85rem; color: var(--muted); font-style: italic; padding: 4px 0; }
 
+  /* ─── Today in Your Brain ────────────────────────── */
+  .brain-today-card { border-radius: var(--radius); overflow: hidden; margin-bottom: 10px; box-shadow: var(--shadow); }
+  .brain-today-header { background: linear-gradient(135deg, #1a3560 0%, #2a4f9a 100%); padding: 18px 20px 16px; }
+  .brain-today-eyebrow { font-size: 0.6rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.45); margin-bottom: 5px; }
+  .brain-today-day { font-size: 0.78rem; font-weight: 700; color: rgba(255,255,255,0.65); margin-bottom: 8px; }
+  .brain-today-title { font-size: 1.05rem; font-weight: 800; color: white; line-height: 1.35; }
+  .brain-today-body { background: var(--card); padding: 16px 20px; }
+  .brain-today-fact { font-size: 0.87rem; line-height: 1.68; color: var(--text); margin-bottom: 14px; }
+  .brain-today-means-label { font-size: 0.63rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--blue); margin-bottom: 5px; }
+  .brain-today-means { font-size: 0.85rem; line-height: 1.6; color: var(--navy); background: var(--blue-pale); border-radius: 8px; padding: 11px 13px; }
+
+  /* ─── Deep Dives ──────────────────────────────────── */
+  .deep-dive-card { background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 8px; overflow: hidden; }
+  .deep-dive-header { padding: 16px 18px; display: flex; gap: 12px; align-items: flex-start; cursor: pointer; }
+  .deep-dive-lock { font-size: 1rem; flex-shrink: 0; margin-top: 2px; }
+  .deep-dive-meta { flex: 1; min-width: 0; }
+  .deep-dive-unlock-label { font-size: 0.62rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px; }
+  .deep-dive-unlock-label.is-unlocked { color: var(--blue); }
+  .deep-dive-unlock-label.is-locked { color: var(--muted); }
+  .deep-dive-title { font-size: 0.95rem; font-weight: 800; color: var(--text); margin-bottom: 3px; line-height: 1.3; }
+  .deep-dive-card.locked .deep-dive-title { color: var(--muted); }
+  .deep-dive-preview { font-size: 0.82rem; color: var(--muted); line-height: 1.45; }
+  .deep-dive-arrow { color: var(--muted); font-size: 0.75rem; flex-shrink: 0; margin-top: 3px; transition: transform 0.2s; }
+  .deep-dive-card.open .deep-dive-arrow { transform: rotate(180deg); }
+  .deep-dive-body { display: none; padding: 0 18px 18px; border-top: 1px solid var(--border); }
+  .deep-dive-body.open { display: block; }
+  .deep-dive-body p { font-size: 0.87rem; line-height: 1.7; color: var(--text); margin: 14px 0 0; }
+  .deep-dive-body p:first-child { margin-top: 14px; }
+  .deep-dive-hl { background: var(--blue-pale); border-left: 3px solid var(--blue); border-radius: 8px; padding: 11px 14px; margin: 14px 0 0; font-size: 0.84rem; color: var(--navy); line-height: 1.6; }
+  .deep-dive-new { display: inline-block; background: var(--blue); color: white; border-radius: 4px; padding: 1px 7px; font-size: 0.58rem; font-weight: 800; letter-spacing: 0.5px; margin-left: 7px; vertical-align: middle; position: relative; top: -1px; }
+
   /* ─── Recovery Snapshot ─────────────────────────── */
   .snap-card { background: linear-gradient(135deg, var(--navy) 0%, #2a4f9a 100%); border-radius: var(--radius); padding: 20px; margin-bottom: 10px; color: white; }
   .snap-header { margin-bottom: 14px; }
@@ -873,6 +904,9 @@
 <!-- SECTION: Science / Learn -->
 <div class="section" id="section-science">
 
+  <div class="section-title">Today in Your Brain</div>
+  <div id="brainTodayCard"></div>
+
   <div class="section-title">What THC Did to Your Brain</div>
 
   <div class="brain-section">
@@ -921,6 +955,9 @@
       <div class="brain-highlight">The irritability, anxiety, and sleep disruption you feel are not signs that something is wrong. They are signs your brain is actively rebuilding its own chemistry.</div>
     </div>
   </div>
+
+  <div class="section-title">Deep Dives</div>
+  <div id="deepDivesCard"></div>
 
   <div class="section-title">Myth-Busting</div>
   <p class="edu-note" style="margin-top:-6px;">The stories that keep people stuck — and the science that breaks them.</p>
@@ -2454,6 +2491,8 @@ function renderEducation(totalHours) {
     symptomsHTML;
   renderRecoveryTimeline(days);
   renderIdentityPrompt(totalHours);
+  renderBrainToday(totalHours);
+  renderDeepDives(totalHours);
 }
 
 // ——— Reflections ———
@@ -2919,6 +2958,177 @@ function renderRituals() {
   }).join('');
 }
 
+// ——— Today in Your Brain ———
+var BRAIN_TODAY_FACTS = [
+  { minHours: 0, maxHours: 24, label: 'Day 1',
+    facts: [{ title: 'THC is clearing your bloodstream', body: 'Psychoactive THC has a blood half-life of roughly 3–12 hours. By the end of your first day, active THC concentrations are dropping toward zero. Your brain is experiencing its first hours without external cannabinoid stimulation — possibly in a long time.', means: 'The discomfort you feel right now is your brain recalibrating, not breaking. Every hour is measurable neurological progress.' }]
+  },
+  { minHours: 24, maxHours: 72, label: 'Days 2–3',
+    facts: [{ title: 'Your endocannabinoid system is in withdrawal', body: 'With THC no longer flooding your CB1 receptors, your brain\'s own endocannabinoid system is noticing the gap. Anandamide — your brain\'s natural "bliss molecule" — is being produced again, but production is slow to restart after chronic suppression. This gap is what withdrawal feels like.', means: 'The anxiety, irritability, and sleep disruption peak in this 24–72 hour window for most people. Knowing this is the peak makes it survivable — it will not get harder than this.' }]
+  },
+  { minHours: 72, maxHours: 168, label: 'Days 3–7',
+    facts: [{ title: 'CB1 receptors are beginning to recover', body: 'PET brain imaging research shows CB1 receptor density begins measurably increasing within 48–72 hours of stopping cannabis. Your brain is literally regrowing sensitivity — the process that will eventually make food, music, movement, and connection feel rewarding again.', means: 'Receptor upregulation is the biological foundation of your recovery. It\'s already happening beneath the surface.' }]
+  },
+  { minHours: 168, maxHours: 336, label: 'Week 2',
+    facts: [
+      { title: 'Your prefrontal cortex is coming back online', body: 'The prefrontal cortex — responsible for decision-making, impulse control, and goal-directed behavior — shows measurable functional improvements after one week of abstinence. THC suppresses this region\'s activity; without it, function gradually restores.', means: 'The clearer thinking and improved ability to follow through you might be noticing aren\'t imagined. They\'re neurological.' },
+      { title: 'Your hippocampus is healing', body: 'Cannabis use is associated with reduced connectivity in the hippocampus — the brain\'s memory hub. Research shows structural recovery begins within the first two weeks of abstinence, with memory consolidation improving measurably.', means: 'If you\'re noticing sharper recall or better retention of new information, this is why.' }
+    ]
+  },
+  { minHours: 336, maxHours: 504, label: 'Week 3',
+    facts: [{ title: 'REM sleep is rebuilding', body: 'THC suppresses REM sleep — the stage responsible for emotional processing and memory consolidation. After two weeks of abstinence, REM sleep architecture begins normalizing. The vivid dreams many people experience are REM rebound — your brain catching up on months of suppressed dream sleep.', means: 'Strange or intense dreams right now are a sign of healing, not a sign something is wrong.' }]
+  },
+  { minHours: 504, maxHours: 720, label: 'Week 4',
+    facts: [{ title: 'Anxiety is chemically resolving', body: 'THC causes the brain to raise its baseline anxiety level as a compensatory response — opponent process theory. After 3–4 weeks without cannabis, this elevated baseline fully resolves. The anxiety you felt in early recovery wasn\'t new anxiety; it was your brain\'s compensation unwinding.', means: 'If anxiety has been gradually easing week by week, you\'re watching the opponent process reverse in real time.' }]
+  },
+  { minHours: 720, maxHours: 1440, label: 'Month 2',
+    facts: [{ title: 'Natural dopamine is returning to normal', body: 'At one month, PET imaging studies show dopamine release in the striatum begins returning toward normal levels. The blunted pleasure response that characterized heavy use is resolving. Your brain is relearning how to reward itself naturally.', means: 'Things that used to feel flat — food, music, achievement, connection — are measurably becoming more rewarding at the neurochemical level.' }]
+  },
+  { minHours: 1440, maxHours: 2160, label: 'Month 3',
+    facts: [{ title: 'CB1 receptor density near full recovery', body: 'A Johns Hopkins PET imaging study found that CB1 receptor density — measurably reduced in active cannabis users — returned to levels indistinguishable from non-users within 4 weeks to 4 months depending on use history. For most people, full normalization occurs by this point.', means: 'Your brain\'s own cannabinoid system is functionally restored. Anandamide and 2-AG are binding to a healthy receptor system again.' }]
+  },
+  { minHours: 2160, maxHours: 4320, label: 'Months 3–6',
+    facts: [{ title: 'Cognitive function has largely returned to baseline', body: 'Research reviews find that verbal memory, attention, and processing speed are largely restored by month 3 of abstinence. The deficits seen in heavy users — often misattributed to personality — were pharmacological. They reverse.', means: 'Work, learning, and creative tasks may feel significantly more natural and fluid than they did during heavy use. That shift is real.' }]
+  },
+  { minHours: 4320, maxHours: 8760, label: 'Months 6–12',
+    facts: [{ title: 'Neuroplasticity at natural levels', body: 'Cannabis reduces BDNF — Brain-Derived Neurotrophic Factor — a protein essential for learning and forming new neural pathways. At 6+ months of abstinence, BDNF levels normalize. Your brain\'s capacity for growth and change is fully restored.', means: 'Any skill, habit, or knowledge you\'re building now is being built on a fully receptive, plastic neural substrate.' }]
+  },
+  { minHours: 8760, maxHours: Infinity, label: 'One Year+',
+    facts: [{ title: 'Neurologically, you are a non-user', body: 'At one year of abstinence, research finds no statistically significant differences between former cannabis users and never-users on cognitive testing, neuroimaging, or neurochemical markers. Full endocannabinoid tone is restored. The brain has completed its recovery.', means: 'This is not the absence of use. This is a rebuilt brain.' }]
+  }
+];
+
+function renderBrainToday(totalHours) {
+  var el = document.getElementById('brainTodayCard');
+  if (!el) return;
+  if (totalHours < 0) {
+    el.innerHTML = '<div class="brain-today-card"><div class="brain-today-header"><div class="brain-today-eyebrow">Today in Your Brain</div><div class="brain-today-title">Set your quit date to see what\'s happening in your brain right now.</div></div></div>';
+    return;
+  }
+  var bucket = null;
+  for (var i = 0; i < BRAIN_TODAY_FACTS.length; i++) {
+    if (totalHours >= BRAIN_TODAY_FACTS[i].minHours && totalHours < BRAIN_TODAY_FACTS[i].maxHours) {
+      bucket = BRAIN_TODAY_FACTS[i]; break;
+    }
+  }
+  if (!bucket) bucket = BRAIN_TODAY_FACTS[BRAIN_TODAY_FACTS.length - 1];
+  var d = new Date();
+  var dayIdx = (d.getFullYear() * 366 + d.getMonth() * 31 + d.getDate()) % bucket.facts.length;
+  var fact = bucket.facts[dayIdx];
+  var days = Math.floor(totalHours / 24);
+  var dayLabel = days === 0 ? 'Less than a day in' : days === 1 ? 'Day 1' : 'Day ' + days;
+  el.innerHTML = '<div class="brain-today-card">' +
+    '<div class="brain-today-header">' +
+      '<div class="brain-today-eyebrow">Today in Your Brain</div>' +
+      '<div class="brain-today-day">' + dayLabel + ' \u00b7 ' + bucket.label + '</div>' +
+      '<div class="brain-today-title">' + fact.title + '</div>' +
+    '</div>' +
+    '<div class="brain-today-body">' +
+      '<div class="brain-today-fact">' + fact.body + '</div>' +
+      '<div class="brain-today-means-label">What this means for you</div>' +
+      '<div class="brain-today-means">' + fact.means + '</div>' +
+    '</div>' +
+  '</div>';
+}
+
+// ——— Deep Dives ———
+var DEEP_DIVES = [
+  { id: 'first72', unlockHours: 0, title: 'The First 72 Hours', eyebrow: 'Always Unlocked', preview: 'The hardest window — and the neuroscience of why.',
+    content: [
+      { t: 'p', s: 'The first 72 hours of cannabis abstinence are, for most people, the hardest. This isn\'t a coincidence or a personal weakness — it\'s the predictable result of specific neurological processes unfolding on a known timeline.' },
+      { t: 'hl', s: 'Cannabis withdrawal symptoms peak between hours 24–72 in most regular users. After that, the acute phase begins to resolve.' },
+      { t: 'p', s: 'Here\'s what\'s actually happening: THC occupies CB1 receptors throughout your brain — in the limbic system, prefrontal cortex, and basal ganglia. These receptors normally bind your brain\'s own cannabinoids (anandamide and 2-AG), which regulate mood, appetite, sleep, and stress. Chronic THC causes your brain to downregulate: reducing CB1 receptor density and cutting its own endocannabinoid production, because THC is doing the job.' },
+      { t: 'p', s: 'When you stop, THC clears — but the downregulation doesn\'t reverse instantly. For 48–72 hours, your brain runs a depleted endocannabinoid system without its external supplement. The irritability, anxiety, insomnia, and physical restlessness are your stress-regulation system operating below capacity. It\'s not broken — it\'s rebuilding.' },
+      { t: 'hl', s: 'Every hour past 72 is measurably easier than the one before it. The biology improves on a predictable, documented curve.' }
+    ]
+  },
+  { id: 'dopamine-week1', unlockHours: 168, title: 'Your Dopamine System at Week 1', eyebrow: 'Unlocks at 1 Week', preview: 'What\'s actually happening to your reward circuit right now.',
+    content: [
+      { t: 'p', s: 'At one week of abstinence, something significant is happening in your brain\'s dopamine system. Chronic cannabis use causes downregulation of D2 dopamine receptors in the striatum — your brain\'s reward hub — and reduces dopamine release in anticipation of rewards.' },
+      { t: 'p', s: 'This combination produces the flatness, low motivation, and anhedonia (reduced capacity for pleasure) that many heavy users experience — and often don\'t attribute to cannabis. It feels like a personality trait. It isn\'t.' },
+      { t: 'hl', s: 'PET imaging research shows D2 receptor density measurably increases within the first week of abstinence. The biological foundation of motivation and pleasure is actively rebuilding.' },
+      { t: 'p', s: 'Simultaneously, CB1 receptor upregulation is accelerating. A key function of the endocannabinoid system is to modulate dopamine signaling — as CB1 receptors restore, dopamine signaling becomes more precise and responsive. Natural rewards — food, exercise, connection, achievement — are beginning to feel more rewarding on a neurochemical level. This will continue for weeks.' }
+    ]
+  },
+  { id: 'rem-rebound', unlockHours: 336, title: 'REM Rebound & Sleep Recovery', eyebrow: 'Unlocks at 2 Weeks', preview: 'Why your dreams are getting weird — and what that actually means.',
+    content: [
+      { t: 'p', s: 'Cannabis is widely used as a sleep aid, but this rests on a misunderstanding. THC reduces sleep onset time — the time it takes to fall asleep. But it does so by suppressing REM sleep, the stage that does the most important work.' },
+      { t: 'p', s: 'REM sleep is when your brain consolidates memories, processes emotional experiences, clears metabolic waste, and restores itself. Without adequate REM, you can sleep eight hours and wake exhausted and emotionally reactive. This is the paradox of cannabis as a sleep aid: it produces quantity of sleep while degrading its quality.' },
+      { t: 'hl', s: 'Vivid, strange, or intense dreams right now mean REM rebound — your brain catching up on weeks or months of suppressed REM sleep. It\'s a sign of healing, not a problem.' },
+      { t: 'p', s: 'REM rebound typically resolves within 3–5 weeks as your brain stops overcompensating. After that window, natural sleep quality — including REM architecture — is generally superior to anything cannabis-assisted sleep provides. The insomnia you\'re experiencing is temporary. The real sleep you\'re getting back is permanent.' }
+    ]
+  },
+  { id: 'cognitive-comeback', unlockHours: 720, title: 'The Cognitive Comeback', eyebrow: 'Unlocks at 1 Month', preview: 'Memory, focus, executive function — what the research actually shows.',
+    content: [
+      { t: 'p', s: 'One of the most debated questions in cannabis research is whether cognitive effects are permanent or reversible. The answer, backed by longitudinal studies, is clear: they reverse.' },
+      { t: 'p', s: 'Heavy cannabis use is associated with measurable deficits in verbal memory, working memory, attention, and processing speed. These show up on neuropsychological testing — they\'re not subjective. The cannabis-caused component fully resolves with sustained abstinence.' },
+      { t: 'hl', s: 'A comprehensive review in Neuropsychology Review found most cognitive deficits associated with cannabis use become statistically indistinguishable from non-users after 72 hours to one month of abstinence, depending on use history and domain.' },
+      { t: 'p', s: 'At one month, you\'re in the window where the most dramatic improvements occur. Verbal learning and memory show the most rapid recovery. Executive function — planning, impulse control, cognitive flexibility — follows close behind. The prefrontal cortex is showing measurably improved functional connectivity. The experience of tasks feeling clearer and thinking feeling less effortful is not placebo. It\'s neurological.' }
+    ]
+  },
+  { id: 'brain-at-90', unlockHours: 2160, title: 'Your Brain at 90 Days', eyebrow: 'Unlocks at 3 Months', preview: 'What brain imaging shows at this milestone — it\'s remarkable.',
+    content: [
+      { t: 'p', s: 'Three months is one of the most studied milestones in cannabis recovery research. At this point, multiple imaging modalities — fMRI, PET, DTI — show measurable and striking changes in brain structure and function.' },
+      { t: 'hl', s: 'A landmark Johns Hopkins PET imaging study found CB1 receptor density had fully normalized in most brain regions by 4 weeks, with complete recovery across all measured regions by approximately 4 months.' },
+      { t: 'p', s: 'What this means: your endocannabinoid system — which regulates mood, appetite, pain, memory, sleep, and stress — is operating with a fully restored receptor system. Anandamide and 2-AG are binding to a normal density of receptors. The fundamental chemical machinery of wellbeing is restored.' },
+      { t: 'p', s: 'Structurally, research shows partial or full recovery of gray matter volume in the hippocampus and prefrontal cortex. White matter integrity, which governs communication between brain regions, shows measurable improvement. At 90 days, most former users report their subjective sense of cognitive function has normalized. The research backs this up.' }
+    ]
+  },
+  { id: 'long-game', unlockHours: 4320, title: 'The Long Game', eyebrow: 'Unlocks at 6 Months', preview: 'What researchers found when they followed people for a year and beyond.',
+    content: [
+      { t: 'p', s: 'The longest-running cannabis abstinence research paints a consistent picture: full neurological recovery is the expected outcome, not the exception.' },
+      { t: 'p', s: 'At six months, neuroplasticity markers have returned to baseline. During heavy use, cannabis reduces BDNF — Brain-Derived Neurotrophic Factor — a protein essential for learning and forming new neural pathways. BDNF normalizes with sustained abstinence, meaning the brain\'s capacity for growth and change is fully restored.' },
+      { t: 'hl', s: 'Research published in JAMA Psychiatry found that former heavy cannabis users showed no significant differences from never-users on comprehensive cognitive batteries at one year of abstinence.' },
+      { t: 'p', s: 'Emotionally, the 6-month mark is associated with significant stabilization. Mood dysregulation, irritability, and emotional blunting have typically fully resolved. Emotional responses become more nuanced and proportionate — a function of restored prefrontal cortex regulation over the limbic system.' },
+      { t: 'p', s: 'At one year, former users\' brains are neurologically indistinguishable from those of people who never used. Cognitively, structurally, neurochemically — the brain has completed its recovery. What you are building right now leads exactly here.' }
+    ]
+  }
+];
+
+function toggleDeepDive(id) {
+  var card = document.getElementById('dd-' + id);
+  if (!card || card.classList.contains('locked')) return;
+  var body = card.querySelector('.deep-dive-body');
+  var arrow = card.querySelector('.deep-dive-arrow');
+  var isOpen = card.classList.contains('open');
+  card.classList.toggle('open', !isOpen);
+  if (body) body.classList.toggle('open', !isOpen);
+  if (arrow) arrow.style.transform = isOpen ? '' : 'rotate(180deg)';
+}
+
+function renderDeepDives(totalHours) {
+  var el = document.getElementById('deepDivesCard');
+  if (!el) return;
+  var now = totalHours < 0 ? -1 : totalHours;
+  var recentUnlock = now > 0 ? now - 72 : -1; // "new" badge if unlocked in last 3 days
+  el.innerHTML = DEEP_DIVES.map(function(d) {
+    var unlocked = now >= d.unlockHours;
+    var isNew = unlocked && d.unlockHours > 0 && now < d.unlockHours + 72;
+    var newBadge = isNew ? '<span class="deep-dive-new">NEW</span>' : '';
+    var lockIcon = unlocked ? '📖' : '🔒';
+    var unlockClass = unlocked ? 'is-unlocked' : 'is-locked';
+    var cardClass = 'deep-dive-card' + (unlocked ? '' : ' locked');
+    var contentHTML = unlocked ? d.content.map(function(c) {
+      return c.t === 'hl'
+        ? '<div class="deep-dive-hl">' + c.s + '</div>'
+        : '<p>' + c.s + '</p>';
+    }).join('') : '';
+    var arrowHTML = unlocked ? '<div class="deep-dive-arrow">▾</div>' : '';
+    return '<div class="' + cardClass + '" id="dd-' + d.id + '">' +
+      '<div class="deep-dive-header" onclick="toggleDeepDive(\'' + d.id + '\')">' +
+        '<div class="deep-dive-lock">' + lockIcon + '</div>' +
+        '<div class="deep-dive-meta">' +
+          '<div class="deep-dive-unlock-label ' + unlockClass + '">' + d.eyebrow + '</div>' +
+          '<div class="deep-dive-title">' + d.title + newBadge + '</div>' +
+          '<div class="deep-dive-preview">' + d.preview + '</div>' +
+        '</div>' +
+        arrowHTML +
+      '</div>' +
+      (unlocked ? '<div class="deep-dive-body">' + contentHTML + '</div>' : '') +
+    '</div>';
+  }).join('');
+}
+
 // ——— Science Tab toggles ———
 function toggleBodySys(header) {
   var body = header.parentElement.querySelector('.body-sys-body');
@@ -3141,6 +3351,8 @@ window.addEventListener('DOMContentLoaded', () => {
   renderReflections();
   renderReasons();
   renderIdentityPrompt(-1);
+  renderBrainToday(-1);
+  renderDeepDives(-1);
   renderUrgePattern();
   renderRituals();
   renderRecoverySnapshot(-1);
