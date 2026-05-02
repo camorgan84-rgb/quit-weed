@@ -658,6 +658,7 @@
     <button class="btn-small" onclick="resetDate()">Change date</button>
   </div>
 </div>
+<div class="section-title" style="padding: 16px 20px 0;">Where You Are</div>
 
 <!-- SOS Modal -->
 <div class="sos-modal" id="sosModal">
@@ -1147,6 +1148,9 @@
 
 <!-- SECTION: Cravings -->
 <div class="section" id="section-cravings">
+
+  <div class="section-title">Where You Are in Withdrawal</div>
+  <div id="withdrawalStageCard"></div>
 
   <div class="section-title">Log This Urge</div>
   <div class="card">
@@ -2490,6 +2494,7 @@ function renderEducation(totalHours) {
   renderIdentityPrompt(totalHours);
   renderBrainToday(totalHours);
   renderDeepDives(totalHours);
+  renderWithdrawalStage(totalHours);
 }
 
 // ——— Reflections ———
@@ -3028,6 +3033,105 @@ function renderBrainToday(totalHours) {
   '</div>';
 }
 
+// ——— Withdrawal Stages ———
+var WITHDRAWAL_STAGES = [
+  {
+    maxHours: 24,
+    name: 'Day One',
+    emoji: '🌱',
+    color: '#3d7a5e',
+    bg: '#e8f5ee',
+    tagline: 'The journey starts here.',
+    body: 'THC is clearing from your bloodstream. Your endocannabinoid system is beginning to notice the shift. You may feel restless, irritable, or have a mild headache — that\'s your brain starting to recalibrate.',
+    tip: 'Hydrate, eat light, and be patient with yourself today.'
+  },
+  {
+    maxHours: 72,
+    name: 'Acute Peak',
+    emoji: '🌊',
+    color: '#c4783a',
+    bg: '#fdf0e4',
+    tagline: 'The hardest part is often right here.',
+    body: 'Withdrawal typically peaks in the first 48–72 hours. Irritability, anxiety, sweating, and disrupted sleep are common. Your nervous system is recalibrating without THC as a buffer — this is temporary.',
+    tip: 'This peak always passes. Most symptoms ease significantly after day 3.'
+  },
+  {
+    maxHours: 168,
+    name: 'Acute Withdrawal',
+    emoji: '🔄',
+    color: '#c4783a',
+    bg: '#fdf0e4',
+    tagline: 'Holding steady through the hard stretch.',
+    body: 'Physical symptoms are beginning to ease. Sleep may still be disrupted — vivid dreams are your REM sleep returning. Mood swings and cravings are still common but usually less intense than days 1–3.',
+    tip: 'Keep your environment calm. This is when new habits take root.'
+  },
+  {
+    maxHours: 336,
+    name: 'Stabilizing',
+    emoji: '⚖️',
+    color: '#7b6fa0',
+    bg: '#f0eef7',
+    tagline: 'Your brain is finding its new baseline.',
+    body: 'The acute phase is largely behind you. Your dopamine system is slowly upregulating. Mood and energy are stabilizing, though strong cravings may still appear linked to habit cues and familiar situations.',
+    tip: 'Identify your trigger patterns now — habit replacement matters most here.'
+  },
+  {
+    maxHours: 720,
+    name: 'Early Recovery',
+    emoji: '🌤️',
+    color: '#5a8fc4',
+    bg: '#eaf2fb',
+    tagline: 'The fog is starting to lift.',
+    body: 'Most physical withdrawal has resolved. Cognitive clarity, motivation, and emotional regulation are gradually returning. CB1 receptor density is beginning to recover, and the brain\'s reward system is waking back up.',
+    tip: 'Cravings now are mostly psychological. New routines are your strongest tool.'
+  },
+  {
+    maxHours: 2160,
+    name: 'Neurological Reset',
+    emoji: '🧠',
+    color: '#3d7a5e',
+    bg: '#e8f5ee',
+    tagline: 'Real, measurable brain changes are happening.',
+    body: 'Research shows CB1 receptor density recovers significantly by 30 days. Your brain\'s reward system is relearning what feels good without THC. Memory, focus, and emotional processing are all improving measurably.',
+    tip: 'The further you get from your last use, the weaker cravings become.'
+  },
+  {
+    maxHours: Infinity,
+    name: 'Long-Term Recovery',
+    emoji: '🌺',
+    color: '#3d7a5e',
+    bg: '#e8f5ee',
+    tagline: 'You\'ve built something real.',
+    body: 'Studies show CB1 receptors have largely recovered by 90 days. Your brain\'s neuroplasticity has been working in your favor the whole time. PAWS can still bring occasional mood dips, but the overall trajectory is clearly upward.',
+    tip: 'Your identity as someone who doesn\'t smoke is now established. Protect it.'
+  }
+];
+
+function renderWithdrawalStage(totalHours) {
+  var el = document.getElementById('withdrawalStageCard');
+  if (!el) return;
+  if (totalHours < 0) {
+    el.innerHTML = '<div class="card"><div class="card-body" style="text-align:center; color:var(--text-muted); font-size:0.95rem; padding:16px 0;">Set your clean date to see where you are in withdrawal.</div></div>';
+    return;
+  }
+  var stage = WITHDRAWAL_STAGES.find(function(s) { return totalHours < s.maxHours; }) || WITHDRAWAL_STAGES[WITHDRAWAL_STAGES.length - 1];
+  el.innerHTML = '<div class="card" style="background:' + stage.bg + '; border-left:4px solid ' + stage.color + ';">' +
+    '<div class="card-body">' +
+      '<div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">' +
+        '<span style="font-size:1.8rem;">' + stage.emoji + '</span>' +
+        '<div>' +
+          '<div style="font-weight:700; color:' + stage.color + '; font-size:1.05rem;">' + stage.name + '</div>' +
+          '<div style="font-size:0.85rem; color:var(--text-muted); font-style:italic;">' + stage.tagline + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<p style="font-size:0.9rem; color:var(--text); line-height:1.65; margin-bottom:10px;">' + stage.body + '</p>' +
+      '<div style="background:rgba(255,255,255,0.65); border-radius:8px; padding:9px 12px; font-size:0.85rem; color:' + stage.color + ';">' +
+        '💡 ' + stage.tip +
+      '</div>' +
+    '</div>' +
+  '</div>';
+}
+
 // ——— Deep Dives ———
 var DEEP_DIVES = [
   { id: 'first72', unlockHours: 0, title: 'The First 72 Hours', eyebrow: 'Always Unlocked', preview: 'The hardest window — and the neuroscience of why.',
@@ -3356,6 +3460,7 @@ window.addEventListener('DOMContentLoaded', () => {
   renderUrgePattern();
   renderRituals();
   renderRecoverySnapshot(-1);
+  renderWithdrawalStage(-1);
 });
 </script>
 </body>
