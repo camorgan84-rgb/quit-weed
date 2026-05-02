@@ -457,6 +457,19 @@
   .breath-count { text-align: center; font-size: 2rem; font-weight: 900; color: white; min-height: 2.4rem; }
   .sos-action-btn { width: 100%; background: rgba(255,255,255,0.08); color: white; border: 1px solid rgba(255,255,255,0.18); border-radius: 12px; padding: 12px; font-weight: 700; font-size: 0.9rem; cursor: pointer; margin-top: 10px; }
 
+  /* ─── My Reasons ─────────────────────────────────── */
+  .reasons-add-row { display: flex; gap: 8px; margin-bottom: 12px; }
+  .reasons-add-row input { flex: 1; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 0.9rem; color: var(--text); background: var(--bg); font-family: inherit; }
+  .reasons-add-row input:focus { outline: none; border-color: var(--blue); }
+  .reasons-add-btn { background: var(--blue); color: white; border: none; border-radius: 10px; padding: 10px 16px; font-weight: 700; cursor: pointer; font-size: 0.9rem; white-space: nowrap; }
+  .reason-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .reason-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .reason-num { width: 26px; height: 26px; border-radius: 50%; background: var(--blue-pale); color: var(--blue); font-size: 0.72rem; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .reason-text { flex: 1; font-size: 0.9rem; color: var(--text); line-height: 1.5; }
+  .reason-del { background: none; border: none; color: var(--muted); font-size: 1.1rem; cursor: pointer; padding: 2px 6px; border-radius: 6px; line-height: 1; transition: all 0.15s; }
+  .reason-del:hover { color: var(--red); background: #fff0f0; }
+  .reasons-empty { font-size: 0.85rem; color: var(--muted); font-style: italic; padding: 6px 0; }
+
   /* ─── Commitment Statement ───────────────────────── */
   .commitment-card { background: linear-gradient(135deg, var(--navy) 0%, #2a4f9a 100%); border-radius: var(--radius); padding: 20px; margin-bottom: 10px; color: white; }
   .commitment-eyebrow { font-size: 0.62rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.5); margin-bottom: 8px; }
@@ -622,11 +635,6 @@
     <button class="sos-close" onclick="closeSOS()">✕</button>
   </div>
 
-  <div class="sos-step" id="sosCommitmentStep" style="display:none;">
-    <div class="sos-step-num">Remember why you're here</div>
-    <div class="sos-step-title" id="sosCommitmentText"></div>
-  </div>
-
   <div class="sos-step">
     <div class="sos-step-num">Remember this</div>
     <div class="sos-step-title">Cravings always peak — then always pass</div>
@@ -704,8 +712,17 @@
 <!-- SECTION: Today -->
 <div class="section active" id="section-today">
 
-  <div class="section-title">My Commitment</div>
-  <div id="commitmentCard"></div>
+  <div class="section-title">My Reasons to Quit</div>
+  <div class="card">
+    <div class="card-title"><span>💛</span> Why I'm doing this</div>
+    <div class="card-body">
+      <div class="reasons-add-row">
+        <input type="text" id="reasonInput" placeholder="Add a reason…" onkeydown="if(event.key==='Enter')addReason()">
+        <button class="reasons-add-btn" onclick="addReason()">Add</button>
+      </div>
+      <div id="reasonsList"><div class="reasons-empty">Add your personal reasons above. The more specific, the more powerful.</div></div>
+    </div>
+  </div>
 
   <div class="section-title">Who Am I Becoming</div>
   <div id="identityPromptCard"></div>
@@ -1093,8 +1110,6 @@
 
 <!-- SECTION: Cravings -->
 <div class="section" id="section-cravings">
-
-  <div id="commitmentCravings"></div>
 
   <div class="section-title">Log This Urge</div>
   <div class="card">
@@ -2598,63 +2613,41 @@ function stopBreathing() {
   if (btn) btn.textContent = '▶ Start Breathing';
 }
 
-// ——— Commitment Statement ———
-function getCommitment() {
-  return storageGet('commitment') || '';
+// ——— My Reasons ———
+function getReasons() {
+  try { return JSON.parse(storageGet('myReasons') || '[]'); } catch(e) { return []; }
 }
-function saveCommitment() {
-  var text = document.getElementById('commitmentInput').value.trim();
+function addReason() {
+  var input = document.getElementById('reasonInput');
+  var text = input.value.trim();
   if (!text) return;
-  storageSet('commitment', text);
-  renderCommitment();
-  renderCommitmentInCravings();
-  renderSOSCommitment();
+  var reasons = getReasons();
+  reasons.push(text);
+  storageSet('myReasons', JSON.stringify(reasons));
+  input.value = '';
+  renderReasons();
 }
-function editCommitment() {
-  storageRemove('commitment');
-  renderCommitment();
-  renderCommitmentInCravings();
-  renderSOSCommitment();
+function deleteReason(idx) {
+  var reasons = getReasons();
+  reasons.splice(idx, 1);
+  storageSet('myReasons', JSON.stringify(reasons));
+  renderReasons();
 }
-function renderCommitment() {
-  var el = document.getElementById('commitmentCard');
+function renderReasons() {
+  var reasons = getReasons();
+  var el = document.getElementById('reasonsList');
   if (!el) return;
-  var text = getCommitment();
-  if (!text) {
-    el.innerHTML = '<div class="card"><div class="card-title"><span>💛</span> Why I\'m doing this</div><div class="card-body">' +
-      '<p class="commitment-prompt">Write your why in your own words. Be honest and specific — this is for you, not anyone else.</p>' +
-      '<textarea class="commitment-textarea" id="commitmentInput" placeholder="I\'m choosing to live weed-free because…"></textarea>' +
-      '<button class="commitment-save-btn" onclick="saveCommitment()">Save My Commitment</button>' +
-    '</div></div>';
+  if (reasons.length === 0) {
+    el.innerHTML = '<div class="reasons-empty">Add your personal reasons above. The more specific, the more powerful.</div>';
     return;
   }
-  el.innerHTML = '<div class="commitment-card">' +
-    '<div class="commitment-eyebrow">My Commitment</div>' +
-    '<div class="commitment-text">\u201c' + text.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '\u201d</div>' +
-    '<button class="commitment-edit-btn" onclick="editCommitment()">Edit</button>' +
-  '</div>';
-}
-function renderCommitmentInCravings() {
-  var el = document.getElementById('commitmentCravings');
-  if (!el) return;
-  var text = getCommitment();
-  if (!text) { el.innerHTML = ''; return; }
-  el.innerHTML = '<div class="commitment-card">' +
-    '<div class="commitment-eyebrow">Remember why you\'re here</div>' +
-    '<div class="commitment-text">\u201c' + text.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '\u201d</div>' +
-  '</div>';
-}
-function renderSOSCommitment() {
-  var stepEl = document.getElementById('sosCommitmentStep');
-  var textEl = document.getElementById('sosCommitmentText');
-  if (!stepEl || !textEl) return;
-  var text = getCommitment();
-  if (text) {
-    textEl.textContent = '\u201c' + text + '\u201d';
-    stepEl.style.display = 'block';
-  } else {
-    stepEl.style.display = 'none';
-  }
+  el.innerHTML = reasons.map(function(r, i) {
+    return '<div class="reason-item">' +
+      '<div class="reason-num">' + (i + 1) + '</div>' +
+      '<div class="reason-text">' + r.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div>' +
+      '<button class="reason-del" onclick="deleteReason(' + i + ')">×</button>' +
+    '</div>';
+  }).join('');
 }
 
 // ——— Identity Prompts ———
@@ -3146,9 +3139,7 @@ window.addEventListener('DOMContentLoaded', () => {
   startCounter();
   setUsed('no');
   renderReflections();
-  renderCommitment();
-  renderCommitmentInCravings();
-  renderSOSCommitment();
+  renderReasons();
   renderIdentityPrompt(-1);
   renderUrgePattern();
   renderRituals();
