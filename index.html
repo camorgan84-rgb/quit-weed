@@ -504,6 +504,19 @@
 
   .pattern-insight { background: var(--blue-pale); border-left: 3px solid var(--blue); border-radius: 10px; padding: 12px 14px; font-size: 0.82rem; color: var(--navy); margin-bottom: 14px; line-height: 1.6; }
 
+  /* ─── Ritual Library ─────────────────────────────── */
+  .ritual-add-row { display: flex; gap: 8px; margin-bottom: 14px; }
+  .ritual-add-row input { flex: 1; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 0.9rem; color: var(--text); background: var(--bg); font-family: inherit; }
+  .ritual-add-row input:focus { outline: none; border-color: var(--blue); }
+  .ritual-add-btn { background: var(--blue); color: white; border: none; border-radius: 10px; padding: 10px 16px; font-weight: 700; cursor: pointer; font-size: 0.9rem; white-space: nowrap; }
+  .ritual-item { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .ritual-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .ritual-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--blue); flex-shrink: 0; }
+  .ritual-text { flex: 1; font-size: 0.9rem; color: var(--text); line-height: 1.45; }
+  .ritual-del { background: none; border: none; color: var(--muted); font-size: 1.1rem; cursor: pointer; padding: 2px 6px; border-radius: 6px; line-height: 1; transition: all 0.15s; }
+  .ritual-del:hover { color: var(--red); background: #fff0f0; }
+  .ritual-empty { font-size: 0.85rem; color: var(--muted); font-style: italic; padding: 4px 0; }
+
   /* ─── Recovery Snapshot ─────────────────────────── */
   .snap-card { background: linear-gradient(135deg, var(--navy) 0%, #2a4f9a 100%); border-radius: var(--radius); padding: 20px; margin-bottom: 10px; color: white; }
   .snap-header { margin-bottom: 14px; }
@@ -1115,6 +1128,18 @@
   </div>
 
   <div id="urgePatternCard"></div>
+
+  <div class="section-title">My Go-To Rituals</div>
+  <div class="card">
+    <div class="card-body">
+      <div style="font-size:0.83rem; color:var(--muted); margin-bottom:12px; line-height:1.55;">Build your personal list of what actually helps. When a craving hits, this is your menu.</div>
+      <div class="ritual-add-row">
+        <input type="text" id="ritualInput" placeholder="e.g. make tea, go for a walk…" onkeydown="if(event.key==='Enter')addRitual()">
+        <button class="ritual-add-btn" onclick="addRitual()">Add</button>
+      </div>
+      <div id="ritualsList"></div>
+    </div>
+  </div>
 
   <div class="section-title">Craving Strategies</div>
 
@@ -2864,6 +2889,43 @@ function renderRecoverySnapshot(totalHours) {
 }
 
 
+// ——— Ritual Library ———
+function getRituals() {
+  try { return JSON.parse(storageGet('rituals') || '[]'); } catch(e) { return []; }
+}
+function addRitual() {
+  var input = document.getElementById('ritualInput');
+  var text = input.value.trim();
+  if (!text) return;
+  var rituals = getRituals();
+  rituals.push(text);
+  storageSet('rituals', JSON.stringify(rituals));
+  input.value = '';
+  renderRituals();
+}
+function deleteRitual(idx) {
+  var rituals = getRituals();
+  rituals.splice(idx, 1);
+  storageSet('rituals', JSON.stringify(rituals));
+  renderRituals();
+}
+function renderRituals() {
+  var el = document.getElementById('ritualsList');
+  if (!el) return;
+  var rituals = getRituals();
+  if (rituals.length === 0) {
+    el.innerHTML = '<div class="ritual-empty">Nothing saved yet — add what works for you.</div>';
+    return;
+  }
+  el.innerHTML = rituals.map(function(r, i) {
+    return '<div class="ritual-item">' +
+      '<div class="ritual-dot"></div>' +
+      '<div class="ritual-text">' + r.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div>' +
+      '<button class="ritual-del" onclick="deleteRitual(' + i + ')">×</button>' +
+    '</div>';
+  }).join('');
+}
+
 // ——— Science Tab toggles ———
 function toggleBodySys(header) {
   var body = header.parentElement.querySelector('.body-sys-body');
@@ -3089,6 +3151,7 @@ window.addEventListener('DOMContentLoaded', () => {
   renderSOSCommitment();
   renderIdentityPrompt(-1);
   renderUrgePattern();
+  renderRituals();
   renderRecoverySnapshot(-1);
 });
 </script>
