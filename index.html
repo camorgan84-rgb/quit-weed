@@ -1619,12 +1619,12 @@
       <div class="stat-lbl">Entries</div>
     </div>
     <div class="log-stat">
-      <div class="stat-num" id="logAvgInt">—</div>
-      <div class="stat-lbl">Avg Intensity</div>
+      <div class="stat-num" id="logUsedCount">0</div>
+      <div class="stat-lbl">Times Used</div>
     </div>
     <div class="log-stat">
-      <div class="stat-num" id="logTopReason">—</div>
-      <div class="stat-lbl">Top Trigger</div>
+      <div class="stat-num" id="logNoteCount">0</div>
+      <div class="stat-lbl">Notes</div>
     </div>
   </div>
 
@@ -1633,11 +1633,10 @@
   <div class="log-form">
     <h3>Add Entry</h3>
     <div class="form-field">
-      <label>Did you use?</label>
-      <div class="used-toggle" style="flex-wrap:wrap;">
-        <button type="button" class="used-btn selected-no" id="usedNo"   onclick="setUsed('no')">🚫 Craving</button>
-        <button type="button" class="used-btn"             id="usedYes"  onclick="setUsed('yes')">✅ Used</button>
-        <button type="button" class="used-btn"             id="usedNote" onclick="setUsed('note')" style="flex-basis:100%;">📝 Note</button>
+      <label>Log Type</label>
+      <div class="used-toggle">
+        <button type="button" class="used-btn selected-yes" id="usedYes"  onclick="setUsed('yes')">✅ Used</button>
+        <button type="button" class="used-btn"              id="usedNote" onclick="setUsed('note')">📝 Note</button>
       </div>
     </div>
     <div class="form-field">
@@ -1675,39 +1674,6 @@
       </div>
     </div>
     </div><!-- /useFieldsWrapper -->
-    <div id="cravingFieldsWrapper">
-    <div class="form-field">
-      <label>Craving Intensity (1–10)</label>
-      <div class="intensity-row" id="intensityBtns">
-        <!-- rendered by JS -->
-      </div>
-    </div>
-    <div class="form-field">
-      <label>Trigger / Reason</label>
-      <select id="logTrigger">
-        <option value="">— Select a trigger —</option>
-        <option>Stress / anxiety</option>
-        <option>Boredom</option>
-        <option>Uncomfortable</option>
-        <option>Overstimulation</option>
-        <option>Free Moment</option>
-        <option>Time Alone</option>
-        <option>Social pressure</option>
-        <option>Loneliness</option>
-        <option>Habit / routine</option>
-        <option>Taper Plan</option>
-        <option>Transition</option>
-        <option>Celebration / reward</option>
-        <option>Anger / frustration</option>
-        <option>Sadness / depression</option>
-        <option>Headache</option>
-        <option>Nausea</option>
-        <option>Sleep issues</option>
-        <option>Physical pain</option>
-        <option>Other</option>
-      </select>
-    </div>
-    </div><!-- /cravingFieldsWrapper -->
     <div class="form-field">
       <label>Notes</label>
       <textarea id="logNotes" placeholder="What was going on? How did you feel before, during, after?"></textarea>
@@ -3179,15 +3145,14 @@ document.addEventListener('click', e => {
 
 // ——— Log ———
 let selectedIntensity = null;
-let selectedUsed = 'no';
+let selectedUsed = 'yes';
 
 function setUsed(val) {
+  if (val === 'no') val = 'note'; // remap legacy craving entries
   selectedUsed = val;
-  document.getElementById('usedNo').className   = 'used-btn' + (val === 'no'   ? ' selected-no'   : '');
   document.getElementById('usedYes').className  = 'used-btn' + (val === 'yes'  ? ' selected-yes'  : '');
   document.getElementById('usedNote').className = 'used-btn' + (val === 'note' ? ' selected-note' : '');
-  document.getElementById('useFieldsWrapper').style.display    = val === 'yes'  ? 'block' : 'none';
-  document.getElementById('cravingFieldsWrapper').style.display = val === 'note' ? 'none'  : 'block';
+  document.getElementById('useFieldsWrapper').style.display = val === 'yes' ? 'block' : 'none';
 }
 
 function renderIntensityBtns() {
@@ -3213,22 +3178,19 @@ function saveLogEntry() {
   const method = document.getElementById('logMethod').value;
   const amount = document.getElementById('logAmount').value;
   const amountUnit = document.getElementById('logAmountUnit').value;
-  const trigger = document.getElementById('logTrigger').value;
   const notes = document.getElementById('logNotes').value.trim();
 
   if (!dt) return alert('Please set a date and time.');
-  if (used !== 'note' && !selectedIntensity) return alert('Please select a craving intensity.');
-  if (used !== 'note' && !trigger) return alert('Please select a trigger.');
 
   let entries = getLogEntries();
 
   if (editingId !== null) {
-    entries = entries.map(e => e.id === editingId ? { ...e, dt, used, method, amount, amountUnit, intensity: selectedIntensity, trigger, notes } : e);
+    entries = entries.map(e => e.id === editingId ? { ...e, dt, used, method, amount, amountUnit, notes } : e);
     editingId = null;
     document.querySelector('#section-log .btn-primary').textContent = 'Save Entry';
     document.querySelector('.log-form h3').textContent = 'Add Entry';
   } else {
-    entries.unshift({ id: Date.now(), dt, used, method, amount, amountUnit, intensity: selectedIntensity, trigger, notes });
+    entries.unshift({ id: Date.now(), dt, used, method, amount, amountUnit, notes });
     if (used === 'yes' && storageGet('quitDate')) {
       var logMs = new Date(dt).getTime();
       if (logMs && !isNaN(logMs)) {
@@ -3245,13 +3207,10 @@ function saveLogEntry() {
   storageSet('usageLog', JSON.stringify(entries));
 
   // Reset form
-  selectedIntensity = null;
-  document.querySelectorAll('.intensity-btn').forEach(b => b.classList.remove('selected'));
-  setUsed('no');
+  setUsed('yes');
   document.getElementById('logMethod').value = '';
   document.getElementById('logAmount').value = '';
   document.getElementById('logAmountUnit').value = 'hits';
-  document.getElementById('logTrigger').value = '';
   document.getElementById('logNotes').value = '';
 
   renderLog();
@@ -3264,17 +3223,11 @@ function editLogEntry(id) {
 
   editingId = id;
   document.getElementById('logDateTime').value = e.dt;
-  setUsed(e.used || 'no');
+  setUsed(e.used || 'yes');
   document.getElementById('logMethod').value = e.method || '';
   document.getElementById('logAmount').value = e.amount || '';
   document.getElementById('logAmountUnit').value = e.amountUnit || 'hits';
-  document.getElementById('logTrigger').value = e.trigger;
   document.getElementById('logNotes').value = e.notes || '';
-
-  selectedIntensity = e.intensity;
-  document.querySelectorAll('.intensity-btn').forEach(b => b.classList.remove('selected'));
-  const btn = document.querySelector(`.intensity-btn:nth-child(${e.intensity})`);
-  if (btn) btn.classList.add('selected');
 
   document.querySelector('.log-form h3').textContent = 'Edit Entry';
   document.querySelector('#section-log .btn-primary').textContent = 'Update Entry';
@@ -3298,28 +3251,13 @@ function renderLog() {
 
   // Stats
   document.getElementById('logTotal').textContent = entries.length;
-  if (entries.length > 0) {
-    const avg = (entries.reduce((s, e) => s + e.intensity, 0) / entries.length).toFixed(1);
-    document.getElementById('logAvgInt').textContent = avg;
-
-    const triggerCounts = {};
-    entries.forEach(e => { triggerCounts[e.trigger] = (triggerCounts[e.trigger] || 0) + 1; });
-    const topTrigger = Object.entries(triggerCounts).sort((a,b) => b[1]-a[1])[0];
-    const shortTrigger = topTrigger[0].split('/')[0].trim();
-    document.getElementById('logTopReason').textContent = shortTrigger.length > 8 ? shortTrigger.slice(0,8)+'…' : shortTrigger;
-
-    const insight = document.getElementById('reasonsInsight');
-    insight.style.display = 'block';
-    insight.innerHTML = `<strong>Pattern insight:</strong> Your most common trigger is <strong>${topTrigger[0]}</strong> (${topTrigger[1]} ${topTrigger[1] === 1 ? 'time' : 'times'}). Check the CBT tab for strategies targeting this trigger type.`;
-  } else {
-    document.getElementById('logAvgInt').textContent = '—';
-    document.getElementById('logTopReason').textContent = '—';
-    document.getElementById('reasonsInsight').style.display = 'none';
-  }
+  document.getElementById('logUsedCount').textContent = entries.filter(e => e.used === 'yes').length;
+  document.getElementById('logNoteCount').textContent = entries.filter(e => e.used !== 'yes').length;
+  document.getElementById('reasonsInsight').style.display = 'none';
 
   // Entry list
   if (entries.length === 0) {
-    container.innerHTML = `<div class="log-empty">No entries yet. Log a craving or use to start seeing your patterns.</div>`;
+    container.innerHTML = `<div class="log-empty">No entries yet. Use the form above to log usage or notes.</div>`;
     return;
   }
 
@@ -3327,14 +3265,16 @@ function renderLog() {
     const date = new Date(e.dt);
     const dateStr = date.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' });
     const timeStr = date.toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit' });
-    const intColor = e.intensity >= 8 ? '#c0392b' : e.intensity >= 5 ? '#c4783a' : '#3d7a5e';
-    const intBg = e.intensity >= 8 ? '#fff0f0' : e.intensity >= 5 ? '#fdf0e4' : '#e8f5ee';
+    const badgeClass = e.used === 'yes' ? 'used-badge-yes' : 'used-badge-note';
+    const badgeLabel = e.used === 'yes' ? 'Used' : 'Note';
+    const entryBody = e.trigger
+      ? `<strong>${e.trigger}</strong>${e.notes ? ' — ' + e.notes : ''}`
+      : (e.notes || '—');
     return `
       <div class="log-entry">
-        <div class="log-intensity-badge" style="background:${intBg}; color:${intColor};">${e.intensity}</div>
         <div style="flex:1; min-width:0;">
-          <div class="log-entry-meta">${dateStr} at ${timeStr}${e.method ? ' · ' + e.method : ''}${e.amount ? ' · ' + e.amount + ' ' + (e.amountUnit || 'hits') : ''}<span class="used-badge ${e.used === 'yes' ? 'used-badge-yes' : e.used === 'note' ? 'used-badge-note' : 'used-badge-no'}">${e.used === 'yes' ? 'Used' : e.used === 'note' ? 'Note' : 'Craving'}</span></div>
-          <div class="log-entry-reason"><strong>${e.trigger}</strong>${e.notes ? ' — ' + e.notes : ''}</div>
+          <div class="log-entry-meta">${dateStr} at ${timeStr}${e.method ? ' · ' + e.method : ''}${e.amount ? ' · ' + e.amount + ' ' + (e.amountUnit || 'hits') : ''}<span class="used-badge ${badgeClass}">${badgeLabel}</span></div>
+          <div class="log-entry-reason">${entryBody}</div>
         </div>
         <div class="log-actions">
           <button class="log-edit" onclick="editLogEntry(${e.id})" title="Edit">✎</button>
@@ -3358,10 +3298,9 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('quitDatePicker').value = todayStr;
   document.getElementById('quitTimePicker').value = timeStr;
 
-  renderIntensityBtns();
   renderLog();
   startCounter();
-  setUsed('no');
+  setUsed('yes');
   renderReflections();
   renderReasons();
   renderIdentityPrompt(-1);
