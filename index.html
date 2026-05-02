@@ -457,18 +457,52 @@
   .breath-count { text-align: center; font-size: 2rem; font-weight: 900; color: white; min-height: 2.4rem; }
   .sos-action-btn { width: 100%; background: rgba(255,255,255,0.08); color: white; border: 1px solid rgba(255,255,255,0.18); border-radius: 12px; padding: 12px; font-weight: 700; font-size: 0.9rem; cursor: pointer; margin-top: 10px; }
 
-  /* ─── My Reasons ─────────────────────────────────── */
-  .reasons-add-row { display: flex; gap: 8px; margin-bottom: 12px; }
-  .reasons-add-row input { flex: 1; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 0.9rem; color: var(--text); background: var(--bg); font-family: inherit; }
-  .reasons-add-row input:focus { outline: none; border-color: var(--blue); }
-  .reasons-add-btn { background: var(--blue); color: white; border: none; border-radius: 10px; padding: 10px 16px; font-weight: 700; cursor: pointer; font-size: 0.9rem; white-space: nowrap; }
-  .reason-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
-  .reason-item:last-child { border-bottom: none; padding-bottom: 0; }
-  .reason-num { width: 26px; height: 26px; border-radius: 50%; background: var(--blue-pale); color: var(--blue); font-size: 0.72rem; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
-  .reason-text { flex: 1; font-size: 0.9rem; color: var(--text); line-height: 1.5; }
-  .reason-del { background: none; border: none; color: var(--muted); font-size: 1.1rem; cursor: pointer; padding: 2px 6px; border-radius: 6px; line-height: 1; transition: all 0.15s; }
-  .reason-del:hover { color: var(--red); background: #fff0f0; }
-  .reasons-empty { font-size: 0.85rem; color: var(--muted); font-style: italic; padding: 6px 0; }
+  /* ─── Commitment Statement ───────────────────────── */
+  .commitment-card { background: linear-gradient(135deg, var(--navy) 0%, #2a4f9a 100%); border-radius: var(--radius); padding: 20px; margin-bottom: 10px; color: white; }
+  .commitment-eyebrow { font-size: 0.62rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.5); margin-bottom: 8px; }
+  .commitment-text { font-size: 0.95rem; line-height: 1.7; color: rgba(255,255,255,0.92); font-style: italic; }
+  .commitment-edit-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.65); border-radius: 8px; padding: 6px 14px; font-size: 0.78rem; cursor: pointer; margin-top: 14px; }
+  .commitment-prompt { font-size: 0.85rem; color: var(--muted); margin-bottom: 12px; line-height: 1.55; }
+  .commitment-textarea { width: 100%; min-height: 90px; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 12px; font-size: 0.9rem; font-family: inherit; resize: vertical; line-height: 1.6; color: var(--text); background: var(--bg); }
+  .commitment-textarea:focus { outline: none; border-color: var(--blue); }
+  .commitment-save-btn { width: 100%; background: var(--blue); color: white; border: none; border-radius: 12px; padding: 12px; font-weight: 700; font-size: 0.9rem; cursor: pointer; margin-top: 12px; }
+
+  /* ─── Identity Prompt ─────────────────────────────── */
+  .identity-card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; margin-bottom: 10px; }
+  .identity-header { background: linear-gradient(135deg, #4a72c4, #5558e8); padding: 16px 18px; }
+  .identity-q-label { font-size: 0.6rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.55); margin-bottom: 5px; }
+  .identity-question { font-size: 1rem; font-weight: 700; color: white; line-height: 1.4; }
+  .identity-body { padding: 14px 18px; }
+  .identity-textarea { width: 100%; min-height: 80px; padding: 10px 12px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 0.88rem; font-family: inherit; resize: none; line-height: 1.5; color: var(--text); background: var(--bg); }
+  .identity-textarea:focus { outline: none; border-color: var(--blue); }
+  .identity-save-btn { width: 100%; background: var(--blue); color: white; border: none; border-radius: 10px; padding: 10px; font-weight: 700; font-size: 0.88rem; cursor: pointer; margin-top: 10px; }
+  .identity-saved { text-align: center; font-size: 0.78rem; color: var(--muted); margin-top: 8px; min-height: 1.2em; }
+  .identity-prev { background: var(--blue-pale); border-radius: 8px; padding: 10px 12px; margin-top: 12px; }
+  .identity-prev-label { font-size: 0.62rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--blue); margin-bottom: 4px; }
+  .identity-prev-text { font-size: 0.84rem; color: var(--navy); line-height: 1.55; font-style: italic; }
+
+  /* ─── Urge Log ────────────────────────────────────── */
+  .urge-field-label { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin: 14px 0 6px; }
+  .urge-field-label:first-child { margin-top: 0; }
+  .urge-int-row { display: flex; gap: 5px; }
+  .urge-int-btn { flex: 1; padding: 9px 2px; border: 1.5px solid var(--border); border-radius: 8px; background: none; font-size: 0.82rem; font-weight: 700; cursor: pointer; text-align: center; color: var(--text); transition: all 0.12s; }
+  .urge-int-btn.high { border-color: #ffb3b3; color: #cc3333; }
+  .urge-int-btn.selected { background: var(--blue); border-color: var(--blue); color: white; }
+  .urge-int-btn.high.selected { background: #cc3333; border-color: #cc3333; color: white; }
+  .urge-trigger-row { display: flex; gap: 6px; flex-wrap: wrap; }
+  .urge-trigger-btn { padding: 7px 13px; border: 1.5px solid var(--border); border-radius: 50px; background: none; font-size: 0.8rem; font-weight: 600; cursor: pointer; color: var(--text); transition: all 0.12s; }
+  .urge-trigger-btn.selected { background: var(--blue); border-color: var(--blue); color: white; }
+  .urge-instead-input { width: 100%; padding: 10px 12px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 0.88rem; font-family: inherit; color: var(--text); background: var(--bg); }
+  .urge-instead-input:focus { outline: none; border-color: var(--blue); }
+  .urge-log-btn { width: 100%; background: var(--blue); color: white; border: none; border-radius: 12px; padding: 12px; font-weight: 700; font-size: 0.9rem; cursor: pointer; margin-top: 14px; transition: background 0.2s; }
+  .urge-pattern { background: var(--blue-pale); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; }
+  .urge-pattern-line { font-size: 0.85rem; color: var(--navy); line-height: 1.9; }
+  .urge-pattern-line strong { color: var(--blue); }
+  .urge-history-item { padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 0.83rem; color: var(--text); line-height: 1.5; }
+  .urge-history-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .urge-history-meta { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+
+  .pattern-insight { background: var(--blue-pale); border-left: 3px solid var(--blue); border-radius: 10px; padding: 12px 14px; font-size: 0.82rem; color: var(--navy); margin-bottom: 14px; line-height: 1.6; }
 
   /* ─── Recovery Snapshot ─────────────────────────── */
   .snap-card { background: linear-gradient(135deg, var(--navy) 0%, #2a4f9a 100%); border-radius: var(--radius); padding: 20px; margin-bottom: 10px; color: white; }
@@ -575,6 +609,11 @@
     <button class="sos-close" onclick="closeSOS()">✕</button>
   </div>
 
+  <div class="sos-step" id="sosCommitmentStep" style="display:none;">
+    <div class="sos-step-num">Remember why you're here</div>
+    <div class="sos-step-title" id="sosCommitmentText"></div>
+  </div>
+
   <div class="sos-step">
     <div class="sos-step-num">Remember this</div>
     <div class="sos-step-title">Cravings always peak — then always pass</div>
@@ -652,17 +691,11 @@
 <!-- SECTION: Today -->
 <div class="section active" id="section-today">
 
-  <div class="section-title">My Reasons to Quit</div>
-  <div class="card">
-    <div class="card-title"><span>💛</span> Why I'm doing this</div>
-    <div class="card-body">
-      <div class="reasons-add-row">
-        <input type="text" id="reasonInput" placeholder="Add a reason…" onkeydown="if(event.key==='Enter')addReason()">
-        <button class="reasons-add-btn" onclick="addReason()">Add</button>
-      </div>
-      <div id="reasonsList"><div class="reasons-empty">Add your personal reasons above. The more specific, the more powerful.</div></div>
-    </div>
-  </div>
+  <div class="section-title">My Commitment</div>
+  <div id="commitmentCard"></div>
+
+  <div class="section-title">Who Am I Becoming</div>
+  <div id="identityPromptCard"></div>
 
   <div class="section-title">Today's Tips</div>
   <div id="cbtTipsContent">
@@ -1047,6 +1080,42 @@
 
 <!-- SECTION: Cravings -->
 <div class="section" id="section-cravings">
+
+  <div id="commitmentCravings"></div>
+
+  <div class="section-title">Log This Urge</div>
+  <div class="card">
+    <div class="card-body">
+      <div class="urge-field-label">How intense is it? (1–10)</div>
+      <div class="urge-int-row">
+        <button class="urge-int-btn" onclick="selectUrgeIntensity(1,this)">1</button>
+        <button class="urge-int-btn" onclick="selectUrgeIntensity(2,this)">2</button>
+        <button class="urge-int-btn" onclick="selectUrgeIntensity(3,this)">3</button>
+        <button class="urge-int-btn" onclick="selectUrgeIntensity(4,this)">4</button>
+        <button class="urge-int-btn" onclick="selectUrgeIntensity(5,this)">5</button>
+        <button class="urge-int-btn" onclick="selectUrgeIntensity(6,this)">6</button>
+        <button class="urge-int-btn high" onclick="selectUrgeIntensity(7,this)">7</button>
+        <button class="urge-int-btn high" onclick="selectUrgeIntensity(8,this)">8</button>
+        <button class="urge-int-btn high" onclick="selectUrgeIntensity(9,this)">9</button>
+        <button class="urge-int-btn high" onclick="selectUrgeIntensity(10,this)">10</button>
+      </div>
+      <div class="urge-field-label">What triggered it?</div>
+      <div class="urge-trigger-row">
+        <button class="urge-trigger-btn" onclick="selectUrgeTrigger('Stress',this)">Stress</button>
+        <button class="urge-trigger-btn" onclick="selectUrgeTrigger('Boredom',this)">Boredom</button>
+        <button class="urge-trigger-btn" onclick="selectUrgeTrigger('Social',this)">Social</button>
+        <button class="urge-trigger-btn" onclick="selectUrgeTrigger('Habit',this)">Habit</button>
+        <button class="urge-trigger-btn" onclick="selectUrgeTrigger('Mood',this)">Mood</button>
+        <button class="urge-trigger-btn" onclick="selectUrgeTrigger('Other',this)">Other</button>
+      </div>
+      <div class="urge-field-label">What did you do instead? (optional)</div>
+      <input class="urge-instead-input" id="urgeInstead" type="text" placeholder="e.g. went for a walk, made tea…">
+      <button class="urge-log-btn" id="urgeLogBtn" onclick="logUrge()">Log It</button>
+    </div>
+  </div>
+
+  <div id="urgePatternCard"></div>
+
   <div class="section-title">Craving Strategies</div>
 
   <div class="card" style="background:var(--warm-pale); border-left: 4px solid var(--warm);">
@@ -1481,7 +1550,7 @@
     </div>
   </div>
 
-  <div class="reasons-insight" id="reasonsInsight" style="display:none;"></div>
+  <div class="pattern-insight" id="reasonsInsight" style="display:none;"></div>
 
   <div class="log-form">
     <h3>Add Entry</h3>
@@ -2344,6 +2413,7 @@ function renderEducation(totalHours) {
     (scienceHTML ? '<div class="section-title" style="margin-top:20px;">What\'s Happening Right Now</div>' + scienceHTML : '') +
     symptomsHTML;
   renderRecoveryTimeline(days);
+  renderIdentityPrompt(totalHours);
 }
 
 // ——— Reflections ———
@@ -2503,41 +2573,239 @@ function stopBreathing() {
   if (btn) btn.textContent = '▶ Start Breathing';
 }
 
-// ——— My Reasons ———
-function getReasons() {
-  try { return JSON.parse(storageGet('myReasons') || '[]'); } catch(e) { return []; }
+// ——— Commitment Statement ———
+function getCommitment() {
+  return storageGet('commitment') || '';
 }
-function addReason() {
-  var input = document.getElementById('reasonInput');
-  var text = input.value.trim();
+function saveCommitment() {
+  var text = document.getElementById('commitmentInput').value.trim();
   if (!text) return;
-  var reasons = getReasons();
-  reasons.push(text);
-  storageSet('myReasons', JSON.stringify(reasons));
-  input.value = '';
-  renderReasons();
+  storageSet('commitment', text);
+  renderCommitment();
+  renderCommitmentInCravings();
+  renderSOSCommitment();
 }
-function deleteReason(idx) {
-  var reasons = getReasons();
-  reasons.splice(idx, 1);
-  storageSet('myReasons', JSON.stringify(reasons));
-  renderReasons();
+function editCommitment() {
+  storageRemove('commitment');
+  renderCommitment();
+  renderCommitmentInCravings();
+  renderSOSCommitment();
 }
-function renderReasons() {
-  var reasons = getReasons();
-  var el = document.getElementById('reasonsList');
+function renderCommitment() {
+  var el = document.getElementById('commitmentCard');
   if (!el) return;
-  if (reasons.length === 0) {
-    el.innerHTML = '<div class="reasons-empty">Add your personal reasons above. The more specific, the more powerful.</div>';
+  var text = getCommitment();
+  if (!text) {
+    el.innerHTML = '<div class="card"><div class="card-title"><span>💛</span> Why I\'m doing this</div><div class="card-body">' +
+      '<p class="commitment-prompt">Write your why in your own words. Be honest and specific — this is for you, not anyone else.</p>' +
+      '<textarea class="commitment-textarea" id="commitmentInput" placeholder="I\'m choosing to live weed-free because…"></textarea>' +
+      '<button class="commitment-save-btn" onclick="saveCommitment()">Save My Commitment</button>' +
+    '</div></div>';
     return;
   }
-  el.innerHTML = reasons.map(function(r, i) {
-    return '<div class="reason-item">' +
-      '<div class="reason-num">' + (i + 1) + '</div>' +
-      '<div class="reason-text">' + r.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div>' +
-      '<button class="reason-del" onclick="deleteReason(' + i + ')">×</button>' +
+  el.innerHTML = '<div class="commitment-card">' +
+    '<div class="commitment-eyebrow">My Commitment</div>' +
+    '<div class="commitment-text">\u201c' + text.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '\u201d</div>' +
+    '<button class="commitment-edit-btn" onclick="editCommitment()">Edit</button>' +
+  '</div>';
+}
+function renderCommitmentInCravings() {
+  var el = document.getElementById('commitmentCravings');
+  if (!el) return;
+  var text = getCommitment();
+  if (!text) { el.innerHTML = ''; return; }
+  el.innerHTML = '<div class="commitment-card">' +
+    '<div class="commitment-eyebrow">Remember why you\'re here</div>' +
+    '<div class="commitment-text">\u201c' + text.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '\u201d</div>' +
+  '</div>';
+}
+function renderSOSCommitment() {
+  var stepEl = document.getElementById('sosCommitmentStep');
+  var textEl = document.getElementById('sosCommitmentText');
+  if (!stepEl || !textEl) return;
+  var text = getCommitment();
+  if (text) {
+    textEl.textContent = '\u201c' + text + '\u201d';
+    stepEl.style.display = 'block';
+  } else {
+    stepEl.style.display = 'none';
+  }
+}
+
+// ——— Identity Prompts ———
+var IDENTITY_QUESTIONS = {
+  early: [
+    "What's one moment today where you chose discomfort over escape?",
+    "What would the person you're becoming do right now?",
+    "What's something you noticed today that you might have missed before?",
+    "What did you do with the time or energy you didn't spend smoking?",
+    "Who did you show up for today that the old version of you couldn't have?"
+  ],
+  week1: [
+    "What did you do today that the old you wouldn't have?",
+    "What's one feeling you sat with instead of numbing?",
+    "Who are you starting to become? Describe them.",
+    "What's clearer to you now than it was a week ago?",
+    "What's one way you took care of yourself today?"
+  ],
+  week2: [
+    "What's one thing you're getting back — a feeling, a habit, a part of yourself?",
+    "How is your relationship with boredom changing?",
+    "What does freedom feel like for you right now?",
+    "What's a value you're living out by not smoking?",
+    "What would you tell yourself from two weeks ago?"
+  ],
+  month1: [
+    "Who is the person you're growing into?",
+    "What's a situation you handled differently because you're weed-free?",
+    "What are you proud of that has nothing to do with the streak number?",
+    "How has your relationship with yourself changed?",
+    "What does your life look like now that you want to protect?"
+  ],
+  month3: [
+    "What parts of your personality are showing up more fully now?",
+    "What new habits or rituals have replaced the old one?",
+    "How do you handle hard emotions differently now?",
+    "What would you lose if you went back? Be specific.",
+    "What does being a non-smoker mean to you at this point?"
+  ],
+  longterm: [
+    "How have your relationships changed since you stopped?",
+    "What are you building now that wouldn't have been possible before?",
+    "How do you see yourself differently than you did at the beginning?",
+    "What's the most important thing you've learned about yourself?",
+    "What does your commitment to yourself mean to you now?"
+  ]
+};
+function getIdentityQuestion(totalHours) {
+  var bank = totalHours < 72   ? IDENTITY_QUESTIONS.early :
+             totalHours < 168  ? IDENTITY_QUESTIONS.week1 :
+             totalHours < 336  ? IDENTITY_QUESTIONS.week2 :
+             totalHours < 720  ? IDENTITY_QUESTIONS.month1 :
+             totalHours < 2160 ? IDENTITY_QUESTIONS.month3 :
+                                 IDENTITY_QUESTIONS.longterm;
+  var d = new Date();
+  var idx = (d.getFullYear() * 366 + d.getMonth() * 31 + d.getDate()) % bank.length;
+  return bank[idx];
+}
+function getTodayKey() {
+  var d = new Date();
+  return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+}
+function getIdentityLog() {
+  try { return JSON.parse(storageGet('identityLog') || '[]'); } catch(e) { return []; }
+}
+function saveIdentityAnswer() {
+  var ta = document.getElementById('identityAnswer');
+  if (!ta) return;
+  var answer = ta.value.trim();
+  if (!answer) return;
+  var question = ta.dataset.question || '';
+  var log = getIdentityLog();
+  var key = getTodayKey();
+  var idx = log.findIndex(function(e) { return e.date === key; });
+  var entry = { date: key, question: question, answer: answer };
+  if (idx >= 0) log[idx] = entry; else log.unshift(entry);
+  if (log.length > 60) log = log.slice(0, 60);
+  storageSet('identityLog', JSON.stringify(log));
+  var saved = document.getElementById('identitySaved');
+  if (saved) saved.textContent = 'Saved \u2713';
+}
+function renderIdentityPrompt(totalHours) {
+  var el = document.getElementById('identityPromptCard');
+  if (!el) return;
+  if (totalHours < 0) {
+    el.innerHTML = '<div class="identity-card"><div class="identity-header"><div class="identity-q-label">Who Am I Becoming</div><div class="identity-question">Set your quit date to unlock daily prompts.</div></div></div>';
+    return;
+  }
+  var question = getIdentityQuestion(totalHours);
+  var key = getTodayKey();
+  var log = getIdentityLog();
+  var todayEntry = log.find(function(e) { return e.date === key; });
+  var prevEntry = log.find(function(e) { return e.date !== key; });
+  var prevHTML = prevEntry ?
+    '<div class="identity-prev"><div class="identity-prev-label">Previously</div><div class="identity-prev-text">' +
+    prevEntry.answer.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div></div>' : '';
+  el.innerHTML = '<div class="identity-card">' +
+    '<div class="identity-header">' +
+      '<div class="identity-q-label">Who Am I Becoming</div>' +
+      '<div class="identity-question">' + question + '</div>' +
+    '</div>' +
+    '<div class="identity-body">' +
+      '<textarea class="identity-textarea" id="identityAnswer" data-question="' + question.replace(/"/g,'&quot;') + '" placeholder="Write your answer\u2026" rows="3">' +
+        (todayEntry ? todayEntry.answer.replace(/</g,'&lt;').replace(/>/g,'&gt;') : '') +
+      '</textarea>' +
+      '<button class="identity-save-btn" onclick="saveIdentityAnswer()">Save</button>' +
+      '<div class="identity-saved" id="identitySaved">' + (todayEntry ? 'Saved \u2713' : '') + '</div>' +
+      prevHTML +
+    '</div>' +
+  '</div>';
+}
+
+// ——— Urge Log ———
+var selectedUrgeIntensity = null;
+var selectedUrgeTrigger = null;
+function selectUrgeIntensity(n, btn) {
+  selectedUrgeIntensity = n;
+  document.querySelectorAll('.urge-int-btn').forEach(function(b) { b.classList.remove('selected'); });
+  btn.classList.add('selected');
+}
+function selectUrgeTrigger(t, btn) {
+  selectedUrgeTrigger = t;
+  document.querySelectorAll('.urge-trigger-btn').forEach(function(b) { b.classList.remove('selected'); });
+  btn.classList.add('selected');
+}
+function getUrgeLog() {
+  try { return JSON.parse(storageGet('urgelog') || '[]'); } catch(e) { return []; }
+}
+function logUrge() {
+  if (!selectedUrgeIntensity) { alert('Please rate the intensity first.'); return; }
+  var entry = {
+    ts: Date.now(),
+    intensity: selectedUrgeIntensity,
+    trigger: selectedUrgeTrigger || 'Unspecified',
+    instead: (document.getElementById('urgeInstead').value || '').trim()
+  };
+  var log = getUrgeLog();
+  log.unshift(entry);
+  if (log.length > 100) log = log.slice(0, 100);
+  storageSet('urgelog', JSON.stringify(log));
+  selectedUrgeIntensity = null;
+  selectedUrgeTrigger = null;
+  document.querySelectorAll('.urge-int-btn').forEach(function(b) { b.classList.remove('selected'); });
+  document.querySelectorAll('.urge-trigger-btn').forEach(function(b) { b.classList.remove('selected'); });
+  document.getElementById('urgeInstead').value = '';
+  var btn = document.getElementById('urgeLogBtn');
+  btn.textContent = '\u2713 Logged \u2014 you rode it out';
+  btn.style.background = '#2a9d8f';
+  setTimeout(function() { btn.textContent = 'Log It'; btn.style.background = ''; }, 3000);
+  renderUrgePattern();
+}
+function renderUrgePattern() {
+  var el = document.getElementById('urgePatternCard');
+  if (!el) return;
+  var log = getUrgeLog();
+  if (log.length === 0) { el.innerHTML = ''; return; }
+  var triggerCounts = {};
+  log.forEach(function(e) { triggerCounts[e.trigger] = (triggerCounts[e.trigger] || 0) + 1; });
+  var topTrigger = Object.keys(triggerCounts).sort(function(a,b){ return triggerCounts[b]-triggerCounts[a]; })[0];
+  var avgIntensity = (log.reduce(function(s,e){return s+e.intensity;},0)/log.length).toFixed(1);
+  var recent = log.slice(0,5);
+  var histHTML = recent.map(function(e) {
+    var d = new Date(e.ts);
+    var ds = d.toLocaleDateString('en-US',{month:'short',day:'numeric'}) + ' \u00b7 ' + d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+    return '<div class="urge-history-item">' +
+      '<strong>Intensity ' + e.intensity + '</strong> \u00b7 ' + e.trigger +
+      (e.instead ? ' \u00b7 <em>' + e.instead.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</em>' : '') +
+      '<div class="urge-history-meta">' + ds + '</div>' +
     '</div>';
   }).join('');
+  el.innerHTML =
+    '<div class="urge-pattern">' +
+      '<div class="urge-pattern-line">You\'ve ridden out <strong>' + log.length + ' urge' + (log.length!==1?'s':'') + '</strong>. Every single one passed.</div>' +
+      '<div class="urge-pattern-line">Top trigger: <strong>' + topTrigger + '</strong> &nbsp;\u00b7&nbsp; Avg intensity: <strong>' + avgIntensity + '/10</strong></div>' +
+    '</div>' +
+    '<div class="card"><div class="card-title" style="font-size:0.85rem;">Recent urges</div><div class="card-body" style="padding-top:4px;">' + histHTML + '</div></div>';
 }
 
 // ——— Recovery Snapshot ———
@@ -2816,7 +3084,11 @@ window.addEventListener('DOMContentLoaded', () => {
   startCounter();
   setUsed('no');
   renderReflections();
-  renderReasons();
+  renderCommitment();
+  renderCommitmentInCravings();
+  renderSOSCommitment();
+  renderIdentityPrompt(-1);
+  renderUrgePattern();
   renderRecoverySnapshot(-1);
 });
 </script>
