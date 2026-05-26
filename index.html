@@ -754,8 +754,6 @@
     </div>
   </div>
 
-  <div class="section-title">Who Am I Becoming</div>
-  <div id="identityPromptCard"></div>
 
   <div class="section-title">Today's Tips</div>
   <div id="cbtTipsContent">
@@ -2440,7 +2438,6 @@ function renderEducation(totalHours) {
     (scienceHTML ? '<div class="section-title" style="margin-top:20px;">What\'s Happening Right Now</div>' + scienceHTML : '') +
     symptomsHTML;
   renderRecoveryTimeline(days);
-  renderIdentityPrompt(totalHours);
   renderBrainToday(totalHours);
   renderDeepDives(totalHours);
   renderWithdrawalStage(totalHours);
@@ -2641,115 +2638,6 @@ function renderReasons() {
 }
 
 // ——— Identity Prompts ———
-var IDENTITY_QUESTIONS = {
-  early: [
-    "What's one moment today where you chose discomfort over escape?",
-    "What would the person you're becoming do right now?",
-    "What's something you noticed today that you might have missed before?",
-    "What did you do with the time or energy you didn't spend smoking?",
-    "Who did you show up for today that the old version of you couldn't have?"
-  ],
-  week1: [
-    "What did you do today that the old you wouldn't have?",
-    "What's one feeling you sat with instead of numbing?",
-    "Who are you starting to become? Describe them.",
-    "What's clearer to you now than it was a week ago?",
-    "What's one way you took care of yourself today?"
-  ],
-  week2: [
-    "What's one thing you're getting back — a feeling, a habit, a part of yourself?",
-    "How is your relationship with boredom changing?",
-    "What does freedom feel like for you right now?",
-    "What's a value you're living out by not smoking?",
-    "What would you tell yourself from two weeks ago?"
-  ],
-  month1: [
-    "Who is the person you're growing into?",
-    "What's a situation you handled differently because you're weed-free?",
-    "What are you proud of that has nothing to do with the streak number?",
-    "How has your relationship with yourself changed?",
-    "What does your life look like now that you want to protect?"
-  ],
-  month3: [
-    "What parts of your personality are showing up more fully now?",
-    "What new habits or rituals have replaced the old one?",
-    "How do you handle hard emotions differently now?",
-    "What would you lose if you went back? Be specific.",
-    "What does being a non-smoker mean to you at this point?"
-  ],
-  longterm: [
-    "How have your relationships changed since you stopped?",
-    "What are you building now that wouldn't have been possible before?",
-    "How do you see yourself differently than you did at the beginning?",
-    "What's the most important thing you've learned about yourself?",
-    "What does your commitment to yourself mean to you now?"
-  ]
-};
-function getIdentityQuestion(totalHours) {
-  var bank = totalHours < 72   ? IDENTITY_QUESTIONS.early :
-             totalHours < 168  ? IDENTITY_QUESTIONS.week1 :
-             totalHours < 336  ? IDENTITY_QUESTIONS.week2 :
-             totalHours < 720  ? IDENTITY_QUESTIONS.month1 :
-             totalHours < 2160 ? IDENTITY_QUESTIONS.month3 :
-                                 IDENTITY_QUESTIONS.longterm;
-  var d = new Date();
-  var idx = (d.getFullYear() * 366 + d.getMonth() * 31 + d.getDate()) % bank.length;
-  return bank[idx];
-}
-function getTodayKey() {
-  var d = new Date();
-  return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
-}
-function getIdentityLog() {
-  try { return JSON.parse(storageGet('identityLog') || '[]'); } catch(e) { return []; }
-}
-function saveIdentityAnswer() {
-  var ta = document.getElementById('identityAnswer');
-  if (!ta) return;
-  var answer = ta.value.trim();
-  if (!answer) return;
-  var question = ta.dataset.question || '';
-  var log = getIdentityLog();
-  var key = getTodayKey();
-  var idx = log.findIndex(function(e) { return e.date === key; });
-  var entry = { date: key, question: question, answer: answer };
-  if (idx >= 0) log[idx] = entry; else log.unshift(entry);
-  if (log.length > 60) log = log.slice(0, 60);
-  storageSet('identityLog', JSON.stringify(log));
-  var saved = document.getElementById('identitySaved');
-  if (saved) saved.textContent = 'Saved \u2713';
-}
-function renderIdentityPrompt(totalHours) {
-  var el = document.getElementById('identityPromptCard');
-  if (!el) return;
-  if (totalHours < 0) {
-    el.innerHTML = '<div class="identity-card"><div class="identity-header"><div class="identity-q-label">Who Am I Becoming</div><div class="identity-question">Set your quit date to unlock daily prompts.</div></div></div>';
-    return;
-  }
-  var question = getIdentityQuestion(totalHours);
-  var key = getTodayKey();
-  var log = getIdentityLog();
-  var todayEntry = log.find(function(e) { return e.date === key; });
-  var prevEntry = log.find(function(e) { return e.date !== key; });
-  var prevHTML = prevEntry ?
-    '<div class="identity-prev"><div class="identity-prev-label">Previously</div><div class="identity-prev-text">' +
-    prevEntry.answer.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div></div>' : '';
-  el.innerHTML = '<div class="identity-card">' +
-    '<div class="identity-header">' +
-      '<div class="identity-q-label">Who Am I Becoming</div>' +
-      '<div class="identity-question">' + question + '</div>' +
-    '</div>' +
-    '<div class="identity-body">' +
-      '<textarea class="identity-textarea" id="identityAnswer" data-question="' + question.replace(/"/g,'&quot;') + '" placeholder="Write your answer\u2026" rows="3">' +
-        (todayEntry ? todayEntry.answer.replace(/</g,'&lt;').replace(/>/g,'&gt;') : '') +
-      '</textarea>' +
-      '<button class="identity-save-btn" onclick="saveIdentityAnswer()">Save</button>' +
-      '<div class="identity-saved" id="identitySaved">' + (todayEntry ? 'Saved \u2713' : '') + '</div>' +
-      prevHTML +
-    '</div>' +
-  '</div>';
-}
-
 // ——— Urge Log ———
 var selectedUrgeIntensity = null;
 var selectedUrgeTrigger = null;
@@ -3403,7 +3291,6 @@ window.addEventListener('DOMContentLoaded', () => {
   setUsed('yes');
   renderReflections();
   renderReasons();
-  renderIdentityPrompt(-1);
   renderBrainToday(-1);
   renderDeepDives(-1);
   renderUrgePattern();
