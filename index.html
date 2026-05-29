@@ -500,20 +500,7 @@
   .urge-int-row { display: flex; gap: 5px; }
   .checkin-btn.selected { border-color: var(--blue) !important; background: var(--blue-pale) !important; transform: scale(1.1); }
 
-  /* ─── Intent Cards (Tools tab) ─────────────────────── */
-  .intent-card { display:flex; align-items:center; gap:14px; background:#fff; border:1.5px solid var(--border); border-radius:14px; padding:16px 18px; margin-bottom:10px; cursor:pointer; transition:all 0.2s; }
-  .intent-card:hover { border-color:var(--blue); box-shadow:0 2px 12px rgba(90,143,196,0.15); }
-  .intent-card.active { border-color:var(--blue); background:var(--blue-pale); }
-  .intent-icon { font-size:1.6rem; flex-shrink:0; }
-  .intent-label { flex:1; font-weight:700; font-size:0.95rem; color:var(--navy); line-height:1.35; }
-  .intent-arrow { font-size:1.1rem; color:var(--muted); transition:transform 0.2s; }
-  .intent-card.active .intent-arrow { transform:rotate(90deg); color:var(--blue); }
-  .intent-section { display:none; margin-bottom:6px; }
-  .intent-section.open { display:block; }
-
   /* ─── Milestone Shield ──────────────────────────────── */
-  .milestone-shield { background:linear-gradient(135deg,#1a3a5c,#2d6a4f); color:#fff; border-radius:12px; padding:11px 16px; margin:10px 0 4px; font-size:0.85rem; font-weight:700; text-align:center; letter-spacing:0.01em; display:none; }
-
   /* ─── Streak Meta (prev streak + cumulative) ────────── */
   .streak-meta { display:flex; gap:8px; justify-content:center; margin-top:8px; flex-wrap:wrap; }
   .streak-meta-item { background:rgba(255,255,255,0.15); border-radius:50px; padding:4px 12px; font-size:0.75rem; color:rgba(255,255,255,0.85); display:none; }
@@ -684,7 +671,6 @@
         <div class="lbl">seconds</div>
       </div>
     </div>
-    <div class="milestone-shield" id="milestoneShield"></div>
     <div class="milestones" id="milestones"></div>
     <div class="streak-meta">
       <div class="streak-meta-item" id="prevStreakBadge"></div>
@@ -1066,16 +1052,9 @@
 <!-- SECTION: Tools (Cravings + CBT + EFT combined) -->
 <div class="section" id="section-tools">
 
-  <p style="font-size:0.85rem; color:var(--muted); margin:4px 0 16px; line-height:1.5;">What do you need right now?</p>
+  <div class="section-title" style="background:var(--warm-pale); border-left:4px solid var(--warm); border-radius:10px; padding:10px 14px; font-size:0.8rem; letter-spacing:0.08em; color:var(--warm);">⚡ WHEN A CRAVING HITS</div>
 
-  <!-- Intent card 1 -->
-  <div class="intent-card" data-intent="craving" onclick="showIntent('craving')">
-    <div class="intent-icon">🆘</div>
-    <div class="intent-label">I'm having a craving right now</div>
-    <div class="intent-arrow">›</div>
-  </div>
-  <div class="intent-section" id="intent-craving">
-    <div class="section-title" style="margin-top:4px;">Log This Urge</div>
+  <div class="section-title" style="margin-top:4px;">Log This Urge</div>
     <div class="card">
     <div class="card-body">
       <div class="urge-field-label">How intense is it? (1–10)</div>
@@ -1174,16 +1153,9 @@
     </div>
   </div>
 
-  </div><!-- /intent-craving -->
+  <div class="section-title" style="background:var(--blue-pale); border-left:4px solid var(--blue); border-radius:10px; padding:10px 14px; font-size:0.8rem; letter-spacing:0.08em; color:var(--blue); margin-top:8px;">🧠 BUILD YOUR SKILLS</div>
 
-  <!-- Intent card 2 -->
-  <div class="intent-card" data-intent="patterns" onclick="showIntent('patterns')">
-    <div class="intent-icon">🧠</div>
-    <div class="intent-label">I want to understand my patterns</div>
-    <div class="intent-arrow">›</div>
-  </div>
-  <div class="intent-section" id="intent-patterns">
-    <div class="section-title" style="margin-top:4px;">CBT Strategies</div>
+  <div class="section-title" style="margin-top:4px;">CBT Strategies</div>
     <div class="cbt-card">
     <div class="cbt-header">
       <div class="cbt-icon">🔍</div>
@@ -1342,16 +1314,7 @@
     </div>
   </div>
 
-  </div><!-- /intent-patterns -->
-
-  <!-- Intent card 3 -->
-  <div class="intent-card" data-intent="relief" onclick="showIntent('relief')">
-    <div class="intent-icon">🌀</div>
-    <div class="intent-label">I need deep relief</div>
-    <div class="intent-arrow">›</div>
-  </div>
-  <div class="intent-section" id="intent-relief">
-  <div class="section-title" style="margin-top:4px;">EFT Tapping</div>
+  <div class="section-title" style="margin-top:8px;">EFT Tapping</div>
 
   <div class="card" style="background:var(--lavender-pale); border-left:4px solid var(--lavender);">
     <div class="card-title" style="color:var(--lavender);">What is EFT?</div>
@@ -1467,7 +1430,6 @@
       </div>
     </div>
   </div>
-  </div><!-- /intent-relief -->
 
 </div>
 
@@ -2199,7 +2161,6 @@ function tickCounter() {
     document.getElementById('secCount').textContent = secs;
 
     try { renderMilestones(days); } catch(e) {}
-    try { renderMilestoneShield(diff / 3600000); } catch(e) {}
     try { renderStreakMeta(); } catch(e) {}
     try { renderEducation(diff / 3600000); } catch(e) {}
     try { renderRecoverySnapshot(diff / 3600000); } catch(e) {}
@@ -2662,23 +2623,6 @@ function resetCheckin() {
   renderDailyCheckin();
 }
 
-// ——— Tools Intent Navigation ———
-var openIntent = null;
-function showIntent(id) {
-  ['craving','patterns','relief'].forEach(function(i) {
-    var sec = document.getElementById('intent-' + i);
-    var card = document.querySelector('[data-intent="' + i + '"]');
-    if (sec) sec.classList.remove('open');
-    if (card) card.classList.remove('active');
-  });
-  if (openIntent === id) { openIntent = null; return; }
-  var sec = document.getElementById('intent-' + id);
-  var card = document.querySelector('[data-intent="' + id + '"]');
-  if (sec) sec.classList.add('open');
-  if (card) card.classList.add('active');
-  openIntent = id;
-}
-
 // ——— Streak History ———
 function getStreakHistory() {
   try { return JSON.parse(storageGet('streakHistory') || '[]'); } catch(e) { return []; }
@@ -2711,23 +2655,6 @@ function renderStreakMeta() {
     cumEl.textContent = totalDays + ' total clean days';
   }
 }
-function renderMilestoneShield(totalHours) {
-  var shield = document.getElementById('milestoneShield');
-  if (!shield) return;
-  var days = totalHours / 24;
-  var next = MILESTONES.find(function(m) { return m.days > days; });
-  if (!next) { shield.style.display = 'none'; return; }
-  var hoursLeft = (next.days * 24) - totalHours;
-  if (hoursLeft > 0 && hoursLeft <= 24) {
-    var h = Math.floor(hoursLeft);
-    var m = Math.floor((hoursLeft - h) * 60);
-    shield.style.display = 'block';
-    shield.textContent = '🛡️ ' + next.label + ' in ' + (h > 0 ? h + 'h ' : '') + m + 'm — protect your streak';
-  } else {
-    shield.style.display = 'none';
-  }
-}
-
 // ——— Slip Modal ———
 var pendingSlipEntry = null;
 function openSlipModal(entryData) {
