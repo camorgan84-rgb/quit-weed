@@ -498,6 +498,7 @@
   .urge-field-label { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin: 14px 0 6px; }
   .urge-field-label:first-child { margin-top: 0; }
   .urge-int-row { display: flex; gap: 5px; }
+  .checkin-btn.selected { border-color: var(--blue) !important; background: var(--blue-pale) !important; transform: scale(1.1); }
   .urge-int-btn { flex: 1; padding: 9px 2px; border: 1.5px solid var(--border); border-radius: 8px; background: none; font-size: 0.82rem; font-weight: 700; cursor: pointer; text-align: center; color: var(--text); transition: all 0.12s; }
   .urge-int-btn.high { border-color: #ffb3b3; color: #cc3333; }
   .urge-int-btn.selected { background: var(--blue); border-color: var(--blue); color: white; }
@@ -725,22 +726,17 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
     <span>Tools</span>
   </button>
-  <button class="nav-item" onclick="showSection('cravings', this)">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-    <span>Cravings</span>
-  </button>
   <button class="nav-item" onclick="showSection('science', this)">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.31l-4.24 6.36A2 2 0 0 0 7.41 18H16.6a2 2 0 0 0 1.65-3.13L14 9.31V2"/><path d="M8.5 2h7"/><path d="M7 16h10"/></svg>
     <span>Learn</span>
-  </button>
-  <button class="nav-item" onclick="showSection('supplements', this)">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
-    <span>Supps</span>
   </button>
 </nav>
 
 <!-- SECTION: Today -->
 <div class="section active" id="section-today">
+
+  <div class="section-title">Daily Check-In</div>
+  <div id="dailyCheckinCard"></div>
 
   <div class="section-title">My Reasons to Quit</div>
   <div class="card">
@@ -754,14 +750,8 @@
     </div>
   </div>
 
-
-  <div class="section-title">Today's Tips</div>
-  <div id="cbtTipsContent">
-    <div class="tips-card">
-      <div class="tips-header">Tips for Today</div>
-      <div class="journal-no-date">Set your quit date to see tips tailored to where you are.</div>
-    </div>
-  </div>
+  <div class="section-title">Where You Are</div>
+  <div id="withdrawalStageCard"></div>
 
   <div class="section-title">What's Happening Today</div>
   <p class="edu-note" id="eduNote">Set your quit date to see personalized info</p>
@@ -896,6 +886,53 @@
     </div>
   </div>
 
+  <div class="section-title">Supplement Protocol</div>
+  <div class="disclaimer">
+    <strong>Heads up:</strong> These are general wellness supplements used in recovery contexts. Always consult your doctor before starting, especially if you take medications or have health conditions.
+  </div>
+
+  <div class="body-sys-card">
+    <div class="body-sys-header accordion-header" onclick="toggleBodySys(this)">
+      <div class="body-sys-icon">🌿</div>
+      <div><div class="body-sys-name">Before You Quit (1 Week Prior)</div><div class="body-sys-timeline">Build the foundation</div></div>
+      <span class="arrow" style="margin-left:auto;">▾</span>
+    </div>
+    <div class="body-sys-body">
+      <div class="supp-item"><div class="supp-icon">🌿</div><div><div class="supp-name">NAC (N-Acetyl Cysteine)</div><div class="supp-dose">600mg twice daily</div><div class="supp-why">Regulates glutamate — the brain chemical that drives compulsive cravings. One of the most evidence-backed supplements for addiction recovery.</div></div></div>
+      <div class="supp-item"><div class="supp-icon">🐟</div><div><div class="supp-name">Omega-3 Fish Oil</div><div class="supp-dose">2,000–3,000mg EPA+DHA daily</div><div class="supp-why">Supports brain cell membrane health, reduces inflammation, and improves mood. The brain is 60% fat — feed it well.</div></div></div>
+      <div class="supp-item"><div class="supp-icon">🪨</div><div><div class="supp-name">Magnesium Glycinate</div><div class="supp-dose">300–400mg at night</div><div class="supp-why">Calms the nervous system, reduces anxiety, and dramatically improves sleep quality.</div></div></div>
+      <div class="supp-item"><div class="supp-icon">☀️</div><div><div class="supp-name">Vitamin D3 + K2</div><div class="supp-dose">2,000–5,000 IU D3 + 100mcg K2</div><div class="supp-why">Supports mood regulation, immune health, and cognitive function. Most people are deficient, especially those who smoke.</div></div></div>
+      <div class="supp-item"><div class="supp-icon">⚡</div><div><div class="supp-name">B-Complex</div><div class="supp-dose">1 tablet daily with food</div><div class="supp-why">B vitamins are essential for neurotransmitter production. Smoking depletes B12 and folate.</div></div></div>
+    </div>
+  </div>
+
+  <div class="body-sys-card">
+    <div class="body-sys-header accordion-header" onclick="toggleBodySys(this)">
+      <div class="body-sys-icon">⚗️</div>
+      <div><div class="body-sys-name">Acute Withdrawal (Days 1–30)</div><div class="body-sys-timeline">Support the transition</div></div>
+      <span class="arrow" style="margin-left:auto;">▾</span>
+    </div>
+    <div class="body-sys-body">
+      <div class="supp-item"><div class="supp-icon">☕</div><div><div class="supp-name">L-Theanine</div><div class="supp-dose">200mg as needed (up to 2x daily)</div><div class="supp-why">Produces calm alertness without sedation. Reduces anxiety and agitation without drowsiness.</div></div></div>
+      <div class="supp-item"><div class="supp-icon">🌙</div><div><div class="supp-name">Melatonin</div><div class="supp-dose">0.5–3mg, 30 min before bed</div><div class="supp-why">Helps with sleep disruption and vivid dreams during withdrawal. Start low (0.5mg) — more isn't better.</div></div></div>
+      <div class="supp-item"><div class="supp-icon">🌱</div><div><div class="supp-name">Ashwagandha (KSM-66)</div><div class="supp-dose">300–600mg daily</div><div class="supp-why">Lowers cortisol, reduces anxiety, and stabilizes mood during early withdrawal stress.</div></div></div>
+      <div class="supp-item"><div class="supp-icon">🦪</div><div><div class="supp-name">Zinc</div><div class="supp-dose">15–30mg with food</div><div class="supp-why">Supports appetite recovery and immune function. Depleted by stress and heavy use.</div></div></div>
+    </div>
+  </div>
+
+  <div class="body-sys-card">
+    <div class="body-sys-header accordion-header" onclick="toggleBodySys(this)">
+      <div class="body-sys-icon">🌺</div>
+      <div><div class="body-sys-name">Long-Term Recovery (30+ Days)</div><div class="body-sys-timeline">Rebuild and thrive</div></div>
+      <span class="arrow" style="margin-left:auto;">▾</span>
+    </div>
+    <div class="body-sys-body">
+      <div class="supp-item"><div class="supp-icon">🦁</div><div><div class="supp-name">Lion's Mane Mushroom</div><div class="supp-dose">500–1,000mg daily</div><div class="supp-why">Stimulates nerve growth factor, promoting neuroplasticity. Supports memory, focus, and mood long-term.</div></div></div>
+      <div class="supp-item"><div class="supp-icon">🌺</div><div><div class="supp-name">Rhodiola Rosea</div><div class="supp-dose">200–400mg in the morning</div><div class="supp-why">Combats fatigue and brain fog while improving energy and stress resilience. Take in the morning — can be stimulating.</div></div></div>
+      <div class="supp-item"><div class="supp-icon">📉</div><div><div class="supp-name">Taper Sleep Aids</div><div class="supp-dose">Reduce melatonin gradually</div><div class="supp-why">As natural sleep patterns restore, taper melatonin from 3mg → 1mg → 0.5mg over weeks 4–8.</div></div></div>
+    </div>
+  </div>
+
 </div>
 
 <!-- SECTION: Science / Learn -->
@@ -975,129 +1012,8 @@
 
 </div>
 
-<!-- SECTION: Supplements -->
-<div class="section" id="section-supplements">
-  <div class="section-title">Supplement Protocol</div>
-  <div class="disclaimer">
-    <strong>Heads up:</strong> These are general wellness supplements used in recovery contexts. Always consult your doctor before starting, especially if you take medications or have health conditions.
-  </div>
-
-  <div class="supp-phase-header" style="background:var(--gold);">Before You Quit — Preparation (1 Week Prior)</div>
-  <div class="supp-item">
-    <div class="supp-icon">🌿</div>
-    <div>
-      <div class="supp-name">NAC (N-Acetyl Cysteine)</div>
-      <div class="supp-dose">600mg twice daily</div>
-      <div class="supp-why">Regulates glutamate — the brain chemical that drives compulsive cravings. One of the most evidence-backed supplements for addiction recovery.</div>
-    </div>
-  </div>
-  <div class="supp-item">
-    <div class="supp-icon">🐟</div>
-    <div>
-      <div class="supp-name">Omega-3 Fish Oil</div>
-      <div class="supp-dose">2,000–3,000mg EPA+DHA daily</div>
-      <div class="supp-why">Supports brain cell membrane health, reduces inflammation, and improves mood. The brain is 60% fat — feed it well.</div>
-    </div>
-  </div>
-  <div class="supp-item">
-    <div class="supp-icon">🪨</div>
-    <div>
-      <div class="supp-name">Magnesium Glycinate</div>
-      <div class="supp-dose">300–400mg at night</div>
-      <div class="supp-why">Calms the nervous system, reduces anxiety, and dramatically improves sleep quality. The glycinate form is gentlest on digestion.</div>
-    </div>
-  </div>
-  <div class="supp-item">
-    <div class="supp-icon">☀️</div>
-    <div>
-      <div class="supp-name">Vitamin D3 + K2</div>
-      <div class="supp-dose">2,000–5,000 IU D3 + 100mcg K2</div>
-      <div class="supp-why">Supports mood regulation, immune health, and cognitive function. Most people are deficient, especially those who smoke.</div>
-    </div>
-  </div>
-  <div class="supp-item" style="border-radius:0 0 10px 10px;">
-    <div class="supp-icon">⚡</div>
-    <div>
-      <div class="supp-name">B-Complex</div>
-      <div class="supp-dose">1 tablet daily with food</div>
-      <div class="supp-why">B vitamins are essential for neurotransmitter production (serotonin, dopamine). Smoking depletes B12 and folate.</div>
-    </div>
-  </div>
-
-  <div class="supp-phase-header" style="background:var(--blue); margin-top:20px;">During Withdrawal — Acute Phase (Days 1–30)</div>
-  <div class="supp-item">
-    <div class="supp-icon">☕</div>
-    <div>
-      <div class="supp-name">L-Theanine</div>
-      <div class="supp-dose">200mg as needed (up to 2x daily)</div>
-      <div class="supp-why">Produces calm alertness without sedation. Works synergistically with the nervous system to reduce anxiety and agitation without drowsiness.</div>
-    </div>
-  </div>
-  <div class="supp-item">
-    <div class="supp-icon">🌙</div>
-    <div>
-      <div class="supp-name">Melatonin</div>
-      <div class="supp-dose">0.5–3mg, 30 min before bed</div>
-      <div class="supp-why">Cannabis suppresses REM sleep. Without it, vivid dreams and insomnia are common. Start low (0.5mg) — more isn't better.</div>
-    </div>
-  </div>
-  <div class="supp-item">
-    <div class="supp-icon">🌱</div>
-    <div>
-      <div class="supp-name">Ashwagandha (KSM-66)</div>
-      <div class="supp-dose">300–600mg daily</div>
-      <div class="supp-why">Adaptogen that lowers cortisol, reduces anxiety, and stabilizes mood. Particularly helpful during the stress of early withdrawal.</div>
-    </div>
-  </div>
-  <div class="supp-item">
-    <div class="supp-icon">🦪</div>
-    <div>
-      <div class="supp-name">Zinc</div>
-      <div class="supp-dose">15–30mg with food</div>
-      <div class="supp-why">Supports appetite recovery and immune function. Zinc is depleted by stress and is critical for taste/smell (which dulls with heavy use).</div>
-    </div>
-  </div>
-  <div class="supp-item" style="border-radius:0 0 10px 10px;">
-    <div class="supp-icon">💊</div>
-    <div>
-      <div class="supp-name">Continue all "Before" supplements</div>
-      <div class="supp-dose">NAC, Omega-3, Magnesium, D3, B-Complex</div>
-      <div class="supp-why">These form the foundation of your recovery stack. Don't skip them during withdrawal — they matter most now.</div>
-    </div>
-  </div>
-
-  <div class="supp-phase-header" style="background:var(--navy); margin-top:20px;">After — Long-Term Recovery (30+ Days)</div>
-  <div class="supp-item">
-    <div class="supp-icon">🦁</div>
-    <div>
-      <div class="supp-name">Lion's Mane Mushroom</div>
-      <div class="supp-dose">500–1,000mg daily</div>
-      <div class="supp-why">Stimulates NGF (nerve growth factor), promoting neuroplasticity and new neural connections. Supports memory, focus, and mood long-term.</div>
-    </div>
-  </div>
-  <div class="supp-item">
-    <div class="supp-icon">🌺</div>
-    <div>
-      <div class="supp-name">Rhodiola Rosea</div>
-      <div class="supp-dose">200–400mg in the morning</div>
-      <div class="supp-why">Adaptogen that combats fatigue and brain fog while improving energy and stress resilience. Take in the morning — can be stimulating.</div>
-    </div>
-  </div>
-  <div class="supp-item" style="border-radius:0 0 10px 10px;">
-    <div class="supp-icon">📉</div>
-    <div>
-      <div class="supp-name">Taper Sleep Aids</div>
-      <div class="supp-dose">Reduce melatonin gradually</div>
-      <div class="supp-why">As natural sleep patterns restore, you'll need less sleep support. Taper melatonin from 3mg → 1mg → 0.5mg over weeks 4–8.</div>
-    </div>
-  </div>
-</div>
-
-<!-- SECTION: Cravings -->
-<div class="section" id="section-cravings">
-
-  <div class="section-title">Where You Are</div>
-  <div id="withdrawalStageCard"></div>
+<!-- SECTION: Tools (Cravings + CBT + EFT combined) -->
+<div class="section" id="section-tools">
 
   <div class="section-title">Log This Urge</div>
   <div class="card">
@@ -1145,142 +1061,59 @@
   </div>
 
   <div class="section-title">Craving Strategies</div>
-
   <div class="card" style="background:var(--warm-pale); border-left: 4px solid var(--warm);">
     <div class="card-title" style="color:var(--warm);">Remember: Cravings peak in 15–20 minutes, then pass. You just have to outlast the wave.</div>
   </div>
 
   <div class="strategy-card">
     <div class="strategy-emoji">🌊</div>
-    <div>
-      <div class="strategy-name">Urge Surfing</div>
-      <div class="strategy-desc">Observe your craving like a surfer watching a wave — without riding it. Cravings are not commands. They're sensations that rise and fall.</div>
-      <ol class="strategy-steps">
-        <li>Close your eyes and notice where you feel the craving in your body</li>
-        <li>Describe it — tight chest? restless hands? a pull in your gut?</li>
-        <li>Breathe into it and watch it shift, change, or soften</li>
-        <li>Remind yourself: "This is temporary. It will pass."</li>
-      </ol>
+    <div><div class="strategy-name">Urge Surfing</div><div class="strategy-desc">Observe your craving like a surfer watching a wave — without riding it. Cravings are not commands. They're sensations that rise and fall.</div>
+      <ol class="strategy-steps"><li>Close your eyes and notice where you feel the craving in your body</li><li>Describe it — tight chest? restless hands? a pull in your gut?</li><li>Breathe into it and watch it shift, change, or soften</li><li>Remind yourself: "This is temporary. It will pass."</li></ol>
     </div>
   </div>
-
   <div class="strategy-card">
     <div class="strategy-emoji">🖐️</div>
-    <div>
-      <div class="strategy-name">5-4-3-2-1 Grounding</div>
-      <div class="strategy-desc">Pulls you out of the craving spiral and back into the present moment using your senses.</div>
-      <ol class="strategy-steps">
-        <li>Name <strong>5 things</strong> you can see</li>
-        <li>Name <strong>4 things</strong> you can touch</li>
-        <li>Name <strong>3 things</strong> you can hear</li>
-        <li>Name <strong>2 things</strong> you can smell</li>
-        <li>Name <strong>1 thing</strong> you can taste</li>
-      </ol>
+    <div><div class="strategy-name">5-4-3-2-1 Grounding</div><div class="strategy-desc">Pulls you out of the craving spiral and back into the present moment using your senses.</div>
+      <ol class="strategy-steps"><li>Name <strong>5 things</strong> you can see</li><li>Name <strong>4 things</strong> you can touch</li><li>Name <strong>3 things</strong> you can hear</li><li>Name <strong>2 things</strong> you can smell</li><li>Name <strong>1 thing</strong> you can taste</li></ol>
     </div>
   </div>
-
   <div class="strategy-card">
     <div class="strategy-emoji">🚨</div>
-    <div>
-      <div class="strategy-name">HALT Check</div>
-      <div class="strategy-desc">Many cravings are disguised basic needs. Check in before assuming you "need" to use.</div>
-      <ol class="strategy-steps">
-        <li><strong>H</strong> — Am I Hungry? (eat something)</li>
-        <li><strong>A</strong> — Am I Angry or Anxious? (name the feeling)</li>
-        <li><strong>L</strong> — Am I Lonely? (reach out to someone)</li>
-        <li><strong>T</strong> — Am I Tired? (rest, don't use)</li>
-      </ol>
+    <div><div class="strategy-name">HALT Check</div><div class="strategy-desc">Many cravings are disguised basic needs. Check in before assuming you "need" to use.</div>
+      <ol class="strategy-steps"><li><strong>H</strong> — Am I Hungry?</li><li><strong>A</strong> — Am I Angry or Anxious?</li><li><strong>L</strong> — Am I Lonely?</li><li><strong>T</strong> — Am I Tired?</li></ol>
     </div>
   </div>
-
-  <div class="strategy-card">
-    <div class="strategy-emoji">🔲</div>
-    <div>
-      <div class="strategy-name">Box Breathing</div>
-      <div class="strategy-desc">Activates the parasympathetic nervous system, reducing anxiety and craving intensity within minutes.</div>
-      <ol class="strategy-steps">
-        <li>Inhale slowly for <strong>4 counts</strong></li>
-        <li>Hold for <strong>4 counts</strong></li>
-        <li>Exhale slowly for <strong>4 counts</strong></li>
-        <li>Hold for <strong>4 counts</strong></li>
-        <li>Repeat 4–6 cycles</li>
-      </ol>
-    </div>
-  </div>
-
   <div class="strategy-card">
     <div class="strategy-emoji">🏃</div>
-    <div>
-      <div class="strategy-name">Move Your Body</div>
-      <div class="strategy-desc">Physical movement burns off restless energy and releases endorphins that dampen cravings. Even 5 minutes works.</div>
-      <ol class="strategy-steps">
-        <li>Walk briskly around the block</li>
-        <li>Do 20 jumping jacks or push-ups</li>
-        <li>Stretch for 5 minutes</li>
-        <li>Dance to one song</li>
-      </ol>
+    <div><div class="strategy-name">Move Your Body</div><div class="strategy-desc">Physical movement burns off restless energy and releases endorphins that dampen cravings. Even 5 minutes works.</div>
+      <ol class="strategy-steps"><li>Walk briskly around the block</li><li>Do 20 jumping jacks or push-ups</li><li>Stretch for 5 minutes</li><li>Dance to one song</li></ol>
     </div>
   </div>
-
   <div class="strategy-card">
     <div class="strategy-emoji">🌡️</div>
-    <div>
-      <div class="strategy-name">Cold Water Reset</div>
-      <div class="strategy-desc">Triggers the dive reflex, rapidly slowing heart rate and clearing the mind. Fast and powerful.</div>
-      <ol class="strategy-steps">
-        <li>Splash cold water on your face</li>
-        <li>Or hold ice cubes for 30 seconds</li>
-        <li>Or step outside into cold air</li>
-        <li>The shock interrupts the craving loop</li>
-      </ol>
+    <div><div class="strategy-name">Cold Water Reset</div><div class="strategy-desc">Triggers the dive reflex, rapidly slowing heart rate and clearing the mind.</div>
+      <ol class="strategy-steps"><li>Splash cold water on your face</li><li>Or hold ice cubes for 30 seconds</li><li>Or step outside into cold air</li><li>The shock interrupts the craving loop</li></ol>
     </div>
   </div>
-
   <div class="strategy-card">
     <div class="strategy-emoji">⏱️</div>
-    <div>
-      <div class="strategy-name">Delay 20 Minutes</div>
-      <div class="strategy-desc">Commit to doing nothing for just 20 minutes. Don't say never — just not right now. Most cravings collapse in this window.</div>
-      <ol class="strategy-steps">
-        <li>Set a 20-minute timer</li>
-        <li>Choose a distraction: show, game, call</li>
-        <li>When timer goes off, reassess</li>
-        <li>Most of the time, the craving will have moved on</li>
-      </ol>
+    <div><div class="strategy-name">Delay 20 Minutes</div><div class="strategy-desc">Commit to doing nothing for just 20 minutes. Don't say never — just not right now. Most cravings collapse in this window.</div>
+      <ol class="strategy-steps"><li>Set a 20-minute timer</li><li>Choose a distraction: show, game, call</li><li>When timer goes off, reassess</li><li>Most of the time, the craving will have moved on</li></ol>
     </div>
   </div>
-
   <div class="strategy-card">
     <div class="strategy-emoji">📞</div>
-    <div>
-      <div class="strategy-name">Reach Out</div>
-      <div class="strategy-desc">Isolation fuels cravings. Connection dissolves them. You don't have to explain — just be with someone.</div>
-      <ol class="strategy-steps">
-        <li>Text or call someone you trust</li>
-        <li>Post in a recovery community or Reddit</li>
-        <li>Tell them how you're feeling right now</li>
-        <li>Ask them to stay on the line for a bit</li>
-      </ol>
+    <div><div class="strategy-name">Reach Out</div><div class="strategy-desc">Isolation fuels cravings. Connection dissolves them.</div>
+      <ol class="strategy-steps"><li>Text or call someone you trust</li><li>Post in a recovery community</li><li>Tell them how you're feeling right now</li><li>Ask them to stay on the line for a bit</li></ol>
     </div>
   </div>
-
   <div class="strategy-card">
     <div class="strategy-emoji">✏️</div>
-    <div>
-      <div class="strategy-name">Write It Out</div>
-      <div class="strategy-desc">Externalizing the craving by writing it down interrupts automatic thinking and reduces its power.</div>
-      <ol class="strategy-steps">
-        <li>Grab any paper or open notes</li>
-        <li>Write: "Right now I'm feeling ____ because ____"</li>
-        <li>Write what you're afraid will happen if you don't use</li>
-        <li>Write one thing you're proud of since quitting</li>
-      </ol>
+    <div><div class="strategy-name">Write It Out</div><div class="strategy-desc">Externalizing the craving by writing it down interrupts automatic thinking and reduces its power.</div>
+      <ol class="strategy-steps"><li>Grab any paper or open notes</li><li>Write: "Right now I'm feeling ____ because ____"</li><li>Write what you're afraid will happen if you don't use</li><li>Write one thing you're proud of since quitting</li></ol>
     </div>
   </div>
-</div>
 
-<!-- SECTION: Tools (CBT + EFT combined) -->
-<div class="section" id="section-tools">
   <div class="section-title">CBT Strategies</div>
 
   <div class="cbt-card">
@@ -1587,6 +1420,9 @@
       <div class="used-toggle">
         <button type="button" class="used-btn selected-yes" id="usedYes"  onclick="setUsed('yes')">✅ Used</button>
         <button type="button" class="used-btn"              id="usedNote" onclick="setUsed('note')">📝 Note</button>
+      </div>
+      <div id="relapseMessage" style="display:none; margin-top:10px; background:#fff5f5; border-left:3px solid #e07070; border-radius:8px; padding:10px 14px; font-size:0.88rem; color:#666; line-height:1.65;">
+        A slip doesn't erase your progress. Logging it honestly is one of the most courageous things you can do right now. Your counter will reset to this moment — and every hour from here counts.
       </div>
     </div>
     <div class="form-field">
@@ -2637,7 +2473,113 @@ function renderReasons() {
   }).join('');
 }
 
-// ——— Identity Prompts ———
+// ——— Daily Check-In ———
+function getTodayKey() {
+  var d = new Date();
+  return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+}
+function getCheckins() {
+  try { return JSON.parse(storageGet('dailyCheckins') || '[]'); } catch(e) { return []; }
+}
+function saveCheckin(mood, sleep, appetite) {
+  var checkins = getCheckins();
+  var key = getTodayKey();
+  var idx = checkins.findIndex(function(c) { return c.date === key; });
+  var entry = { date: key, mood: mood, sleep: sleep, appetite: appetite };
+  if (idx >= 0) checkins[idx] = entry; else checkins.unshift(entry);
+  if (checkins.length > 30) checkins = checkins.slice(0, 30);
+  storageSet('dailyCheckins', JSON.stringify(checkins));
+  renderDailyCheckin();
+}
+var checkinSelections = { mood: null, sleep: null, appetite: null };
+function selectCheckin(category, val, el) {
+  checkinSelections[category] = val;
+  var row = el.closest('.checkin-row');
+  row.querySelectorAll('.checkin-btn').forEach(function(b) { b.classList.remove('selected'); });
+  el.classList.add('selected');
+}
+function submitCheckin() {
+  var s = checkinSelections;
+  if (!s.mood || !s.sleep || !s.appetite) return alert('Please rate all three before saving.');
+  saveCheckin(s.mood, s.sleep, s.appetite);
+  checkinSelections = { mood: null, sleep: null, appetite: null };
+}
+function renderDailyCheckin() {
+  var el = document.getElementById('dailyCheckinCard');
+  if (!el) return;
+  var checkins = getCheckins();
+  var key = getTodayKey();
+  var today = checkins.find(function(c) { return c.date === key; });
+  var recent = checkins.slice(0, 7);
+
+  var dotColor = function(v) {
+    return v >= 4 ? '#3d7a5e' : v >= 3 ? '#c4783a' : '#c0392b';
+  };
+  var trendHTML = '';
+  if (checkins.length > 1) {
+    trendHTML = '<div style="margin-top:14px; border-top:1px solid var(--border); padding-top:12px;">' +
+      '<div style="font-size:0.78rem; color:var(--muted); margin-bottom:8px; font-weight:600; letter-spacing:0.04em;">LAST 7 DAYS</div>' +
+      '<div style="display:flex; gap:6px; align-items:flex-end;">' +
+      recent.map(function(c) {
+        var avg = ((c.mood + c.sleep + c.appetite) / 3).toFixed(1);
+        var d = new Date(c.date.replace(/-/g,'/'));
+        var label = d.toLocaleDateString('en-US',{weekday:'short'}).slice(0,1);
+        var h = Math.round((parseFloat(avg) / 5) * 36) + 12;
+        return '<div style="display:flex; flex-direction:column; align-items:center; gap:3px; flex:1;">' +
+          '<div style="width:100%; max-width:28px; height:' + h + 'px; background:' + dotColor(parseFloat(avg)) + '; border-radius:4px; opacity:0.85;"></div>' +
+          '<div style="font-size:0.65rem; color:var(--muted);">' + label + '</div>' +
+        '</div>';
+      }).join('') +
+      '</div></div>';
+  }
+
+  if (today) {
+    var emoji = function(v) { return ['','😔','😞','😐','🙂','😊'][v] || v; };
+    el.innerHTML = '<div class="card"><div class="card-body">' +
+      '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">' +
+        '<div style="font-weight:700; color:var(--navy);">Today\'s Check-In ✓</div>' +
+        '<button onclick="resetCheckin()" style="font-size:0.78rem; color:var(--muted); background:none; border:none; cursor:pointer; text-decoration:underline;">Edit</button>' +
+      '</div>' +
+      '<div style="display:flex; gap:16px; justify-content:space-around; text-align:center;">' +
+        '<div><div style="font-size:1.5rem;">' + emoji(today.mood) + '</div><div style="font-size:0.75rem; color:var(--muted); margin-top:2px;">Mood</div></div>' +
+        '<div><div style="font-size:1.5rem;">' + emoji(today.sleep) + '</div><div style="font-size:0.75rem; color:var(--muted); margin-top:2px;">Sleep</div></div>' +
+        '<div><div style="font-size:1.5rem;">' + emoji(today.appetite) + '</div><div style="font-size:0.75rem; color:var(--muted); margin-top:2px;">Appetite</div></div>' +
+      '</div>' +
+      trendHTML +
+    '</div></div>';
+    return;
+  }
+
+  var makeRow = function(label, cat) {
+    var emojis = ['😔','😞','😐','🙂','😊'];
+    return '<div class="checkin-row" style="margin-bottom:12px;">' +
+      '<div style="font-size:0.8rem; font-weight:600; color:var(--navy); margin-bottom:6px;">' + label + '</div>' +
+      '<div style="display:flex; gap:6px;">' +
+      emojis.map(function(e, i) {
+        return '<button class="checkin-btn" onclick="selectCheckin(\'' + cat + '\',' + (i+1) + ',this)" ' +
+          'style="flex:1; font-size:1.25rem; padding:8px 4px; border:1.5px solid var(--border); border-radius:8px; background:#fff; cursor:pointer; transition:all 0.15s;">' + e + '</button>';
+      }).join('') +
+      '</div></div>';
+  };
+
+  el.innerHTML = '<div class="card"><div class="card-body">' +
+    '<div style="font-size:0.82rem; color:var(--muted); margin-bottom:14px;">How are you doing today?</div>' +
+    makeRow('Mood', 'mood') +
+    makeRow('Sleep last night', 'sleep') +
+    makeRow('Appetite', 'appetite') +
+    '<button class="btn-primary" style="width:100%; margin-top:4px;" onclick="submitCheckin()">Save Check-In</button>' +
+    trendHTML +
+  '</div></div>';
+}
+function resetCheckin() {
+  checkinSelections = { mood: null, sleep: null, appetite: null };
+  var checkins = getCheckins();
+  var key = getTodayKey();
+  checkins = checkins.filter(function(c) { return c.date !== key; });
+  storageSet('dailyCheckins', JSON.stringify(checkins));
+  renderDailyCheckin();
+}
+
 // ——— Urge Log ———
 var selectedUrgeIntensity = null;
 var selectedUrgeTrigger = null;
@@ -3124,6 +3066,8 @@ function setUsed(val) {
   document.getElementById('usedYes').className  = 'used-btn' + (val === 'yes'  ? ' selected-yes'  : '');
   document.getElementById('usedNote').className = 'used-btn' + (val === 'note' ? ' selected-note' : '');
   document.getElementById('useFieldsWrapper').style.display = val === 'yes' ? 'block' : 'none';
+  var rm = document.getElementById('relapseMessage');
+  if (rm) rm.style.display = val === 'yes' ? 'block' : 'none';
 }
 
 function renderIntensityBtns() {
@@ -3297,6 +3241,7 @@ window.addEventListener('DOMContentLoaded', () => {
   renderRituals();
   renderRecoverySnapshot(-1);
   renderWithdrawalStage(-1);
+  renderDailyCheckin();
 });
 </script>
 </body>
