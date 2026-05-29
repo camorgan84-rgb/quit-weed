@@ -2231,8 +2231,9 @@ function resetDate() {
 function renderCBT(days) {
   const phase = getPhase(days);
 
-  // Tips
-  document.getElementById('cbtTipsContent').innerHTML = `
+  // Tips (element may not exist if Today's Tips section was removed)
+  var tipsEl = document.getElementById('cbtTipsContent');
+  if (tipsEl) tipsEl.innerHTML = `
     <div class="tips-card">
       <div class="tips-header">💡 Tips for ${phase.name}</div>
       ${phase.tips.map((t, i) => `
