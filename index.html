@@ -1502,37 +1502,6 @@
     </div>
     </div><!-- /useFieldsWrapper -->
     <div class="form-field">
-      <label>Craving Intensity (1–10)</label>
-      <div class="intensity-row" id="intensityBtns">
-        <!-- rendered by JS -->
-      </div>
-    </div>
-    <div class="form-field">
-      <label>Trigger / Reason</label>
-      <select id="logTrigger">
-        <option value="">— Select a trigger —</option>
-        <option>Stress / anxiety</option>
-        <option>Boredom</option>
-        <option>Uncomfortable</option>
-        <option>Overstimulation</option>
-        <option>Free Moment</option>
-        <option>Time Alone</option>
-        <option>Social pressure</option>
-        <option>Loneliness</option>
-        <option>Habit / routine</option>
-        <option>Taper Plan</option>
-        <option>Transition</option>
-        <option>Celebration / reward</option>
-        <option>Anger / frustration</option>
-        <option>Sadness / depression</option>
-        <option>Headache</option>
-        <option>Nausea</option>
-        <option>Sleep issues</option>
-        <option>Physical pain</option>
-        <option>Other</option>
-      </select>
-    </div>
-    <div class="form-field">
       <label>Notes</label>
       <textarea id="logNotes" placeholder="What was going on? How did you feel before, during, after?"></textarea>
     </div>
@@ -2691,13 +2660,10 @@ function confirmSlip(type) {
   }
 
   // Reset log form
-  selectedIntensity = null;
-  document.querySelectorAll('.intensity-btn').forEach(function(b) { b.classList.remove('selected'); });
   setUsed('yes');
   document.getElementById('logMethod').value = '';
   document.getElementById('logAmount').value = '';
   document.getElementById('logAmountUnit').value = 'hits';
-  document.getElementById('logTrigger').value = '';
   document.getElementById('logNotes').value = '';
   renderLog();
   renderStreakMeta();
@@ -3180,7 +3146,6 @@ document.addEventListener('click', e => {
 });
 
 // ——— Log ———
-let selectedIntensity = null;
 let selectedUsed = 'yes';
 
 function setUsed(val) {
@@ -3193,21 +3158,6 @@ function setUsed(val) {
   if (rm) rm.style.display = val === 'yes' ? 'block' : 'none';
 }
 
-function renderIntensityBtns() {
-  const container = document.getElementById('intensityBtns');
-  container.innerHTML = Array.from({length: 10}, (_, i) => {
-    const n = i + 1;
-    const cls = n >= 8 ? 'high' : n >= 5 ? 'med' : '';
-    return `<button class="intensity-btn ${cls}" onclick="selectIntensity(${n}, this)">${n}</button>`;
-  }).join('');
-}
-
-function selectIntensity(n, btn) {
-  selectedIntensity = n;
-  document.querySelectorAll('.intensity-btn').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
-}
-
 let editingId = null;
 
 function saveLogEntry() {
@@ -3216,7 +3166,6 @@ function saveLogEntry() {
   const method = document.getElementById('logMethod').value;
   const amount = document.getElementById('logAmount').value;
   const amountUnit = document.getElementById('logAmountUnit').value;
-  const trigger = document.getElementById('logTrigger').value;
   const notes = document.getElementById('logNotes').value.trim();
 
   if (!dt) return alert('Please set a date and time.');
@@ -3224,29 +3173,26 @@ function saveLogEntry() {
   let entries = getLogEntries();
 
   if (editingId !== null) {
-    entries = entries.map(e => e.id === editingId ? { ...e, dt, used, method, amount, amountUnit, intensity: selectedIntensity, trigger, notes } : e);
+    entries = entries.map(e => e.id === editingId ? { ...e, dt, used, method, amount, amountUnit, notes } : e);
     editingId = null;
     document.querySelector('#section-log .btn-primary').textContent = 'Save Entry';
     document.querySelector('.log-form h3').textContent = 'Add Entry';
   } else {
     // If logging a "Used" entry and counter is running, show slip modal first
     if (used === 'yes' && storageGet('quitDate')) {
-      openSlipModal({ dt, method, amount, amountUnit, intensity: selectedIntensity, trigger, notes });
+      openSlipModal({ dt, method, amount, amountUnit, notes });
       return;
     }
-    entries.unshift({ id: Date.now(), dt, used, method, amount, amountUnit, intensity: selectedIntensity, trigger, notes });
+    entries.unshift({ id: Date.now(), dt, used, method, amount, amountUnit, notes });
   }
 
   storageSet('usageLog', JSON.stringify(entries));
 
   // Reset form
-  selectedIntensity = null;
-  document.querySelectorAll('.intensity-btn').forEach(b => b.classList.remove('selected'));
   setUsed('yes');
   document.getElementById('logMethod').value = '';
   document.getElementById('logAmount').value = '';
   document.getElementById('logAmountUnit').value = 'hits';
-  document.getElementById('logTrigger').value = '';
   document.getElementById('logNotes').value = '';
 
   renderLog();
@@ -3263,15 +3209,7 @@ function editLogEntry(id) {
   document.getElementById('logMethod').value = e.method || '';
   document.getElementById('logAmount').value = e.amount || '';
   document.getElementById('logAmountUnit').value = e.amountUnit || 'hits';
-  document.getElementById('logTrigger').value = e.trigger || '';
   document.getElementById('logNotes').value = e.notes || '';
-
-  selectedIntensity = e.intensity || null;
-  document.querySelectorAll('.intensity-btn').forEach(b => b.classList.remove('selected'));
-  if (e.intensity) {
-    const btn = document.querySelector(`.intensity-btn:nth-child(${e.intensity})`);
-    if (btn) btn.classList.add('selected');
-  }
 
   document.querySelector('.log-form h3').textContent = 'Edit Entry';
   document.querySelector('#section-log .btn-primary').textContent = 'Update Entry';
@@ -3346,7 +3284,6 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('quitDatePicker').value = todayStr;
   document.getElementById('quitTimePicker').value = timeStr;
 
-  renderIntensityBtns();
   renderLog();
   startCounter();
   setUsed('yes');
