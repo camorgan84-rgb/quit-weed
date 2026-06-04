@@ -498,7 +498,6 @@
   .urge-field-label { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin: 14px 0 6px; }
   .urge-field-label:first-child { margin-top: 0; }
   .urge-int-row { display: flex; gap: 5px; }
-  .checkin-btn.selected { border-color: var(--blue) !important; background: var(--blue-pale) !important; transform: scale(1.1); }
 
   /* ─── Milestone Shield ──────────────────────────────── */
   /* ─── Streak Meta (prev streak + cumulative) ────────── */
@@ -772,8 +771,6 @@
 <!-- SECTION: Today -->
 <div class="section active" id="section-today">
 
-  <div class="section-title">Daily Check-In</div>
-  <div id="dailyCheckinCard"></div>
 
   <div class="section-title">My Reasons to Quit</div>
   <div class="card">
@@ -2485,113 +2482,6 @@ function renderReasons() {
   }).join('');
 }
 
-// ——— Daily Check-In ———
-function getTodayKey() {
-  var d = new Date();
-  return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
-}
-function getCheckins() {
-  try { return JSON.parse(storageGet('dailyCheckins') || '[]'); } catch(e) { return []; }
-}
-function saveCheckin(mood, sleep, appetite) {
-  var checkins = getCheckins();
-  var key = getTodayKey();
-  var idx = checkins.findIndex(function(c) { return c.date === key; });
-  var entry = { date: key, mood: mood, sleep: sleep, appetite: appetite };
-  if (idx >= 0) checkins[idx] = entry; else checkins.unshift(entry);
-  if (checkins.length > 30) checkins = checkins.slice(0, 30);
-  storageSet('dailyCheckins', JSON.stringify(checkins));
-  renderDailyCheckin();
-}
-var checkinSelections = { mood: null, sleep: null, appetite: null };
-function selectCheckin(category, val, el) {
-  checkinSelections[category] = val;
-  var row = el.closest('.checkin-row');
-  row.querySelectorAll('.checkin-btn').forEach(function(b) { b.classList.remove('selected'); });
-  el.classList.add('selected');
-}
-function submitCheckin() {
-  var s = checkinSelections;
-  if (!s.mood || !s.sleep || !s.appetite) return alert('Please rate all three before saving.');
-  saveCheckin(s.mood, s.sleep, s.appetite);
-  checkinSelections = { mood: null, sleep: null, appetite: null };
-}
-function renderDailyCheckin() {
-  var el = document.getElementById('dailyCheckinCard');
-  if (!el) return;
-  var checkins = getCheckins();
-  var key = getTodayKey();
-  var today = checkins.find(function(c) { return c.date === key; });
-  var recent = checkins.slice(0, 7);
-
-  var dotColor = function(v) {
-    return v >= 4 ? '#3d7a5e' : v >= 3 ? '#c4783a' : '#c0392b';
-  };
-  var trendHTML = '';
-  if (checkins.length > 1) {
-    trendHTML = '<div style="margin-top:14px; border-top:1px solid var(--border); padding-top:12px;">' +
-      '<div style="font-size:0.78rem; color:var(--muted); margin-bottom:8px; font-weight:600; letter-spacing:0.04em;">LAST 7 DAYS</div>' +
-      '<div style="display:flex; gap:6px; align-items:flex-end;">' +
-      recent.map(function(c) {
-        var avg = ((c.mood + c.sleep + c.appetite) / 3).toFixed(1);
-        var d = new Date(c.date.replace(/-/g,'/'));
-        var label = d.toLocaleDateString('en-US',{weekday:'short'}).slice(0,1);
-        var h = Math.round((parseFloat(avg) / 5) * 36) + 12;
-        return '<div style="display:flex; flex-direction:column; align-items:center; gap:3px; flex:1;">' +
-          '<div style="width:100%; max-width:28px; height:' + h + 'px; background:' + dotColor(parseFloat(avg)) + '; border-radius:4px; opacity:0.85;"></div>' +
-          '<div style="font-size:0.65rem; color:var(--muted);">' + label + '</div>' +
-        '</div>';
-      }).join('') +
-      '</div></div>';
-  }
-
-  if (today) {
-    var emoji = function(v) { return ['','😔','😞','😐','🙂','😊'][v] || v; };
-    el.innerHTML = '<div class="card"><div class="card-body">' +
-      '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">' +
-        '<div style="font-weight:700; color:var(--navy);">Today\'s Check-In ✓</div>' +
-        '<button onclick="resetCheckin()" style="font-size:0.78rem; color:var(--muted); background:none; border:none; cursor:pointer; text-decoration:underline;">Edit</button>' +
-      '</div>' +
-      '<div style="display:flex; gap:16px; justify-content:space-around; text-align:center;">' +
-        '<div><div style="font-size:1.5rem;">' + emoji(today.mood) + '</div><div style="font-size:0.75rem; color:var(--muted); margin-top:2px;">Mood</div></div>' +
-        '<div><div style="font-size:1.5rem;">' + emoji(today.sleep) + '</div><div style="font-size:0.75rem; color:var(--muted); margin-top:2px;">Sleep</div></div>' +
-        '<div><div style="font-size:1.5rem;">' + emoji(today.appetite) + '</div><div style="font-size:0.75rem; color:var(--muted); margin-top:2px;">Appetite</div></div>' +
-      '</div>' +
-      trendHTML +
-    '</div></div>';
-    return;
-  }
-
-  var makeRow = function(label, cat) {
-    var emojis = ['😔','😞','😐','🙂','😊'];
-    return '<div class="checkin-row" style="margin-bottom:12px;">' +
-      '<div style="font-size:0.8rem; font-weight:600; color:var(--navy); margin-bottom:6px;">' + label + '</div>' +
-      '<div style="display:flex; gap:6px;">' +
-      emojis.map(function(e, i) {
-        return '<button class="checkin-btn" onclick="selectCheckin(\'' + cat + '\',' + (i+1) + ',this)" ' +
-          'style="flex:1; font-size:1.25rem; padding:8px 4px; border:1.5px solid var(--border); border-radius:8px; background:#fff; cursor:pointer; transition:all 0.15s;">' + e + '</button>';
-      }).join('') +
-      '</div></div>';
-  };
-
-  el.innerHTML = '<div class="card"><div class="card-body">' +
-    '<div style="font-size:0.82rem; color:var(--muted); margin-bottom:14px;">How are you doing today?</div>' +
-    makeRow('Mood', 'mood') +
-    makeRow('Sleep last night', 'sleep') +
-    makeRow('Appetite', 'appetite') +
-    '<button class="btn-primary" style="width:100%; margin-top:4px;" onclick="submitCheckin()">Save Check-In</button>' +
-    trendHTML +
-  '</div></div>';
-}
-function resetCheckin() {
-  checkinSelections = { mood: null, sleep: null, appetite: null };
-  var checkins = getCheckins();
-  var key = getTodayKey();
-  checkins = checkins.filter(function(c) { return c.date !== key; });
-  storageSet('dailyCheckins', JSON.stringify(checkins));
-  renderDailyCheckin();
-}
-
 // ——— Streak History ———
 function getStreakHistory() {
   try { return JSON.parse(storageGet('streakHistory') || '[]'); } catch(e) { return []; }
@@ -3295,7 +3185,6 @@ window.addEventListener('DOMContentLoaded', () => {
   renderRituals();
   renderRecoverySnapshot(-1);
   renderWithdrawalStage(-1);
-  renderDailyCheckin();
   renderStreakMeta();
 });
 </script>
