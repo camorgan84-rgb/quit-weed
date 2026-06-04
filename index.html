@@ -740,6 +740,10 @@
       🔄 Full relapse — I've been using regularly
       <span class="slip-choice-sub">Counter resets. Your history stays. Recovery isn't linear.</span>
     </button>
+    <button class="slip-choice" onclick="confirmSlip('logonly')">
+      📋 Just log it — don't change my quit date
+      <span class="slip-choice-sub">Entry is saved for your records. Your streak stays untouched.</span>
+    </button>
     <button class="slip-cancel" onclick="cancelSlip()">Cancel — don't save this entry</button>
   </div>
 </div>
@@ -1460,11 +1464,7 @@
         <button type="button" class="used-btn"              id="usedNote" onclick="setUsed('note')">📝 Note</button>
       </div>
       <div id="relapseMessage" style="display:none; margin-top:10px; background:#fff5f5; border-left:3px solid #e07070; border-radius:8px; padding:10px 14px; font-size:0.88rem; color:#666; line-height:1.65;">
-        A slip doesn't erase your progress. Logging it honestly is one of the most courageous things you can do right now. Your counter will reset to this moment — and every hour from here counts.
-        <label style="display:flex; align-items:center; gap:8px; margin-top:10px; cursor:pointer; font-size:0.85rem; color:var(--text); font-weight:600;">
-          <input type="checkbox" id="logNoReset" style="width:16px; height:16px; cursor:pointer; flex-shrink:0;">
-          Log this without resetting my quit date
-        </label>
+        A slip doesn't erase your progress. Logging it honestly is one of the most courageous things you can do right now.
       </div>
     </div>
     <div class="form-field">
@@ -2545,13 +2545,25 @@ function confirmSlip(type) {
   var d = pendingSlipEntry;
   pendingSlipEntry = null;
 
-  // Archive current streak before resetting
-  saveStreakToHistory(type);
-
   // Save the log entry
   var entries = getLogEntries();
   entries.unshift({ id: Date.now(), dt: d.dt, used: 'yes', method: d.method, amount: d.amount, amountUnit: d.amountUnit, intensity: d.intensity, trigger: d.trigger, notes: d.notes, slipType: type });
   storageSet('usageLog', JSON.stringify(entries));
+
+  // "Log only" — record it but leave the streak and quit date alone
+  if (type === 'logonly') {
+    setUsed('yes');
+    document.getElementById('logMethod').value = '';
+    document.getElementById('logAmount').value = '';
+    document.getElementById('logAmountUnit').value = 'hits';
+    document.getElementById('logNotes').value = '';
+    resetLogTrigger();
+    renderLog();
+    return;
+  }
+
+  // Archive current streak before resetting
+  saveStreakToHistory(type);
 
   // Reset counter
   var logMs = new Date(d.dt).getTime();
@@ -3082,8 +3094,6 @@ function selectLogTrigger(t, btn) {
 function resetLogTrigger() {
   selectedLogTrigger = null;
   document.querySelectorAll('#logTriggerRow .urge-trigger-btn').forEach(function(b) { b.classList.remove('selected'); });
-  var noResetEl = document.getElementById('logNoReset');
-  if (noResetEl) noResetEl.checked = false;
 }
 
 function saveLogEntry() {
@@ -3094,8 +3104,6 @@ function saveLogEntry() {
   const amountUnit = document.getElementById('logAmountUnit').value;
   const notes = document.getElementById('logNotes').value.trim();
   const logTrigger = selectedLogTrigger;
-  const noResetEl = document.getElementById('logNoReset');
-  const noReset = noResetEl && noResetEl.checked;
 
   if (!dt) return alert('Please set a date and time.');
 
@@ -3107,8 +3115,8 @@ function saveLogEntry() {
     document.querySelector('#section-log .btn-primary').textContent = 'Save Entry';
     document.querySelector('.log-form h3').textContent = 'Add Entry';
   } else {
-    // If logging a "Used" entry and counter is running, show slip modal first (unless "no reset" checked)
-    if (used === 'yes' && storageGet('quitDate') && !noReset) {
+    // If logging a "Used" entry and counter is running, show slip modal first
+    if (used === 'yes' && storageGet('quitDate')) {
       openSlipModal({ dt, method, amount, amountUnit, trigger: logTrigger, notes });
       return;
     }
