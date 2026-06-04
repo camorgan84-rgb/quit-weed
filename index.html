@@ -2591,6 +2591,11 @@ function selectUrgeTrigger(t, btn) {
 function getUrgeLog() {
   try { return JSON.parse(storageGet('urgelog') || '[]'); } catch(e) { return []; }
 }
+function deleteUrgeEntry(ts) {
+  var log = getUrgeLog().filter(function(e) { return e.ts !== ts; });
+  storageSet('urgelog', JSON.stringify(log));
+  renderUrgePattern();
+}
 function logUrge() {
   if (!selectedUrgeIntensity) { alert('Please rate the intensity first.'); return; }
   var entry = {
@@ -2623,14 +2628,16 @@ function renderUrgePattern() {
   log.forEach(function(e) { triggerCounts[e.trigger] = (triggerCounts[e.trigger] || 0) + 1; });
   var topTrigger = Object.keys(triggerCounts).sort(function(a,b){ return triggerCounts[b]-triggerCounts[a]; })[0];
   var avgIntensity = (log.reduce(function(s,e){return s+e.intensity;},0)/log.length).toFixed(1);
-  var recent = log.slice(0,5);
-  var histHTML = recent.map(function(e) {
+  var histHTML = log.map(function(e) {
     var d = new Date(e.ts);
     var ds = d.toLocaleDateString('en-US',{month:'short',day:'numeric'}) + ' \u00b7 ' + d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
-    return '<div class="urge-history-item">' +
-      '<strong>Intensity ' + e.intensity + '</strong> \u00b7 ' + e.trigger +
-      (e.instead ? ' \u00b7 <em>' + e.instead.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</em>' : '') +
-      '<div class="urge-history-meta">' + ds + '</div>' +
+    return '<div class="urge-history-item" style="display:flex; align-items:flex-start; gap:8px;">' +
+      '<div style="flex:1;">' +
+        '<strong>Intensity ' + e.intensity + '</strong> \u00b7 ' + e.trigger +
+        (e.instead ? ' \u00b7 <em>' + e.instead.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</em>' : '') +
+        '<div class="urge-history-meta">' + ds + '</div>' +
+      '</div>' +
+      '<button onclick="deleteUrgeEntry(' + e.ts + ')" style="background:none; border:none; color:var(--muted); font-size:1rem; cursor:pointer; padding:2px 4px; border-radius:6px; flex-shrink:0; line-height:1;" title="Delete">\u2715</button>' +
     '</div>';
   }).join('');
   el.innerHTML =
@@ -2638,7 +2645,7 @@ function renderUrgePattern() {
       '<div class="urge-pattern-line">You\'ve ridden out <strong>' + log.length + ' urge' + (log.length!==1?'s':'') + '</strong>. Every single one passed.</div>' +
       '<div class="urge-pattern-line">Top trigger: <strong>' + topTrigger + '</strong> &nbsp;\u00b7&nbsp; Avg intensity: <strong>' + avgIntensity + '/10</strong></div>' +
     '</div>' +
-    '<div class="card"><div class="card-title" style="font-size:0.85rem;">Recent urges</div><div class="card-body" style="padding-top:4px;">' + histHTML + '</div></div>';
+    '<div class="card"><div class="card-title" style="font-size:0.85rem;">Urge log</div><div class="card-body" style="padding-top:4px;">' + histHTML + '</div></div>';
 }
 
 // ——— Recovery Snapshot ———
